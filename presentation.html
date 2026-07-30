@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Filter — AI·에너지·스마트홈 발표자료</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Outfit:wght@600;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --panel-bg: #FFFFFF;
+      --panel-border: #CBD5E1;
+      --primary: #0284C7;
+      --primary-dark: #0369A1;
+      --primary-light: #E0F2FE;
+      --accent: #059669;
+      --accent-light: #D1FAE5;
+      --warning: #D97706;
+      --warning-light: #FEF3C7;
+      --danger: #DC2626;
+      --danger-light: #FEE2E2;
+      --text: #0F172A;
+      --muted: #1E293B;
+      --dim: #475569;
+      --font-main: 'Noto Sans KR', sans-serif;
+      --font-display: 'Outfit', 'Noto Sans KR', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+    html, body {
+      width: 100%; height: 100%;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      font-size: 16px;
+      overflow: hidden;
+    }
+
+    /* Subtle Airflow Background Canvas */
+    #bgCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Deck Container */
+    #deck {
+      position: relative;
+      z-index: 1;
+      width: 100vw; height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      position: absolute;
+      width: 88vw; height: 86vh;
+      max-width: 1600px; max-height: 900px;
+      aspect-ratio: 16 / 9;
+      padding: 2.5rem 3.5rem;
+      background: var(--panel-bg);
+      border: 1.5px solid var(--panel-border);
+      border-radius: 24px;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      transform: scale(0.97) translateY(15px);
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Slide Header */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .tag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--primary-light);
+      border: 1.5px solid #BAE6FD;
+      border-radius: 30px;
+      color: var(--primary-dark);
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .tag-badge::before {
+      content: '';
+      width: 8px; height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    .product-logo {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--text);
+    }
+    .product-logo span { color: var(--primary); }
+
+    .slide-title-box h2 {
+      font-family: var(--font-display);
+      font-size: 2.35rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-top: 0.2rem;
+      color: var(--text);
+    }
+
+    /* Grid Layouts */
+    .slide-body {
+      flex: 1;
+      display: grid;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+    .card {
+      background: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 18px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+
+    .card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -5px rgba(2, 132, 199, 0.14);
+    }
+
+    .card-title {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 1.15rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    /* Controls & Navigation */
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 10px 26px;
+      background: #FFFFFF;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 40px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+    }
+
+    .nav-btn {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 6px 16px;
+      border-radius: 20px;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover { color: #FFFFFF; background: var(--primary); border-color: var(--primary); }
+
+    .counter {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    #progressBar {
+      position: fixed;
+      bottom: 0; left: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      width: 9.09%;
+      transition: width 0.3s ease;
+      z-index: 101;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Subtle Airflow Background Canvas -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Deck Container -->
+  <div id="deck">
+
+    <!-- SLIDE 1: Cover Title (표지 페이지) -->
+    <section class="slide active" id="slide-1" style="justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at 50% 40%, #F0F9FF 0%, #FFFFFF 75%);">
+      <div style="margin-bottom: 1.75rem;">
+        <div class="tag-badge" style="font-size: 1.05rem; padding: 8px 24px; margin-bottom: 1.25rem;">AI · ENERGY · SMART HOME MAKERTHON</div>
+        <h1 style="font-family: var(--font-display); font-size: 5rem; font-weight: 900; color: var(--text); letter-spacing: -0.03em; line-height: 1.1;">
+          Smart <span style="color: var(--primary);">Filter</span>
+        </h1>
+        <p style="font-size: 1.55rem; color: var(--primary-dark); font-weight: 800; margin-top: 1rem;">
+          에어컨 필터의 실시간 차압 진단 & 에너지 최적화 솔루션
+        </p>
+      </div>
+
+      <div style="background: #FFFFFF; border: 2.5px solid #BAE6FD; padding: 1.4rem 3rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(2, 132, 199, 0.1); margin-top: 1rem;">
+        <div style="font-size: 1.35rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.4rem;">
+          팀명: 에너지온 <span style="font-family: var(--font-mono); color: var(--primary);">[Energy ON]</span>
+        </div>
+        <div style="font-size: 1.15rem; color: var(--muted); font-weight: 700;">
+          팀원: 김예지 · 변성훈 · 정지예
+        </div>
+      </div>
+      <div style="position: absolute; bottom: 2.5rem; font-family: var(--font-mono); font-size: 0.9rem; color: var(--dim); font-weight: 700;">
+        PRESS SPACE OR ARROW KEYS (→) TO START PRESENTATION
+      </div>
+    </section>
+
+    <!-- SLIDE 2: 에어컨 필터 관리의 중요성 (원인 ➔ 결과 화살표 구조 적용) -->
+    <section class="slide" id="slide-2">
+      <div class="slide-header">
+        <div class="slide-title-box">
+          <div class="tag-badge" style="background: var(--danger-light); color: var(--danger); border-color: #FCA5A5;">PROBLEM & CAUSE</div>
+          <h2>에어컨 필터 관리의 중요성</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body" style="grid-template-columns: 1fr 60px 1.2fr; align-items: center;">
+        <!-- Left: 3 Causes -->
+        <div style="display: flex; flex-direction: column; gap: 1rem; justify-content: space-between; height: 100%;">
+          <div class="card" style="border-left: 6px solid var(--danger); background: #FEF2F2; padding: 1.1rem 1.4rem;">
+            <div class="card-title" style="color: var(--danger); font-size: 1.3rem;">🚨 공기 저항 ➔ 전력 27% 급증</div>
+            <div class="card-desc" style="font-size: 1.05rem;">먼지 누적 ➔ 공기 저항 증가 ➔ 팬 과부하 발생</div>
+          </div>
+          <div class="card" style="border-left: 6px solid var(--warning); background: #FFFBEB; padding: 1.1rem 1.4rem;">
+            <div class="card-title" style="color: var(--warning); font-size: 1.3rem;">⏳ 감 의존 주기 교체</div>
+            <div class="card-desc" style="font-size: 1.05rem;">실제 오염과 상관없이 기간으로 판단하거나 고장 후 대응</div>
+          </div>
+          <div class="card" style="border-left: 6px solid var(--primary); background: #F0F9FF; padding: 1.1rem 1.4rem;">
+            <div class="card-title" style="color: var(--primary-dark); font-size: 1.3rem;">💸 필터 & 전력 이중 낭비</div>
+            <div class="card-desc" style="font-size: 1.05rem;">성급한 교체(필터 낭비) vs 늦은 교체(전력 낭비 & 공기질 악화)</div>
+          </div>
+        </div>
+
+        <!-- Center: Cause to Effect Arrow -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--danger); font-weight: 900;">
+          <div style="font-size: 2.8rem; line-height: 1;">➔</div>
+          <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--danger); margin-top: 4px;">원인 ➔ 결과</div>
+        </div>
+
+        <!-- Right: Real Problem -->
+        <div class="card" style="justify-content: center; background: #FEF2F2; border: 2.5px solid #FCA5A5; padding: 2.2rem; text-align: center; height: 100%;">
+          <div style="font-size: 3.2rem; margin-bottom: 0.75rem;">🔍</div>
+          <div class="tag-badge" style="background: var(--danger); color: #FFFFFF; font-size: 1.1rem; padding: 6px 18px; margin: 0 auto 1.25rem auto; border: none;">
+            진짜 문제점 (REAL PROBLEM)
+          </div>
+          <h3 style="font-size: 1.65rem; color: var(--text); font-weight: 900; line-height: 1.55; margin-bottom: 1rem;">
+            필터의 실시간 상태를 알 수 없어,<br>
+            <span style="color: var(--danger);">교체 시기가 아닐 때 무분별하게 교체하거나</span><br>
+            <span style="color: var(--danger);">적정 교체 타이밍을 놓치게 됩니다.</span>
+          </h3>
+          <p style="font-size: 1.05rem; color: var(--muted); font-weight: 700;">
+            실측 데이터 없는 단순 주기 관리가 매달 전력 과다 지출 유발!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: 해결 방향 — 필터 상태를 수치로 바꾸다 (원형 인포그래픽 & 화살표 연결 구조) -->
+    <section class="slide" id="slide-3">
+      <div class="slide-header">
+        <div class="slide-title-box">
+          <div class="tag-badge">SOLUTION DIRECTION</div>
+          <h2>해결 방향 — 필터 상태를 수치로 바꾸다</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body grid-3" style="align-items: center; height: 100%; gap: 1.2rem;">
+        <!-- Step 1 Circle Card -->
+        <div style="background: #F0F9FF; border: 2.5px solid #BAE6FD; border-radius: 24px; padding: 2.2rem 1.8rem; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: #0284C7; color: #FFFFFF; display: grid; place-items: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 1.25rem; box-shadow: 0 8px 20px rgba(2,132,199,0.3);">
+            🌀
+          </div>
+          <h3 style="font-size: 1.6rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.85rem;">
+            1. 먼지 누적 & 공기 저항
+          </h3>
+          <p style="font-size: 1.2rem; color: var(--muted); font-weight: 700; line-height: 1.65;">
+            필터가 오염될수록 공기가 통과하기 어려워지고<br>
+            <b style="color: var(--danger); font-size: 1.25rem;">필터 차압(압력차) ⬆ 급격히 증가!</b>
+          </p>
+        </div>
+
+        <!-- Step 2 Circle Card -->
+        <div style="background: #F0FDF4; border: 2.5px solid #A7F3D0; border-radius: 24px; padding: 2.2rem 1.8rem; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: #059669; color: #FFFFFF; display: grid; place-items: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 1.25rem; box-shadow: 0 8px 20px rgba(5,150,105,0.3);">
+            📊
+          </div>
+          <h3 style="font-size: 1.6rem; font-weight: 900; color: var(--accent); margin-bottom: 0.85rem;">
+            2. 0.1Pa 정밀 차압 측정
+          </h3>
+          <p style="font-size: 1.2rem; color: var(--muted); font-weight: 700; line-height: 1.65;">
+            차압 센서로 미세 압력 변화를 측정하여<br>
+            <b style="color: var(--accent); font-size: 1.25rem;">보이지 않는 필터 오염 정밀 수치화!</b>
+          </p>
+        </div>
+
+        <!-- Step 3 Circle Card -->
+        <div style="background: #FFFBEB; border: 2.5px solid #FDE68A; border-radius: 24px; padding: 2.2rem 1.8rem; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: #D97706; color: #FFFFFF; display: grid; place-items: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 1.25rem; box-shadow: 0 8px 20px rgba(217,119,6,0.3);">
+            ⚡
+          </div>
+          <h3 style="font-size: 1.6rem; font-weight: 900; color: var(--warning); margin-bottom: 0.85rem;">
+            3. 팬 과부하 & 전력 추적
+          </h3>
+          <p style="font-size: 1.2rem; color: var(--muted); font-weight: 700; line-height: 1.65;">
+            증가한 공기 저항으로 인한 팬 전력 낭비를<br>
+            <b style="color: var(--warning); font-size: 1.25rem;">실시간 전력 데이터로 명확히 확인!</b>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: SmartFilter 전체 흐름도 -->
+    <section class="slide" id="slide-4">
+      <div class="slide-header">
+        <div class="slide-title-box">
+          <div class="tag-badge">SYSTEM WORKFLOW</div>
+          <h2>SmartFilter 전체 흐름도</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body grid-3" style="align-items: stretch; height: 100%;">
+        <!-- STEP 01 -->
+        <div style="background: #F0F9FF; border-left: 6px solid var(--primary); padding: 2.2rem 2rem; border-radius: 20px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 900; color: var(--primary-dark); height: 2.2rem; display: flex; align-items: center;">STEP 01</div>
+            <h3 style="font-size: 1.75rem; font-weight: 900; color: var(--primary-dark); height: 3.5rem; display: flex; align-items: center; border-bottom: 2px dashed #BAE6FD; margin-bottom: 1.5rem;">1. 차압·온습도 측정</h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1.2rem; flex: 1; justify-content: space-around;">
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 필터 막힘 상태 실측 (SDP610)</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 실내 온도·습도 측정 (BME280)</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 오염 가속 환경 트래킹</div>
+          </div>
+        </div>
+        <!-- STEP 02 -->
+        <div style="background: #F0FDF4; border-left: 6px solid var(--accent); padding: 2.2rem 2rem; border-radius: 20px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 900; color: var(--accent); height: 2.2rem; display: flex; align-items: center;">STEP 02</div>
+            <h3 style="font-size: 1.75rem; font-weight: 900; color: var(--accent); height: 3.5rem; display: flex; align-items: center; border-bottom: 2px dashed #A7F3D0; margin-bottom: 1.5rem;">2. 데이터 저장·분석</h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1.2rem; flex: 1; justify-content: space-around;">
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 측정 데이터 누적 DB 저장</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 필터 상태 변화 이력 분석</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 AI 예측 데이터 생성</div>
+          </div>
+        </div>
+        <!-- STEP 03 -->
+        <div style="background: #FFFBEB; border-left: 6px solid var(--warning); padding: 2.2rem 2rem; border-radius: 20px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 900; color: var(--warning); height: 2.2rem; display: flex; align-items: center;">STEP 03</div>
+            <h3 style="font-size: 1.75rem; font-weight: 900; color: var(--warning); height: 3.5rem; display: flex; align-items: center; border-bottom: 2px dashed #FDE68A; margin-bottom: 1.5rem;">3. MQTT 실시간 통신</h3>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1.2rem; flex: 1; justify-content: space-around;">
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 ESP32 데이터 전송 노드</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 실시간 상태 즉시 업데이트</div>
+            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 웹 대시보드 무선 연동</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Smart Filter — AI 오염 예측 & 전력 분석 (예측 데이터 vs 전력 계산 명확 구분) -->
+    <section class="slide" id="slide-5">
+      <div class="slide-header">
+        <div class="slide-title-box">
+          <div class="tag-badge">AI PREDICTION ENGINE</div>
+          <h2>Smart Filter — AI 오염 예측 & 전력 분석</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body grid-2" style="align-items: stretch;">
+        <!-- Division 1: 필터 오염 & 교체 주기 예측 -->
+        <div class="card" style="border: 2.5px solid #0284C7; background: #F0F9FF; padding: 1.75rem; justify-content: space-between;">
+          <div>
+            <div class="tag-badge" style="margin-bottom: 0.75rem;">SECTION 01</div>
+            <div style="font-size: 1.55rem; font-weight: 900; color: var(--primary-dark); border-bottom: 2px solid #BAE6FD; padding-bottom: 0.75rem; margin-bottom: 1rem;">
+              🧠 1. 필터 오염 & 교체 주기 예측
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem; flex: 1; justify-content: space-around;">
+            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1rem 1.2rem; border-radius: 12px;">
+              <b style="color: var(--primary-dark); font-size: 1.15rem;">📌 예측 활용 데이터:</b>
+              <div style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-top: 0.2rem;">
+                • 차압 수치 / 실별 공간 특성 (거실·주방 등)<br>
+                • 온·습도 / 시간에 따른 차압 변화 추세
+              </div>
+            </div>
+            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1rem 1.2rem; border-radius: 12px;">
+              <b style="color: var(--primary-dark); font-size: 1.15rem;">📊 예측 결과 리포트:</b>
+              <div style="font-size: 1.05rem; font-weight: 800; color: var(--primary-dark); margin-top: 0.2rem;">
+                ✓ 현재 필터 오염도 (%)<br>
+                ✓ AI 계산 예상 필터 교체 D-Day<br>
+                ✓ 3단계 오염 상태 (정상·주의·위험)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Division 2: 팬 전력 감소량 & 전기요금 계산 -->
+        <div class="card" style="border: 2.5px solid #059669; background: #F0FDF4; padding: 1.75rem; justify-content: space-between;">
+          <div>
+            <div class="tag-badge" style="margin-bottom: 0.75rem; background: var(--accent-light); color: var(--accent);">SECTION 02</div>
+            <div style="font-size: 1.55rem; font-weight: 900; color: var(--accent); border-bottom: 2px solid #A7F3D0; padding-bottom: 0.75rem; margin-bottom: 1rem;">
+              ⚡ 2. 팬 전력 감소량 & 비용 계산
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem; flex: 1; justify-content: space-around;">
+            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1rem 1.2rem; border-radius: 12px;">
+              <b style="color: var(--accent); font-size: 1.15rem;">📌 계산 필요 데이터:</b>
+              <div style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-top: 0.2rem;">
+                • 차압 상승에 따른 팬 과부하 측정값<br>
+                • 새 필터 교체 시 감소 풍량/전력 계수
+              </div>
+            </div>
+            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1rem 1.2rem; border-radius: 12px;">
+              <b style="color: var(--accent); font-size: 1.15rem;">💰 절감 계산 리포트:</b>
+              <div style="font-size: 1.05rem; font-weight: 800; color: var(--accent); margin-top: 0.2rem;">
+                ✓ 미교체 시 예상 전력 증가량 (kWh)<br>
+                ✓ 교체 시 예상 전력 감소량 (kWh)<br>
+                ✓ <b>월간·연간 예상 전기요금 절감액 환산</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: 실제 개발한 스마트홈 웹 앱 소개 (개요 & 6대 탭 구성) -->
+    <section class="slide" id="slide-6">
+      <div class="slide-header">
+        <div class="slide-title-box">
+          <div class="tag-badge">DEPLOYED WEB APP</div>
+          <h2>실제 구현된 스마트홈 웹 서비스 구조</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body grid-2" style="align-items: stretch;">
+        <div class="card" style="background: #F0F9FF; border: 2.5px solid var(--primary); padding: 1.75rem; justify-content: space-between;">
+          <div>
+            <div class="tag-badge" style="margin-bottom: 0.75rem;">RAILWAY CLOUD DEPLOYED</div>
+            <div class="card-title" style="color: var(--primary-dark); font-size: 1.6rem;">🌐 완성형 스마트홈 웹 시스템</div>
+            <p style="font-size: 1.15rem; color: var(--muted); font-weight: 700; line-height: 1.7; margin-top: 0.75rem;">
+              센서 실측 수치부터 AI 예측, 3분 회복 검증, B2B 마켓까지 한눈에 관리하는 클라우드 배포 통합 웹 서비스입니다.
+            </p>
+          </div>
+          <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1rem; border-radius: 12px; font-family: var(--font-mono); font-size: 0.95rem; color: var(--primary-dark); font-weight: 700;">
+            🔗 배포 주소: https://smartfilter-railway-cloud-production-e704.up.railway.app
+          </div>
+        </div>
+
+        <div class="card" style="padding: 1.75rem; justify-content: space-between; background: #F8FAFC;">
+          <div class="card-title" style="font-size: 1.45rem; color: var(--text);">📱 하단 6대 핵심 탭 메뉴 구성</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 1.1rem; font-weight: 800; color: var(--text);">
+            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">1. 🏠 홈 (Home)</div>
+            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">2. 💻 기기 (Device)</div>
+            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">3. 📊 리포트 (Report)</div>
+            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">4. ⏱️ 회복 테스트</div>
+            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">5. ⚙️ 관리 (Admin)</div>
+            <div style="background: var(--primary-dark); color: #FFFFFF; padding: 12px 14px; border-radius: 10px; text-align: center;">6. 🛒 필터 마켓 (Market)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: 웹 어플 탭별 상세 기능 (홈 · 기기 · 리포트) -->
+    <section class="slide" id="slide-7">
+      <div class="slide-header">
+        <div class="slide-title-box">
+          <div class="tag-badge">APP FEATURES (PART 1)</div>
+          <h2>스마트홈 웹 어플 핵심 기능 (홈 · 기기 · 리포트)</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body grid-3" style="align-items: stretch;">
+        <!-- 1. 홈 탭 -->
+        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--primary); background: #F0F9FF;">
+          <div>
+            <div class="card-title" style="font-size: 1.35rem; color: var(--primary-dark);">1. 🏠 홈 (Home)</div>
+            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.5rem;">
+              <div>• <b>최상단 시스템 알림:</b> 긴급/최근 알림 창 상단 배치</div>
+              <div>• <b>필터 막힘도 UI:</b> 예상관리일·수명% 에너지효율등급형 시각화</div>
+              <div>• <b>위험도 분석:</b> AI 곰팡이 & 오염가속 위험도</div>
+              <div>• <b>센서 새로고침:</b> 수치 즉시 갱신 버튼</div>
+              <div>• <b>라이브 카메라:</b> 실시간 필터 촬영 On/Off</div>
+              <div>• <b>실시간 센서:</b> 차압, 온습도, 누적 운전시간</div>
+              <div>• <b>미세먼지 농도:</b> 기상청 연동 대기 창</div>
+              <div>• <b>바로가기:</b> 3분 회복 검증 이동 버튼</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 기기 탭 -->
+        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--accent); background: #F0FDF4;">
+          <div>
+            <div class="card-title" style="font-size: 1.35rem; color: var(--accent);">2. 💻 기기 (Device)</div>
+            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.5rem;">
+              <div>• <b>에어컨 등록 & 공간 선택:</b> 주방/거실 등 공간별 수명 공식 차등 적용 (주방 기름때 반영)</div>
+              <div>• <b>가족 관리 (+반려동물):</b> 털/오염 필터 수명 영향 반영</div>
+              <div>• <b>기기 상세 정보:</b> 모델, 필터 종류, 설치일, 누적 운전시간, 연결 게이트웨이/신호</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 리포트 탭 -->
+        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--warning); background: #FFFBEB;">
+          <div>
+            <div class="card-title" style="font-size: 1.35rem; color: var(--warning);">3. 📊 리포트 (Report)</div>
+            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.5rem;">
+              <div>• <b>라즈베리파이 실시간 절감 분석:</b> 누적 절감 전력(kWh) & 누적 절감 전기요금(원) 집계</div>
+              <div>• <b>에너지 절감 집중화:</b> 가동 그래프 제거 ➔ 오직 절감된 에너지 데이터 시각화 제공</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: 웹 어플 탭별 상세 기능 (회복 테스트 · 필터 마켓 · 관리) -->
+    <section class="slide" id="slide-8">
+      <div class="slide-header">
+        <div class="slide-title-box">
+          <div class="tag-badge">APP FEATURES (PART 2)</div>
+          <h2>스마트홈 웹 어플 핵심 기능 (회복테스트 · 관리 · 필터마켓)</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body grid-3" style="align-items: stretch;">
+        <!-- 4. 회복 테스트 탭 -->
+        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--primary); background: #F0F9FF;">
+          <div>
+            <div class="card-title" style="font-size: 1.35rem; color: var(--primary-dark);">4. ⏱️ 회복 테스트</div>
+            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+              <div>• <b>3분 세척 전후 검증:</b> 3분 타이머 카운트다운 진행</div>
+              <div>• <b>종합 판정:</b> 100점 만점 평가 리포트</div>
+              <div>• <b>테스트 결과:</b> 차압 회복률, 전력 개선률, 풍량 회복률 수치화</div>
+              <div>• <b>항목 확인:</b> 차압, 소비전력 확인 & 다시 테스트하기</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. 관리 탭 -->
+        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--accent); background: #F0FDF4;">
+          <div>
+            <div class="card-title" style="font-size: 1.35rem; color: var(--accent);">5. ⚙️ 관리 (Management)</div>
+            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+              <div>• <b>필터 이력:</b> 관리 및 회복 데이터 이력 기록</div>
+              <div>• <b>센서 상태 체크:</b> SDP610 차압 & BME280 온습도 정상작동 진단 및 이상 알림</div>
+              <div>• <b>기준값 재학습 실행:</b> 차압/팬속도/교체주기 재학습 실행 기능</div>
+              <div>• <b>알림 임계값 설정:</b> 주의 및 청소 권장 알림 기준 설정</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. 필터 마켓 탭 (가장 우측 배치!) -->
+        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--warning); background: #FFFBEB;">
+          <div>
+            <div class="card-title" style="font-size: 1.35rem; color: var(--warning);">6. 🛒 필터 마켓 (Market)</div>
+            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+              <div>• <b>가장 오른쪽 탭 배치:</b> B2B 연계 커머스 공간</div>
+              <div>• <b>필터 메인 상품배치:</b> 전체상품 ➔ <b>필터(Main)</b> ➔ 에어컨, 공기청정기, TV 등</div>
+              <div>• <b>기업 제휴 배너:</b> 제조사 맞춤 정기배송 배너 광고 연동</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Smart Filter 수익 구조 & 시장 확장성 (위치 Swap 적용) -->
+    <section class="slide" id="slide-9">
+      <div class="slide-header">
+        <div class="slide-title-box">
+          <div class="tag-badge">BUSINESS MODEL</div>
+          <h2>Smart Filter 수익 구조 & 시장 확장성</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body grid-2" style="gap: 1.5rem; align-items: stretch;">
+        <!-- 4대 수익 구조 -->
+        <div class="card" style="padding: 1.6rem; justify-content: space-between; border: 2.5px solid var(--primary); background: #F0F9FF;">
+          <div>
+            <div class="tag-badge" style="margin-bottom: 0.85rem;">REVENUE STREAMS</div>
+            <div style="font-size: 1.65rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.85rem;">
+              💰 4대 핵심 수익 모델
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
+              📦 <b>01. 하드웨어 판매</b> — 차압 센서 모듈 B2B/B2C 공급
+            </div>
+            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
+              💻 <b>02. SaaS 구독료</b> — 대시보드 & AI 예측 서비스 월/연간 구독
+            </div>
+            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
+              🛒 <b>03. 필터 수수료</b> — 맞춤 필터 자동 주문/배송 수수료
+            </div>
+            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
+              🛠️ <b>04. B2B 유지케어</b> — 정기 점검, 센서 교정, 관리 보고서
+            </div>
+          </div>
+        </div>
+
+        <!-- 4단계 시장 확장성 -->
+        <div class="card" style="padding: 1.6rem; justify-content: space-between; border: 2.5px solid var(--accent); background: #F0FDF4;">
+          <div>
+            <div class="tag-badge" style="margin-bottom: 0.85rem; background: var(--accent-light); color: var(--accent);">TARGET MARKETS</div>
+            <div style="font-size: 1.65rem; font-weight: 900; color: var(--accent); margin-bottom: 0.85rem;">
+              🚀 4단계 시장 연쇄 확장
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
+              🏠 <b>1단계 (초기 진입)</b> — 일반 가정 & 스마트 아파트 단지
+            </div>
+            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
+              🏫 <b>2단계 (공공 확장)</b> — 학교, 학원, 공공기관 건물
+            </div>
+            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
+              🏥 <b>3단계 (다중 시설)</b> — 병원, 다중 이용 시설
+            </div>
+            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
+              🏢 <b>4단계 (대형 B2B)</b> — 공장, 클린룸, B2B 대형 건물 관제
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: LIVE DEMO (100% ORIGINAL DEMO IFRAME ENGINE - UNTOUCHED) -->
+    <section class="slide" id="slide-10" style="padding: 1.75rem 2.5rem;">
+      <div class="slide-header" style="padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+        <div class="slide-title-box">
+          <div class="tag-badge" style="background: var(--danger-light); color: var(--danger); border-color: #FCA5A5;">LIVE DEMO</div>
+          <h2 style="font-size: 1.8rem; margin-top: 0.2rem;">실시간 실물 시연: Smart Filter 카메라 중계</h2>
+        </div>
+        <div class="product-logo">Smart <span>Filter</span></div>
+      </div>
+      <div class="slide-body" style="flex: 1; min-height: 480px; height: 100%; display: flex; margin: 0; padding: 0;">
+        <iframe src="index.html" style="width: 100%; height: 100%; min-height: 480px; flex: 1; border: 2px solid #CBD5E1; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.1);" title="Live Relay Engine"></iframe>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: 결론 및 엔딩 (새 럭셔리 구조) -->
+    <section class="slide" id="slide-11" style="justify-content: center; align-items: center; background: radial-gradient(circle at 50% 50%, #F0F9FF 0%, #FFFFFF 80%);">
+      <div style="width: 100%; max-width: 1100px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div class="tag-badge" style="font-size: 1rem; padding: 8px 24px; margin-bottom: 1.25rem;">SMART HOME STANDARD</div>
+        <h2 style="font-family: var(--font-display); font-size: 4.2rem; font-weight: 900; color: var(--primary-dark); letter-spacing: -0.02em; margin-bottom: 0.5rem;">
+          Smart Filter
+        </h2>
+        <p style="font-size: 1.5rem; color: var(--text); font-weight: 900; margin-bottom: 2.2rem;">
+          "감이 아닌 실측 데이터로, 에너지를 절약하는 스마트홈의 필수 표준"
+        </p>
+
+        <!-- 3대 핵심 요약 아이콘 바 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; width: 100%; margin-bottom: 2.5rem;">
+          <div style="background: #FFFFFF; border: 2px solid #BAE6FD; border-radius: 18px; padding: 1.4rem; box-shadow: 0 6px 15px rgba(2,132,199,0.08);">
+            <div style="font-size: 2.6rem; margin-bottom: 0.4rem;">⚡</div>
+            <div style="font-size: 1.25rem; font-weight: 900; color: var(--primary-dark);">에너지 27% 절감</div>
+            <div style="font-size: 0.95rem; color: var(--muted); margin-top: 0.2rem; font-weight: 700;">공기 저항 차단 전기요금 절약</div>
+          </div>
+          <div style="background: #FFFFFF; border: 2px solid #A7F3D0; border-radius: 18px; padding: 1.4rem; box-shadow: 0 6px 15px rgba(5,150,105,0.08);">
+            <div style="font-size: 2.6rem; margin-bottom: 0.4rem;">🧠</div>
+            <div style="font-size: 1.25rem; font-weight: 900; color: var(--accent);">AI 교체 예측</div>
+            <div style="font-size: 0.95rem; color: var(--muted); margin-top: 0.2rem; font-weight: 700;">3단계 상태 & 사전 D-Day 알림</div>
+          </div>
+          <div style="background: #FFFFFF; border: 2px solid #FDE68A; border-radius: 18px; padding: 1.4rem; box-shadow: 0 6px 15px rgba(217,119,6,0.08);">
+            <div style="font-size: 2.6rem; margin-bottom: 0.4rem;">📱</div>
+            <div style="font-size: 1.25rem; font-weight: 900; color: var(--warning);">통합 웹 대시보드</div>
+            <div style="font-size: 0.95rem; color: var(--muted); margin-top: 0.2rem; font-weight: 700;">원격 상태 점검 및 리포트</div>
+          </div>
+        </div>
+
+        <div style="background: #0F172A; color: #FFFFFF; padding: 1.1rem 3rem; border-radius: 40px; display: flex; align-items: center; gap: 1.75rem; box-shadow: 0 10px 25px rgba(15,23,42,0.2);">
+          <div style="font-size: 1.1rem; font-weight: 900; color: #38BDF8;">
+            팀명: 에너지온 <span style="font-family: var(--font-mono); color: #FFF;">[Energy ON]</span>
+          </div>
+          <div style="font-size: 1rem; color: #94A3B8;">|</div>
+          <div style="font-size: 1.05rem; color: #E2E8F0; font-weight: 700;">
+            김예지 · 변성훈 · 정지예
+          </div>
+          <div style="margin-left: auto; font-family: var(--font-mono); font-size: 0.95rem; color: #38BDF8; font-weight: 700;">
+            THANK YOU FOR LISTENING
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Controls & Navigation -->
+  <div id="controls">
+    <button class="nav-btn" id="prevBtn" title="이전 슬라이드 (←)">◀ 이전</button>
+    <div class="counter" id="slideCounter">SLIDE 01 / 11</div>
+    <button class="nav-btn" id="nextBtn" title="다음 슬라이드 (→)">다음 ▶</button>
+  </div>
+  <div id="progressBar"></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* Subtle Airflow Background Canvas */
+      const bgCanvas = document.getElementById('bgCanvas');
+      const ctx = bgCanvas.getContext('2d');
+      let width, height;
+      const particles = [];
+
+      function resize() {
+        width = bgCanvas.width = window.innerWidth;
+        height = bgCanvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      for (let i = 0; i < 35; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: Math.random() * 1.2 + 0.3,
+          vy: (Math.random() - 0.5) * 0.4,
+          radius: Math.random() * 2.5 + 1,
+          alpha: Math.random() * 0.3 + 0.1
+        });
+      }
+
+      function drawBg() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = 'rgba(2, 132, 199, 0.18)';
+        for (let p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        requestAnimationFrame(drawBg);
+      }
+      drawBg();
+
+      /* Slide Navigation Logic */
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentSlide = 0;
+
+      const slideCounter = document.getElementById('slideCounter');
+      const progressBar = document.getElementById('progressBar');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      function updateSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= totalSlides) index = totalSlides - 1;
+        currentSlide = index;
+
+        slides.forEach((slide, i) => {
+          if (i === currentSlide) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        });
+
+        slideCounter.textContent = `SLIDE ${String(currentSlide + 1).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+        progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+      }
+
+      prevBtn.addEventListener('click', () => updateSlide(currentSlide - 1));
+      nextBtn.addEventListener('click', () => updateSlide(currentSlide + 1));
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          updateSlide(currentSlide - 1);
+        }
+      });
+
+      document.getElementById('deck').addEventListener('click', (e) => {
+        if (e.target.closest('#controls') || e.target.closest('.card') || e.target.closest('button') || e.target.closest('input') || e.target.closest('iframe')) return;
+        if (e.clientX > window.innerWidth * 0.75) {
+          updateSlide(currentSlide + 1);
+        } else if (e.clientX < window.innerWidth * 0.25) {
+          updateSlide(currentSlide - 1);
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>

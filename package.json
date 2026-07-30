@@ -1,0 +1,16 @@
+{
+  "name": "live-relay-site",
+  "version": "1.0.0",
+  "description": "A phone camera on a laptop screen, live. **WebRTC peer-to-peer** — the video is\r never stored on a server, and there is no backend to run.",
+  "main": "peerjs.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "peerjs": "^1.5.5",
+    "qrcode": "^1.5.4"
+  }
+}
