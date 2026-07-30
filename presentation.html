@@ -1,849 +1,468 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Filter — AI·에너지·스마트홈 발표자료</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Filter — 발표자료</title>
+<style>
+  :root{
+    --bg:#0A0F0E;
+    --bg2:#111917;
+    --bg3:#161F1D;
+    --line:rgba(255,255,255,.09);
+    --line-strong:rgba(255,255,255,.2);
+    --ink:#F2F7F5;
+    --ink-dim:#8FA39D;
+    --ink-faint:#5C6E69;
+    --accent:#1FD8A8;
+    --accent-ink:#04211A;
+    --accent-2:#F0954A;
+    --danger:#FF6A55;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 20px 50px rgba(0,0,0,.55);
+    --font-display:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",-apple-system,"Segoe UI",sans-serif;
+    --font-body:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",-apple-system,"Segoe UI",sans-serif;
+    --font-mono:"Cascadia Code","SF Mono",Consolas,ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;user-select:none;}
+  html,body{width:100%;height:100%;background:var(--bg);color:var(--ink);font-family:var(--font-body);overflow:hidden;}
+  ::selection{background:var(--accent);color:var(--accent-ink);}
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Outfit:wght@600;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  #bgCanvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;opacity:.5;}
 
-  <style>
-    :root {
-      --bg: #F8FAFC;
-      --panel-bg: #FFFFFF;
-      --panel-border: #CBD5E1;
-      --primary: #0284C7;
-      --primary-dark: #0369A1;
-      --primary-light: #E0F2FE;
-      --accent: #059669;
-      --accent-light: #D1FAE5;
-      --warning: #D97706;
-      --warning-light: #FEF3C7;
-      --danger: #DC2626;
-      --danger-light: #FEE2E2;
-      --text: #0F172A;
-      --muted: #1E293B;
-      --dim: #475569;
-      --font-main: 'Noto Sans KR', sans-serif;
-      --font-display: 'Outfit', 'Noto Sans KR', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-    }
+  #deck{position:relative;z-index:1;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+  .slide{
+    position:absolute;width:88vw;height:86vh;max-width:1600px;max-height:900px;aspect-ratio:16/9;
+    padding:3.2rem 4rem;background:var(--bg2);border:1px solid var(--line);border-radius:20px;
+    box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;
+    opacity:0;transform:scale(.97) translateY(16px);pointer-events:none;transition:opacity .35s ease,transform .35s ease;
+    overflow:hidden;
+  }
+  .slide.active{opacity:1;transform:scale(1) translateY(0);pointer-events:auto;}
+  .slide::before,.slide::after{content:"";position:absolute;width:20px;height:20px;opacity:.35;pointer-events:none;}
+  .slide::before{top:22px;left:22px;border-top:1px solid var(--line-strong);border-left:1px solid var(--line-strong);}
+  .slide::after{bottom:22px;right:22px;border-bottom:1px solid var(--line-strong);border-right:1px solid var(--line-strong);}
 
-    html, body {
-      width: 100%; height: 100%;
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font-main);
-      font-size: 16px;
-      overflow: hidden;
-    }
+  .eyebrow{
+    font-family:var(--font-mono);font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);font-weight:700;display:flex;align-items:center;gap:.7em;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--accent);display:inline-block;}
 
-    /* Subtle Airflow Background Canvas */
-    #bgCanvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
+  h1,h2,h3{font-family:var(--font-display);text-wrap:balance;}
 
-    /* Deck Container */
-    #deck {
-      position: relative;
-      z-index: 1;
-      width: 100vw; height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  .slide-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.6rem;}
+  .slide-header h2{font-size:2.1rem;font-weight:900;letter-spacing:-.02em;margin-top:.5rem;color:var(--ink);line-height:1.2;}
+  .logo{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase;}
 
-    .slide {
-      position: absolute;
-      width: 88vw; height: 86vh;
-      max-width: 1600px; max-height: 900px;
-      aspect-ratio: 16 / 9;
-      padding: 2.5rem 3.5rem;
-      background: var(--panel-bg);
-      border: 1.5px solid var(--panel-border);
-      border-radius: 24px;
-      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      opacity: 0;
-      transform: scale(0.97) translateY(15px);
-      pointer-events: none;
-      transition: opacity 0.35s ease, transform 0.35s ease;
-    }
+  .body{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;}
 
-    .slide.active {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-      pointer-events: auto;
-    }
+  .readout{font-family:var(--font-mono);font-variant-numeric:tabular-nums;background:#04100E;color:var(--accent);border-radius:8px;padding:.35em .8em;font-size:.9rem;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);}
+  .chip{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.03em;padding:.35em .8em;border-radius:999px;border:1px solid var(--line-strong);color:var(--ink-dim);display:inline-flex;align-items:center;gap:.5em;}
 
-    /* Slide Header */
-    .slide-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #E2E8F0;
-      padding-bottom: 0.85rem;
-      margin-bottom: 1.25rem;
-    }
+  /* ===== S1 Cover ===== */
+  #s1{align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 30%,#132320 0%,var(--bg2) 70%);}
+  .cover-eyebrow{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.24em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:1.6rem;}
+  .cover-title{font-size:clamp(3.5rem,9vw,6.5rem);font-weight:900;letter-spacing:-.03em;line-height:1.02;color:var(--ink);}
+  .cover-title span{color:var(--accent);}
+  .cover-tag{font-size:1.5rem;font-weight:800;color:var(--ink-dim);margin-top:1.3rem;}
+  .cover-plate{margin-top:2.6rem;background:var(--bg3);border:1px solid var(--line-strong);border-radius:16px;padding:1.2rem 2.6rem;box-shadow:var(--shadow);}
+  .cover-plate .team{font-size:1.15rem;font-weight:900;color:var(--accent);}
+  .cover-plate .team span{font-family:var(--font-mono);color:var(--ink);font-weight:700;}
+  .cover-plate .members{font-size:1rem;color:var(--ink-dim);font-weight:700;margin-top:.35rem;}
+  .cover-hint{position:absolute;bottom:2.2rem;font-family:var(--font-mono);font-size:.8rem;color:var(--ink-faint);letter-spacing:.06em;}
 
-    .tag-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: var(--primary-light);
-      border: 1.5px solid #BAE6FD;
-      border-radius: 30px;
-      color: var(--primary-dark);
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
-      font-weight: 800;
-    }
+  /* ===== S2 Problem — single dramatic stat ===== */
+  #s2 .body{align-items:flex-start;}
+  .mega-stat{font-family:var(--font-mono);font-weight:800;font-size:clamp(4.5rem,11vw,8rem);line-height:.95;color:var(--danger);letter-spacing:-.02em;}
+  .mega-label{font-size:1.7rem;font-weight:900;color:var(--ink);margin-top:.6rem;}
+  .mega-sub{font-size:1.15rem;color:var(--ink-dim);font-weight:700;margin-top:.9rem;max-width:56ch;line-height:1.6;}
+  .fact-row{display:flex;gap:.8rem;margin-top:2.2rem;flex-wrap:wrap;}
+  .fact-row .chip{border-color:rgba(255,106,85,.35);color:#FFB6A8;}
 
-    .tag-badge::before {
-      content: '';
-      width: 8px; height: 8px;
-      background: var(--primary);
-      border-radius: 50%;
-    }
+  /* ===== S3 감 vs 데이터 split ===== */
+  .split{display:grid;grid-template-columns:1fr auto 1fr;gap:2rem;align-items:stretch;flex:1;}
+  .split-col{border-radius:16px;padding:2rem 2.2rem;display:flex;flex-direction:column;justify-content:center;gap:1rem;}
+  .split-col.old{background:var(--bg3);border:1px solid var(--line);opacity:.7;}
+  .split-col.new{background:linear-gradient(160deg,rgba(31,216,168,.14),rgba(31,216,168,.03));border:1.5px solid rgba(31,216,168,.4);}
+  .split-tag{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;}
+  .split-col.old .split-tag{color:var(--ink-faint);}
+  .split-col.new .split-tag{color:var(--accent);}
+  .split-head{font-size:2rem;font-weight:900;margin-top:.3rem;}
+  .split-col.old .split-head{color:var(--ink-dim);}
+  .split-col.new .split-head{color:var(--ink);}
+  .split-list{margin-top:1rem;display:flex;flex-direction:column;gap:.65rem;font-size:1.1rem;font-weight:700;}
+  .split-col.old .split-list{color:var(--ink-faint);}
+  .split-col.new .split-list{color:var(--ink-dim);}
+  .split-list b{color:var(--ink);}
+  .split-vs{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:900;font-size:1.1rem;color:var(--ink-faint);}
 
-    .product-logo {
-      font-family: var(--font-display);
-      font-size: 1.45rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      color: var(--text);
-    }
-    .product-logo span { color: var(--primary); }
+  /* ===== S4 Architecture schematic ===== */
+  .schematic{display:flex;align-items:stretch;gap:0;flex:1;margin-top:1rem;}
+  .node{flex:1;background:var(--bg3);border:1px solid var(--line);border-radius:16px;padding:1.8rem 1.6rem;position:relative;display:flex;flex-direction:column;justify-content:center;gap:.9rem;}
+  .node + .node{margin-left:2.4rem;}
+  .node-no{font-family:var(--font-mono);color:var(--accent);font-size:.85rem;letter-spacing:.1em;font-weight:800;}
+  .node-title{font-size:1.4rem;font-weight:900;color:var(--ink);}
+  .node-desc{font-size:1rem;color:var(--ink-dim);font-weight:700;line-height:1.6;}
+  .node-arrow{position:absolute;top:50%;left:calc(100% + .4rem);transform:translateY(-50%);color:var(--accent);font-size:1.4rem;font-weight:900;}
 
-    .slide-title-box h2 {
-      font-family: var(--font-display);
-      font-size: 2.35rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      margin-top: 0.2rem;
-      color: var(--text);
-    }
+  /* ===== S5 Engine — two big blocks ===== */
+  .engine{display:grid;grid-template-columns:1fr 1fr;gap:2rem;flex:1;align-items:stretch;}
+  .engine-block{border-radius:16px;padding:2rem 2.1rem;display:flex;flex-direction:column;justify-content:center;gap:1.1rem;background:var(--bg3);border:1.5px solid var(--line);}
+  .engine-block.b{border-color:rgba(240,149,74,.4);background:linear-gradient(160deg,rgba(240,149,74,.1),rgba(240,149,74,.02));}
+  .engine-tag{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;color:var(--accent);}
+  .engine-block.b .engine-tag{color:var(--accent-2);}
+  .engine-title{font-size:1.65rem;font-weight:900;color:var(--ink);}
+  .engine-list{display:flex;flex-direction:column;gap:.75rem;font-size:1.08rem;font-weight:700;color:var(--ink-dim);}
+  .engine-list b{color:var(--ink);}
 
-    /* Grid Layouts */
-    .slide-body {
-      flex: 1;
-      display: grid;
-      gap: 1.5rem;
-      align-items: stretch;
-    }
+  /* ===== S6/S7 Real product — phone filmstrip ===== */
+  .phone-row{display:flex;gap:2.6rem;justify-content:center;align-items:flex-end;flex:1;}
+  .phone-card{display:flex;flex-direction:column;align-items:center;gap:1.1rem;}
+  .phone-frame{width:180px;aspect-ratio:430/860;border-radius:22px;overflow:hidden;border:5px solid #1B2422;box-shadow:var(--shadow);background:#000;}
+  .phone-frame img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+  .phone-cap{text-align:center;}
+  .phone-cap .k{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;}
+  .phone-cap .v{font-size:1.05rem;font-weight:800;color:var(--ink);margin-top:.3rem;max-width:16ch;line-height:1.4;}
 
-    .grid-2 { grid-template-columns: 1fr 1fr; }
-    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
-    .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  /* ===== S8 Business ===== */
+  .ledger{display:flex;flex-direction:column;flex:1;justify-content:center;}
+  .ledger-row{display:grid;grid-template-columns:3.5rem 1fr;gap:1.3rem;align-items:center;padding:1.1rem 0;border-top:1px solid var(--line);}
+  .ledger-row:last-child{border-bottom:1px solid var(--line);}
+  .ledger-no{font-family:var(--font-mono);color:var(--accent);font-weight:900;font-size:1.1rem;}
+  .ledger-row p{font-size:1.2rem;font-weight:800;color:var(--ink);}
+  .ledger-row p b{color:var(--accent);}
+  .market-note{margin-top:1.8rem;font-size:1.05rem;color:var(--ink-dim);font-weight:700;border-left:3px solid var(--accent-2);padding-left:1.1rem;}
 
-    .card {
-      background: #FFFFFF;
-      border: 1.5px solid #CBD5E1;
-      border-radius: 18px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
-      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-    }
+  /* ===== S9 Live demo ===== */
+  #s9{padding:2.2rem 2.8rem;}
+  .demo-body{flex:1;min-height:0;display:flex;}
+  .demo-body iframe{width:100%;height:100%;border:1px solid var(--line-strong);border-radius:16px;box-shadow:var(--shadow);}
 
-    .card:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px -5px rgba(2, 132, 199, 0.14);
-    }
+  /* ===== S10 Closing ===== */
+  #s10{align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 55%,#132320 0%,var(--bg2) 80%);}
+  .close-tag{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:1.2rem;}
+  .close-title{font-size:clamp(2.2rem,5vw,3.2rem);font-weight:900;color:var(--ink);max-width:22ch;line-height:1.3;}
+  .close-stats{display:flex;gap:1rem;margin-top:2.2rem;flex-wrap:wrap;justify-content:center;}
+  .close-plate{margin-top:2.6rem;background:#000;color:#fff;border-radius:40px;padding:1rem 2.4rem;display:flex;align-items:center;gap:1.6rem;box-shadow:var(--shadow);}
+  .close-plate .team{font-weight:900;color:var(--accent);font-size:1rem;}
+  .close-plate .members{color:#C9D6D2;font-size:.95rem;font-weight:700;}
+  .close-plate .thanks{margin-left:auto;font-family:var(--font-mono);font-size:.85rem;color:var(--accent);font-weight:700;}
 
-    .card-title {
-      font-size: 1.45rem;
-      font-weight: 900;
-      color: var(--text);
-      margin-bottom: 0.6rem;
-      line-height: 1.3;
-    }
+  /* ===== controls ===== */
+  #controls{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:1.4rem;padding:.7rem 1.6rem;background:var(--bg2);border:1px solid var(--line-strong);border-radius:40px;box-shadow:var(--shadow);}
+  .nav-btn{background:var(--bg3);border:1px solid var(--line-strong);color:var(--ink);font-size:.95rem;font-weight:800;cursor:pointer;padding:.5em 1.1em;border-radius:20px;font-family:var(--font-body);transition:all .2s;}
+  .nav-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  .counter{font-family:var(--font-mono);font-size:.9rem;font-weight:700;color:var(--ink-dim);}
+  #progressBar{position:fixed;bottom:0;left:0;height:3px;background:var(--accent);width:10%;transition:width .3s ease;z-index:101;}
 
-    .card-desc {
-      font-size: 1.15rem;
-      color: var(--muted);
-      line-height: 1.6;
-      font-weight: 700;
-    }
-
-    /* Controls & Navigation */
-    #controls {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 10px 26px;
-      background: #FFFFFF;
-      border: 1.5px solid #CBD5E1;
-      border-radius: 40px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
-    }
-
-    .nav-btn {
-      background: #F1F5F9;
-      border: 1px solid #CBD5E1;
-      color: var(--text);
-      font-size: 1rem;
-      font-weight: 800;
-      cursor: pointer;
-      padding: 6px 16px;
-      border-radius: 20px;
-      transition: all 0.2s;
-    }
-
-    .nav-btn:hover { color: #FFFFFF; background: var(--primary); border-color: var(--primary); }
-
-    .counter {
-      font-family: var(--font-mono);
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--muted);
-    }
-
-    #progressBar {
-      position: fixed;
-      bottom: 0; left: 0;
-      height: 5px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      width: 9.09%;
-      transition: width 0.3s ease;
-      z-index: 101;
-    }
-  </style>
+  @media (max-width:900px){
+    .split{grid-template-columns:1fr;}
+    .split-vs{display:none;}
+    .schematic{flex-direction:column;}
+    .node+.node{margin-left:0;margin-top:1.6rem;}
+    .node-arrow{display:none;}
+    .engine{grid-template-columns:1fr;}
+    .phone-row{flex-wrap:wrap;}
+  }
+</style>
 </head>
 <body>
 
-  <!-- Subtle Airflow Background Canvas -->
-  <canvas id="bgCanvas"></canvas>
+<canvas id="bgCanvas"></canvas>
 
-  <!-- Deck Container -->
-  <div id="deck">
+<div id="deck">
 
-    <!-- SLIDE 1: Cover Title (표지 페이지) -->
-    <section class="slide active" id="slide-1" style="justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at 50% 40%, #F0F9FF 0%, #FFFFFF 75%);">
-      <div style="margin-bottom: 1.75rem;">
-        <div class="tag-badge" style="font-size: 1.05rem; padding: 8px 24px; margin-bottom: 1.25rem;">AI · ENERGY · SMART HOME MAKERTHON</div>
-        <h1 style="font-family: var(--font-display); font-size: 5rem; font-weight: 900; color: var(--text); letter-spacing: -0.03em; line-height: 1.1;">
-          Smart <span style="color: var(--primary);">Filter</span>
-        </h1>
-        <p style="font-size: 1.55rem; color: var(--primary-dark); font-weight: 800; margin-top: 1rem;">
-          에어컨 필터의 실시간 차압 진단 & 에너지 최적화 솔루션
-        </p>
+  <!-- S1 Cover -->
+  <section class="slide active" id="s1">
+    <div class="body" style="align-items:center;text-align:center;">
+      <div class="cover-eyebrow">AI · Energy · Smart Home Makerthon</div>
+      <h1 class="cover-title">Smart <span>Filter</span></h1>
+      <p class="cover-tag">감이 아니라, 데이터로 필터를 관리합니다.</p>
+      <div class="cover-plate">
+        <div class="team">에너지온 <span>[Energy ON]</span></div>
+        <div class="members">김예지 · 변성훈 · 정지예</div>
       </div>
+    </div>
+    <div class="cover-hint" style="align-self:center;">→ 또는 SPACE로 시작</div>
+  </section>
 
-      <div style="background: #FFFFFF; border: 2.5px solid #BAE6FD; padding: 1.4rem 3rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(2, 132, 199, 0.1); margin-top: 1rem;">
-        <div style="font-size: 1.35rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.4rem;">
-          팀명: 에너지온 <span style="font-family: var(--font-mono); color: var(--primary);">[Energy ON]</span>
-        </div>
-        <div style="font-size: 1.15rem; color: var(--muted); font-weight: 700;">
-          팀원: 김예지 · 변성훈 · 정지예
-        </div>
+  <!-- S2 Problem -->
+  <section class="slide" id="s2">
+    <div class="slide-header">
+      <div><div class="eyebrow">Problem</div><h2>필터는 조용히 막힙니다</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="body">
+      <div class="mega-stat">27%</div>
+      <div class="mega-label">필터가 막히면, 팬 전력이 이만큼 급증합니다</div>
+      <p class="mega-sub">그런데도 교체 시기는 여전히 <b style="color:var(--ink)">'감'</b>으로 정합니다. 실측 데이터 없이, 기간이 됐으니 바꾸거나 — 고장 나고 나서야 바꿉니다.</p>
+      <div class="fact-row">
+        <span class="chip">판단 기준: 없음</span>
+        <span class="chip">실측 데이터: 0건</span>
+        <span class="chip">결과: 필터 · 전력 이중 낭비</span>
       </div>
-      <div style="position: absolute; bottom: 2.5rem; font-family: var(--font-mono); font-size: 0.9rem; color: var(--dim); font-weight: 700;">
-        PRESS SPACE OR ARROW KEYS (→) TO START PRESENTATION
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 2: 에어컨 필터 관리의 중요성 (원인 ➔ 결과 화살표 구조 적용) -->
-    <section class="slide" id="slide-2">
-      <div class="slide-header">
-        <div class="slide-title-box">
-          <div class="tag-badge" style="background: var(--danger-light); color: var(--danger); border-color: #FCA5A5;">PROBLEM & CAUSE</div>
-          <h2>에어컨 필터 관리의 중요성</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
-      </div>
-      <div class="slide-body" style="grid-template-columns: 1fr 60px 1.2fr; align-items: center;">
-        <!-- Left: 3 Causes -->
-        <div style="display: flex; flex-direction: column; gap: 1rem; justify-content: space-between; height: 100%;">
-          <div class="card" style="border-left: 6px solid var(--danger); background: #FEF2F2; padding: 1.1rem 1.4rem;">
-            <div class="card-title" style="color: var(--danger); font-size: 1.3rem;">🚨 공기 저항 ➔ 전력 27% 급증</div>
-            <div class="card-desc" style="font-size: 1.05rem;">먼지 누적 ➔ 공기 저항 증가 ➔ 팬 과부하 발생</div>
-          </div>
-          <div class="card" style="border-left: 6px solid var(--warning); background: #FFFBEB; padding: 1.1rem 1.4rem;">
-            <div class="card-title" style="color: var(--warning); font-size: 1.3rem;">⏳ 감 의존 주기 교체</div>
-            <div class="card-desc" style="font-size: 1.05rem;">실제 오염과 상관없이 기간으로 판단하거나 고장 후 대응</div>
-          </div>
-          <div class="card" style="border-left: 6px solid var(--primary); background: #F0F9FF; padding: 1.1rem 1.4rem;">
-            <div class="card-title" style="color: var(--primary-dark); font-size: 1.3rem;">💸 필터 & 전력 이중 낭비</div>
-            <div class="card-desc" style="font-size: 1.05rem;">성급한 교체(필터 낭비) vs 늦은 교체(전력 낭비 & 공기질 악화)</div>
-          </div>
-        </div>
-
-        <!-- Center: Cause to Effect Arrow -->
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--danger); font-weight: 900;">
-          <div style="font-size: 2.8rem; line-height: 1;">➔</div>
-          <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--danger); margin-top: 4px;">원인 ➔ 결과</div>
-        </div>
-
-        <!-- Right: Real Problem -->
-        <div class="card" style="justify-content: center; background: #FEF2F2; border: 2.5px solid #FCA5A5; padding: 2.2rem; text-align: center; height: 100%;">
-          <div style="font-size: 3.2rem; margin-bottom: 0.75rem;">🔍</div>
-          <div class="tag-badge" style="background: var(--danger); color: #FFFFFF; font-size: 1.1rem; padding: 6px 18px; margin: 0 auto 1.25rem auto; border: none;">
-            진짜 문제점 (REAL PROBLEM)
-          </div>
-          <h3 style="font-size: 1.65rem; color: var(--text); font-weight: 900; line-height: 1.55; margin-bottom: 1rem;">
-            필터의 실시간 상태를 알 수 없어,<br>
-            <span style="color: var(--danger);">교체 시기가 아닐 때 무분별하게 교체하거나</span><br>
-            <span style="color: var(--danger);">적정 교체 타이밍을 놓치게 됩니다.</span>
-          </h3>
-          <p style="font-size: 1.05rem; color: var(--muted); font-weight: 700;">
-            실측 데이터 없는 단순 주기 관리가 매달 전력 과다 지출 유발!
-          </p>
+  <!-- S3 감 vs 데이터 -->
+  <section class="slide" id="s3">
+    <div class="slide-header">
+      <div><div class="eyebrow">Why Us</div><h2>감 vs 데이터</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="split">
+      <div class="split-col old">
+        <div class="split-tag">기존 방식</div>
+        <div class="split-head">육안 판단</div>
+        <div class="split-list">
+          <div>"더러워 보인다" — 정성적 판단</div>
+          <div>기간 기준 or 고장 후 대응</div>
+          <div>결과: <b>너무 이르거나, 너무 늦거나</b></div>
         </div>
       </div>
-    </section>
-
-    <!-- SLIDE 3: 해결 방향 — 필터 상태를 수치로 바꾸다 (원형 인포그래픽 & 화살표 연결 구조) -->
-    <section class="slide" id="slide-3">
-      <div class="slide-header">
-        <div class="slide-title-box">
-          <div class="tag-badge">SOLUTION DIRECTION</div>
-          <h2>해결 방향 — 필터 상태를 수치로 바꾸다</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
-      </div>
-      <div class="slide-body grid-3" style="align-items: center; height: 100%; gap: 1.2rem;">
-        <!-- Step 1 Circle Card -->
-        <div style="background: #F0F9FF; border: 2.5px solid #BAE6FD; border-radius: 24px; padding: 2.2rem 1.8rem; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
-          <div style="width: 80px; height: 80px; border-radius: 50%; background: #0284C7; color: #FFFFFF; display: grid; place-items: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 1.25rem; box-shadow: 0 8px 20px rgba(2,132,199,0.3);">
-            🌀
-          </div>
-          <h3 style="font-size: 1.6rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.85rem;">
-            1. 먼지 누적 & 공기 저항
-          </h3>
-          <p style="font-size: 1.2rem; color: var(--muted); font-weight: 700; line-height: 1.65;">
-            필터가 오염될수록 공기가 통과하기 어려워지고<br>
-            <b style="color: var(--danger); font-size: 1.25rem;">필터 차압(압력차) ⬆ 급격히 증가!</b>
-          </p>
-        </div>
-
-        <!-- Step 2 Circle Card -->
-        <div style="background: #F0FDF4; border: 2.5px solid #A7F3D0; border-radius: 24px; padding: 2.2rem 1.8rem; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
-          <div style="width: 80px; height: 80px; border-radius: 50%; background: #059669; color: #FFFFFF; display: grid; place-items: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 1.25rem; box-shadow: 0 8px 20px rgba(5,150,105,0.3);">
-            📊
-          </div>
-          <h3 style="font-size: 1.6rem; font-weight: 900; color: var(--accent); margin-bottom: 0.85rem;">
-            2. 0.1Pa 정밀 차압 측정
-          </h3>
-          <p style="font-size: 1.2rem; color: var(--muted); font-weight: 700; line-height: 1.65;">
-            차압 센서로 미세 압력 변화를 측정하여<br>
-            <b style="color: var(--accent); font-size: 1.25rem;">보이지 않는 필터 오염 정밀 수치화!</b>
-          </p>
-        </div>
-
-        <!-- Step 3 Circle Card -->
-        <div style="background: #FFFBEB; border: 2.5px solid #FDE68A; border-radius: 24px; padding: 2.2rem 1.8rem; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
-          <div style="width: 80px; height: 80px; border-radius: 50%; background: #D97706; color: #FFFFFF; display: grid; place-items: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 1.25rem; box-shadow: 0 8px 20px rgba(217,119,6,0.3);">
-            ⚡
-          </div>
-          <h3 style="font-size: 1.6rem; font-weight: 900; color: var(--warning); margin-bottom: 0.85rem;">
-            3. 팬 과부하 & 전력 추적
-          </h3>
-          <p style="font-size: 1.2rem; color: var(--muted); font-weight: 700; line-height: 1.65;">
-            증가한 공기 저항으로 인한 팬 전력 낭비를<br>
-            <b style="color: var(--warning); font-size: 1.25rem;">실시간 전력 데이터로 명확히 확인!</b>
-          </p>
+      <div class="split-vs">VS</div>
+      <div class="split-col new">
+        <div class="split-tag">Smart Filter</div>
+        <div class="split-head">0.1Pa 정밀 실측</div>
+        <div class="split-list">
+          <div>SDP610 차압센서 직결 측정</div>
+          <div>공간·온습도 반영 AI 예측</div>
+          <div>결과: <b>필요한 순간, 정확하게</b></div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 4: SmartFilter 전체 흐름도 -->
-    <section class="slide" id="slide-4">
-      <div class="slide-header">
-        <div class="slide-title-box">
-          <div class="tag-badge">SYSTEM WORKFLOW</div>
-          <h2>SmartFilter 전체 흐름도</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
+  <!-- S4 Architecture -->
+  <section class="slide" id="s4">
+    <div class="slide-header">
+      <div><div class="eyebrow">How It Works</div><h2>실측 → 분석 → 전송</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="schematic">
+      <div class="node">
+        <div class="node-no">01 · SENSE</div>
+        <div class="node-title">실측</div>
+        <div class="node-desc">SDP610 차압센서 · BME280 온습도센서로 필터 상태를 직접 측정</div>
+        <span class="node-arrow">→</span>
       </div>
-      <div class="slide-body grid-3" style="align-items: stretch; height: 100%;">
-        <!-- STEP 01 -->
-        <div style="background: #F0F9FF; border-left: 6px solid var(--primary); padding: 2.2rem 2rem; border-radius: 20px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 900; color: var(--primary-dark); height: 2.2rem; display: flex; align-items: center;">STEP 01</div>
-            <h3 style="font-size: 1.75rem; font-weight: 900; color: var(--primary-dark); height: 3.5rem; display: flex; align-items: center; border-bottom: 2px dashed #BAE6FD; margin-bottom: 1.5rem;">1. 차압·온습도 측정</h3>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 1.2rem; flex: 1; justify-content: space-around;">
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 필터 막힘 상태 실측 (SDP610)</div>
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 실내 온도·습도 측정 (BME280)</div>
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 오염 가속 환경 트래킹</div>
-          </div>
-        </div>
-        <!-- STEP 02 -->
-        <div style="background: #F0FDF4; border-left: 6px solid var(--accent); padding: 2.2rem 2rem; border-radius: 20px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 900; color: var(--accent); height: 2.2rem; display: flex; align-items: center;">STEP 02</div>
-            <h3 style="font-size: 1.75rem; font-weight: 900; color: var(--accent); height: 3.5rem; display: flex; align-items: center; border-bottom: 2px dashed #A7F3D0; margin-bottom: 1.5rem;">2. 데이터 저장·분석</h3>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 1.2rem; flex: 1; justify-content: space-around;">
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 측정 데이터 누적 DB 저장</div>
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 필터 상태 변화 이력 분석</div>
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 AI 예측 데이터 생성</div>
-          </div>
-        </div>
-        <!-- STEP 03 -->
-        <div style="background: #FFFBEB; border-left: 6px solid var(--warning); padding: 2.2rem 2rem; border-radius: 20px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 900; color: var(--warning); height: 2.2rem; display: flex; align-items: center;">STEP 03</div>
-            <h3 style="font-size: 1.75rem; font-weight: 900; color: var(--warning); height: 3.5rem; display: flex; align-items: center; border-bottom: 2px dashed #FDE68A; margin-bottom: 1.5rem;">3. MQTT 실시간 통신</h3>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 1.2rem; flex: 1; justify-content: space-around;">
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 ESP32 데이터 전송 노드</div>
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 실시간 상태 즉시 업데이트</div>
-            <div style="font-size: 1.35rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px;">🔹 웹 대시보드 무선 연동</div>
-          </div>
+      <div class="node">
+        <div class="node-no">02 · COMPUTE</div>
+        <div class="node-title">분석</div>
+        <div class="node-desc">라즈베리파이 엣지 연산 — 오염도·잔여수명·절감 전력 계산</div>
+        <span class="node-arrow">→</span>
+      </div>
+      <div class="node">
+        <div class="node-no">03 · SYNC</div>
+        <div class="node-title">전송</div>
+        <div class="node-desc">MQTT 실시간 전송 — 앱 화면에 즉시 반영</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S5 Engine -->
+  <section class="slide" id="s5">
+    <div class="slide-header">
+      <div><div class="eyebrow">The Engine</div><h2>예측하고, 계산합니다</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="engine">
+      <div class="engine-block a">
+        <div class="engine-tag">PREDICT</div>
+        <div class="engine-title">🧠 오염 & 교체 예측</div>
+        <div class="engine-list">
+          <div>차압 · 공간 특성 · 온습도 변화 추세를 입력</div>
+          <div>→ <b>오염도(%) · 교체 D-Day · 3단계 등급</b>을 산출</div>
         </div>
       </div>
-    </section>
-
-    <!-- SLIDE 5: Smart Filter — AI 오염 예측 & 전력 분석 (예측 데이터 vs 전력 계산 명확 구분) -->
-    <section class="slide" id="slide-5">
-      <div class="slide-header">
-        <div class="slide-title-box">
-          <div class="tag-badge">AI PREDICTION ENGINE</div>
-          <h2>Smart Filter — AI 오염 예측 & 전력 분석</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
-      </div>
-      <div class="slide-body grid-2" style="align-items: stretch;">
-        <!-- Division 1: 필터 오염 & 교체 주기 예측 -->
-        <div class="card" style="border: 2.5px solid #0284C7; background: #F0F9FF; padding: 1.75rem; justify-content: space-between;">
-          <div>
-            <div class="tag-badge" style="margin-bottom: 0.75rem;">SECTION 01</div>
-            <div style="font-size: 1.55rem; font-weight: 900; color: var(--primary-dark); border-bottom: 2px solid #BAE6FD; padding-bottom: 0.75rem; margin-bottom: 1rem;">
-              🧠 1. 필터 오염 & 교체 주기 예측
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 0.85rem; flex: 1; justify-content: space-around;">
-            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1rem 1.2rem; border-radius: 12px;">
-              <b style="color: var(--primary-dark); font-size: 1.15rem;">📌 예측 활용 데이터:</b>
-              <div style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-top: 0.2rem;">
-                • 차압 수치 / 실별 공간 특성 (거실·주방 등)<br>
-                • 온·습도 / 시간에 따른 차압 변화 추세
-              </div>
-            </div>
-            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1rem 1.2rem; border-radius: 12px;">
-              <b style="color: var(--primary-dark); font-size: 1.15rem;">📊 예측 결과 리포트:</b>
-              <div style="font-size: 1.05rem; font-weight: 800; color: var(--primary-dark); margin-top: 0.2rem;">
-                ✓ 현재 필터 오염도 (%)<br>
-                ✓ AI 계산 예상 필터 교체 D-Day<br>
-                ✓ 3단계 오염 상태 (정상·주의·위험)
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Division 2: 팬 전력 감소량 & 전기요금 계산 -->
-        <div class="card" style="border: 2.5px solid #059669; background: #F0FDF4; padding: 1.75rem; justify-content: space-between;">
-          <div>
-            <div class="tag-badge" style="margin-bottom: 0.75rem; background: var(--accent-light); color: var(--accent);">SECTION 02</div>
-            <div style="font-size: 1.55rem; font-weight: 900; color: var(--accent); border-bottom: 2px solid #A7F3D0; padding-bottom: 0.75rem; margin-bottom: 1rem;">
-              ⚡ 2. 팬 전력 감소량 & 비용 계산
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 0.85rem; flex: 1; justify-content: space-around;">
-            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1rem 1.2rem; border-radius: 12px;">
-              <b style="color: var(--accent); font-size: 1.15rem;">📌 계산 필요 데이터:</b>
-              <div style="font-size: 1.05rem; font-weight: 700; color: var(--text); margin-top: 0.2rem;">
-                • 차압 상승에 따른 팬 과부하 측정값<br>
-                • 새 필터 교체 시 감소 풍량/전력 계수
-              </div>
-            </div>
-            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1rem 1.2rem; border-radius: 12px;">
-              <b style="color: var(--accent); font-size: 1.15rem;">💰 절감 계산 리포트:</b>
-              <div style="font-size: 1.05rem; font-weight: 800; color: var(--accent); margin-top: 0.2rem;">
-                ✓ 미교체 시 예상 전력 증가량 (kWh)<br>
-                ✓ 교체 시 예상 전력 감소량 (kWh)<br>
-                ✓ <b>월간·연간 예상 전기요금 절감액 환산</b>
-              </div>
-            </div>
-          </div>
+      <div class="engine-block b">
+        <div class="engine-tag">SAVE</div>
+        <div class="engine-title">⚡ 전력 & 비용 절감</div>
+        <div class="engine-list">
+          <div>팬 과부하 실측치를 새 필터 기준과 비교</div>
+          <div>→ <b>절감 전력(kWh) · 절감 전기요금(원)</b>을 자동 환산</div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 6: 실제 개발한 스마트홈 웹 앱 소개 (개요 & 6대 탭 구성) -->
-    <section class="slide" id="slide-6">
-      <div class="slide-header">
-        <div class="slide-title-box">
-          <div class="tag-badge">DEPLOYED WEB APP</div>
-          <h2>실제 구현된 스마트홈 웹 서비스 구조</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
+  <!-- S6 Real product part 1 -->
+  <section class="slide" id="s6">
+    <div class="slide-header">
+      <div><div class="eyebrow">The Real Thing</div><h2>실제로 우리가 만들었습니다</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="phone-row">
+      <div class="phone-card">
+        <div class="phone-frame"><img src="shots/home.png" alt="홈 화면"></div>
+        <div class="phone-cap"><div class="k">Home</div><div class="v">필터 상태를 한눈에, 실시간으로</div></div>
       </div>
-      <div class="slide-body grid-2" style="align-items: stretch;">
-        <div class="card" style="background: #F0F9FF; border: 2.5px solid var(--primary); padding: 1.75rem; justify-content: space-between;">
-          <div>
-            <div class="tag-badge" style="margin-bottom: 0.75rem;">RAILWAY CLOUD DEPLOYED</div>
-            <div class="card-title" style="color: var(--primary-dark); font-size: 1.6rem;">🌐 완성형 스마트홈 웹 시스템</div>
-            <p style="font-size: 1.15rem; color: var(--muted); font-weight: 700; line-height: 1.7; margin-top: 0.75rem;">
-              센서 실측 수치부터 AI 예측, 3분 회복 검증, B2B 마켓까지 한눈에 관리하는 클라우드 배포 통합 웹 서비스입니다.
-            </p>
-          </div>
-          <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1rem; border-radius: 12px; font-family: var(--font-mono); font-size: 0.95rem; color: var(--primary-dark); font-weight: 700;">
-            🔗 배포 주소: https://smartfilter-railway-cloud-production-e704.up.railway.app
-          </div>
-        </div>
-
-        <div class="card" style="padding: 1.75rem; justify-content: space-between; background: #F8FAFC;">
-          <div class="card-title" style="font-size: 1.45rem; color: var(--text);">📱 하단 6대 핵심 탭 메뉴 구성</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 1.1rem; font-weight: 800; color: var(--text);">
-            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">1. 🏠 홈 (Home)</div>
-            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">2. 💻 기기 (Device)</div>
-            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">3. 📊 리포트 (Report)</div>
-            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">4. ⏱️ 회복 테스트</div>
-            <div style="background: #FFFFFF; border: 1.5px solid #CBD5E1; padding: 12px 14px; border-radius: 10px;">5. ⚙️ 관리 (Admin)</div>
-            <div style="background: var(--primary-dark); color: #FFFFFF; padding: 12px 14px; border-radius: 10px; text-align: center;">6. 🛒 필터 마켓 (Market)</div>
-          </div>
-        </div>
+      <div class="phone-card">
+        <div class="phone-frame"><img src="shots/devices.png" alt="기기 화면"></div>
+        <div class="phone-cap"><div class="k">Devices</div><div class="v">공간별 필터, 따로 관리</div></div>
       </div>
-    </section>
-
-    <!-- SLIDE 7: 웹 어플 탭별 상세 기능 (홈 · 기기 · 리포트) -->
-    <section class="slide" id="slide-7">
-      <div class="slide-header">
-        <div class="slide-title-box">
-          <div class="tag-badge">APP FEATURES (PART 1)</div>
-          <h2>스마트홈 웹 어플 핵심 기능 (홈 · 기기 · 리포트)</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
+      <div class="phone-card">
+        <div class="phone-frame"><img src="shots/report.png" alt="리포트 화면"></div>
+        <div class="phone-cap"><div class="k">Report</div><div class="v">계산된 절감액, 그대로</div></div>
       </div>
-      <div class="slide-body grid-3" style="align-items: stretch;">
-        <!-- 1. 홈 탭 -->
-        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--primary); background: #F0F9FF;">
-          <div>
-            <div class="card-title" style="font-size: 1.35rem; color: var(--primary-dark);">1. 🏠 홈 (Home)</div>
-            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.5rem;">
-              <div>• <b>최상단 시스템 알림:</b> 긴급/최근 알림 창 상단 배치</div>
-              <div>• <b>필터 막힘도 UI:</b> 예상관리일·수명% 에너지효율등급형 시각화</div>
-              <div>• <b>위험도 분석:</b> AI 곰팡이 & 오염가속 위험도</div>
-              <div>• <b>센서 새로고침:</b> 수치 즉시 갱신 버튼</div>
-              <div>• <b>라이브 카메라:</b> 실시간 필터 촬영 On/Off</div>
-              <div>• <b>실시간 센서:</b> 차압, 온습도, 누적 운전시간</div>
-              <div>• <b>미세먼지 농도:</b> 기상청 연동 대기 창</div>
-              <div>• <b>바로가기:</b> 3분 회복 검증 이동 버튼</div>
-            </div>
-          </div>
-        </div>
+    </div>
+  </section>
 
-        <!-- 2. 기기 탭 -->
-        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--accent); background: #F0FDF4;">
-          <div>
-            <div class="card-title" style="font-size: 1.35rem; color: var(--accent);">2. 💻 기기 (Device)</div>
-            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.5rem;">
-              <div>• <b>에어컨 등록 & 공간 선택:</b> 주방/거실 등 공간별 수명 공식 차등 적용 (주방 기름때 반영)</div>
-              <div>• <b>가족 관리 (+반려동물):</b> 털/오염 필터 수명 영향 반영</div>
-              <div>• <b>기기 상세 정보:</b> 모델, 필터 종류, 설치일, 누적 운전시간, 연결 게이트웨이/신호</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. 리포트 탭 -->
-        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--warning); background: #FFFBEB;">
-          <div>
-            <div class="card-title" style="font-size: 1.35rem; color: var(--warning);">3. 📊 리포트 (Report)</div>
-            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.55rem; margin-top: 0.5rem;">
-              <div>• <b>라즈베리파이 실시간 절감 분석:</b> 누적 절감 전력(kWh) & 누적 절감 전기요금(원) 집계</div>
-              <div>• <b>에너지 절감 집중화:</b> 가동 그래프 제거 ➔ 오직 절감된 에너지 데이터 시각화 제공</div>
-            </div>
-          </div>
-        </div>
+  <!-- S7 Real product part 2 -->
+  <section class="slide" id="s7">
+    <div class="slide-header">
+      <div><div class="eyebrow">The Real Thing</div><h2>청소했다고 끝이 아닙니다</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="phone-row">
+      <div class="phone-card">
+        <div class="phone-frame"><img src="shots/recovery.png" alt="회복 테스트 화면"></div>
+        <div class="phone-cap"><div class="k">Recovery</div><div class="v">청소 전후, 3분 성능 검증</div></div>
       </div>
-    </section>
-
-    <!-- SLIDE 8: 웹 어플 탭별 상세 기능 (회복 테스트 · 필터 마켓 · 관리) -->
-    <section class="slide" id="slide-8">
-      <div class="slide-header">
-        <div class="slide-title-box">
-          <div class="tag-badge">APP FEATURES (PART 2)</div>
-          <h2>스마트홈 웹 어플 핵심 기능 (회복테스트 · 관리 · 필터마켓)</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
+      <div class="phone-card">
+        <div class="phone-frame"><img src="shots/management.png" alt="관리 화면"></div>
+        <div class="phone-cap"><div class="k">Management</div><div class="v">센서 헬스체크 + 이력 자동 기록</div></div>
       </div>
-      <div class="slide-body grid-3" style="align-items: stretch;">
-        <!-- 4. 회복 테스트 탭 -->
-        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--primary); background: #F0F9FF;">
-          <div>
-            <div class="card-title" style="font-size: 1.35rem; color: var(--primary-dark);">4. ⏱️ 회복 테스트</div>
-            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
-              <div>• <b>3분 세척 전후 검증:</b> 3분 타이머 카운트다운 진행</div>
-              <div>• <b>종합 판정:</b> 100점 만점 평가 리포트</div>
-              <div>• <b>테스트 결과:</b> 차압 회복률, 전력 개선률, 풍량 회복률 수치화</div>
-              <div>• <b>항목 확인:</b> 차압, 소비전력 확인 & 다시 테스트하기</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. 관리 탭 -->
-        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--accent); background: #F0FDF4;">
-          <div>
-            <div class="card-title" style="font-size: 1.35rem; color: var(--accent);">5. ⚙️ 관리 (Management)</div>
-            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
-              <div>• <b>필터 이력:</b> 관리 및 회복 데이터 이력 기록</div>
-              <div>• <b>센서 상태 체크:</b> SDP610 차압 & BME280 온습도 정상작동 진단 및 이상 알림</div>
-              <div>• <b>기준값 재학습 실행:</b> 차압/팬속도/교체주기 재학습 실행 기능</div>
-              <div>• <b>알림 임계값 설정:</b> 주의 및 청소 권장 알림 기준 설정</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 6. 필터 마켓 탭 (가장 우측 배치!) -->
-        <div class="card" style="padding: 1.25rem; border-top: 5px solid var(--warning); background: #FFFBEB;">
-          <div>
-            <div class="card-title" style="font-size: 1.35rem; color: var(--warning);">6. 🛒 필터 마켓 (Market)</div>
-            <div style="font-size: 0.95rem; color: var(--muted); font-weight: 700; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
-              <div>• <b>가장 오른쪽 탭 배치:</b> B2B 연계 커머스 공간</div>
-              <div>• <b>필터 메인 상품배치:</b> 전체상품 ➔ <b>필터(Main)</b> ➔ 에어컨, 공기청정기, TV 등</div>
-              <div>• <b>기업 제휴 배너:</b> 제조사 맞춤 정기배송 배너 광고 연동</div>
-            </div>
-          </div>
-        </div>
+      <div class="phone-card">
+        <div class="phone-frame"><img src="shots/market.png" alt="필터 마켓 화면"></div>
+        <div class="phone-cap"><div class="k">Market</div><div class="v">진단이 곧 구매로, B2B2C 커머스</div></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 9: Smart Filter 수익 구조 & 시장 확장성 (위치 Swap 적용) -->
-    <section class="slide" id="slide-9">
-      <div class="slide-header">
-        <div class="slide-title-box">
-          <div class="tag-badge">BUSINESS MODEL</div>
-          <h2>Smart Filter 수익 구조 & 시장 확장성</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
+  <!-- S8 Business -->
+  <section class="slide" id="s8">
+    <div class="slide-header">
+      <div><div class="eyebrow">Revenue</div><h2>네 갈래, 하나의 데이터</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="ledger">
+      <div class="ledger-row"><div class="ledger-no">01</div><p><b>하드웨어</b> — 차압 센서 모듈 B2B/B2C 판매</p></div>
+      <div class="ledger-row"><div class="ledger-no">02</div><p><b>SaaS 구독</b> — AI 예측 대시보드 월정액</p></div>
+      <div class="ledger-row"><div class="ledger-no">03</div><p><b>필터 커머스</b> — 진단 연동 자동주문 수수료</p></div>
+      <div class="ledger-row"><div class="ledger-no">04</div><p><b>B2B 유지보수</b> — 정기 점검 · 센서 교정</p></div>
+    </div>
+    <div class="market-note">가정에서 시작해 학교·병원·공장까지 — 센서는 그대로, 데이터만 쌓입니다.</div>
+  </section>
+
+  <!-- S9 Live demo -->
+  <section class="slide" id="s9">
+    <div class="slide-header" style="margin-bottom:.9rem;">
+      <div><div class="eyebrow" style="color:var(--danger)">Live Demo</div><h2 style="font-size:1.6rem;">실시간 실물 시연 — Smart Filter 카메라 중계</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="demo-body"><iframe src="index.html" title="Live Relay Engine"></iframe></div>
+  </section>
+
+  <!-- S10 Closing -->
+  <section class="slide" id="s10">
+    <div class="body" style="align-items:center;text-align:center;">
+      <div class="close-tag">Smart Home Standard</div>
+      <h2 class="close-title">감이 아닌 데이터, 스마트홈의 기본기</h2>
+      <div class="close-stats">
+        <span class="readout">27% <span style="opacity:.6">절감 여력</span></span>
+        <span class="readout">0.1Pa <span style="opacity:.6">정밀도</span></span>
+        <span class="readout">3분 <span style="opacity:.6">회복 검증</span></span>
       </div>
-      <div class="slide-body grid-2" style="gap: 1.5rem; align-items: stretch;">
-        <!-- 4대 수익 구조 -->
-        <div class="card" style="padding: 1.6rem; justify-content: space-between; border: 2.5px solid var(--primary); background: #F0F9FF;">
-          <div>
-            <div class="tag-badge" style="margin-bottom: 0.85rem;">REVENUE STREAMS</div>
-            <div style="font-size: 1.65rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.85rem;">
-              💰 4대 핵심 수익 모델
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
-              📦 <b>01. 하드웨어 판매</b> — 차압 센서 모듈 B2B/B2C 공급
-            </div>
-            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
-              💻 <b>02. SaaS 구독료</b> — 대시보드 & AI 예측 서비스 월/연간 구독
-            </div>
-            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
-              🛒 <b>03. 필터 수수료</b> — 맞춤 필터 자동 주문/배송 수수료
-            </div>
-            <div style="background: #FFFFFF; border: 1.5px solid #BAE6FD; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
-              🛠️ <b>04. B2B 유지케어</b> — 정기 점검, 센서 교정, 관리 보고서
-            </div>
-          </div>
-        </div>
-
-        <!-- 4단계 시장 확장성 -->
-        <div class="card" style="padding: 1.6rem; justify-content: space-between; border: 2.5px solid var(--accent); background: #F0FDF4;">
-          <div>
-            <div class="tag-badge" style="margin-bottom: 0.85rem; background: var(--accent-light); color: var(--accent);">TARGET MARKETS</div>
-            <div style="font-size: 1.65rem; font-weight: 900; color: var(--accent); margin-bottom: 0.85rem;">
-              🚀 4단계 시장 연쇄 확장
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
-              🏠 <b>1단계 (초기 진입)</b> — 일반 가정 & 스마트 아파트 단지
-            </div>
-            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
-              🏫 <b>2단계 (공공 확장)</b> — 학교, 학원, 공공기관 건물
-            </div>
-            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
-              🏥 <b>3단계 (다중 시설)</b> — 병원, 다중 이용 시설
-            </div>
-            <div style="background: #FFFFFF; border: 1.5px solid #A7F3D0; padding: 1.1rem 1.4rem; border-radius: 14px; font-size: 1.25rem; font-weight: 800; color: var(--text);">
-              🏢 <b>4단계 (대형 B2B)</b> — 공장, 클린룸, B2B 대형 건물 관제
-            </div>
-          </div>
-        </div>
+      <div class="close-plate">
+        <div class="team">에너지온 [Energy ON]</div>
+        <div class="members">김예지 · 변성훈 · 정지예</div>
+        <div class="thanks">THANK YOU</div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SLIDE 10: LIVE DEMO (100% ORIGINAL DEMO IFRAME ENGINE - UNTOUCHED) -->
-    <section class="slide" id="slide-10" style="padding: 1.75rem 2.5rem;">
-      <div class="slide-header" style="padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
-        <div class="slide-title-box">
-          <div class="tag-badge" style="background: var(--danger-light); color: var(--danger); border-color: #FCA5A5;">LIVE DEMO</div>
-          <h2 style="font-size: 1.8rem; margin-top: 0.2rem;">실시간 실물 시연: Smart Filter 카메라 중계</h2>
-        </div>
-        <div class="product-logo">Smart <span>Filter</span></div>
-      </div>
-      <div class="slide-body" style="flex: 1; min-height: 480px; height: 100%; display: flex; margin: 0; padding: 0;">
-        <iframe src="index.html" style="width: 100%; height: 100%; min-height: 480px; flex: 1; border: 2px solid #CBD5E1; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.1);" title="Live Relay Engine"></iframe>
-      </div>
-    </section>
+</div>
 
-    <!-- SLIDE 11: 결론 및 엔딩 (새 럭셔리 구조) -->
-    <section class="slide" id="slide-11" style="justify-content: center; align-items: center; background: radial-gradient(circle at 50% 50%, #F0F9FF 0%, #FFFFFF 80%);">
-      <div style="width: 100%; max-width: 1100px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        <div class="tag-badge" style="font-size: 1rem; padding: 8px 24px; margin-bottom: 1.25rem;">SMART HOME STANDARD</div>
-        <h2 style="font-family: var(--font-display); font-size: 4.2rem; font-weight: 900; color: var(--primary-dark); letter-spacing: -0.02em; margin-bottom: 0.5rem;">
-          Smart Filter
-        </h2>
-        <p style="font-size: 1.5rem; color: var(--text); font-weight: 900; margin-bottom: 2.2rem;">
-          "감이 아닌 실측 데이터로, 에너지를 절약하는 스마트홈의 필수 표준"
-        </p>
+<div id="controls">
+  <button class="nav-btn" id="prevBtn" title="이전 슬라이드 (←)">◀ 이전</button>
+  <div class="counter" id="slideCounter">SLIDE 01 / 10</div>
+  <button class="nav-btn" id="nextBtn" title="다음 슬라이드 (→)">다음 ▶</button>
+</div>
+<div id="progressBar"></div>
 
-        <!-- 3대 핵심 요약 아이콘 바 -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; width: 100%; margin-bottom: 2.5rem;">
-          <div style="background: #FFFFFF; border: 2px solid #BAE6FD; border-radius: 18px; padding: 1.4rem; box-shadow: 0 6px 15px rgba(2,132,199,0.08);">
-            <div style="font-size: 2.6rem; margin-bottom: 0.4rem;">⚡</div>
-            <div style="font-size: 1.25rem; font-weight: 900; color: var(--primary-dark);">에너지 27% 절감</div>
-            <div style="font-size: 0.95rem; color: var(--muted); margin-top: 0.2rem; font-weight: 700;">공기 저항 차단 전기요금 절약</div>
-          </div>
-          <div style="background: #FFFFFF; border: 2px solid #A7F3D0; border-radius: 18px; padding: 1.4rem; box-shadow: 0 6px 15px rgba(5,150,105,0.08);">
-            <div style="font-size: 2.6rem; margin-bottom: 0.4rem;">🧠</div>
-            <div style="font-size: 1.25rem; font-weight: 900; color: var(--accent);">AI 교체 예측</div>
-            <div style="font-size: 0.95rem; color: var(--muted); margin-top: 0.2rem; font-weight: 700;">3단계 상태 & 사전 D-Day 알림</div>
-          </div>
-          <div style="background: #FFFFFF; border: 2px solid #FDE68A; border-radius: 18px; padding: 1.4rem; box-shadow: 0 6px 15px rgba(217,119,6,0.08);">
-            <div style="font-size: 2.6rem; margin-bottom: 0.4rem;">📱</div>
-            <div style="font-size: 1.25rem; font-weight: 900; color: var(--warning);">통합 웹 대시보드</div>
-            <div style="font-size: 0.95rem; color: var(--muted); margin-top: 0.2rem; font-weight: 700;">원격 상태 점검 및 리포트</div>
-          </div>
-        </div>
+<script>
+(() => {
+  'use strict';
 
-        <div style="background: #0F172A; color: #FFFFFF; padding: 1.1rem 3rem; border-radius: 40px; display: flex; align-items: center; gap: 1.75rem; box-shadow: 0 10px 25px rgba(15,23,42,0.2);">
-          <div style="font-size: 1.1rem; font-weight: 900; color: #38BDF8;">
-            팀명: 에너지온 <span style="font-family: var(--font-mono); color: #FFF;">[Energy ON]</span>
-          </div>
-          <div style="font-size: 1rem; color: #94A3B8;">|</div>
-          <div style="font-size: 1.05rem; color: #E2E8F0; font-weight: 700;">
-            김예지 · 변성훈 · 정지예
-          </div>
-          <div style="margin-left: auto; font-family: var(--font-mono); font-size: 0.95rem; color: #38BDF8; font-weight: 700;">
-            THANK YOU FOR LISTENING
-          </div>
-        </div>
-      </div>
-    </section>
+  /* Ambient signal-line background — echoes the differential-pressure readout the product is built on */
+  const bgCanvas = document.getElementById('bgCanvas');
+  const ctx = bgCanvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let width, height, lines = [];
+  const LINE_COUNT = 12;
 
-  </div>
-
-  <!-- Controls & Navigation -->
-  <div id="controls">
-    <button class="nav-btn" id="prevBtn" title="이전 슬라이드 (←)">◀ 이전</button>
-    <div class="counter" id="slideCounter">SLIDE 01 / 11</div>
-    <button class="nav-btn" id="nextBtn" title="다음 슬라이드 (→)">다음 ▶</button>
-  </div>
-  <div id="progressBar"></div>
-
-  <script>
-    (() => {
-      'use strict';
-
-      /* Subtle Airflow Background Canvas */
-      const bgCanvas = document.getElementById('bgCanvas');
-      const ctx = bgCanvas.getContext('2d');
-      let width, height;
-      const particles = [];
-
-      function resize() {
-        width = bgCanvas.width = window.innerWidth;
-        height = bgCanvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resize);
-      resize();
-
-      for (let i = 0; i < 35; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: Math.random() * 1.2 + 0.3,
-          vy: (Math.random() - 0.5) * 0.4,
-          radius: Math.random() * 2.5 + 1,
-          alpha: Math.random() * 0.3 + 0.1
-        });
-      }
-
-      function drawBg() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = 'rgba(2, 132, 199, 0.18)';
-        for (let p of particles) {
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height;
-          if (p.y > height) p.y = 0;
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        requestAnimationFrame(drawBg);
-      }
-      drawBg();
-
-      /* Slide Navigation Logic */
-      const slides = document.querySelectorAll('.slide');
-      const totalSlides = slides.length;
-      let currentSlide = 0;
-
-      const slideCounter = document.getElementById('slideCounter');
-      const progressBar = document.getElementById('progressBar');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-
-      function updateSlide(index) {
-        if (index < 0) index = 0;
-        if (index >= totalSlides) index = totalSlides - 1;
-        currentSlide = index;
-
-        slides.forEach((slide, i) => {
-          if (i === currentSlide) {
-            slide.classList.add('active');
-          } else {
-            slide.classList.remove('active');
-          }
-        });
-
-        slideCounter.textContent = `SLIDE ${String(currentSlide + 1).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
-        progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
-      }
-
-      prevBtn.addEventListener('click', () => updateSlide(currentSlide - 1));
-      nextBtn.addEventListener('click', () => updateSlide(currentSlide + 1));
-
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-          updateSlide(currentSlide + 1);
-        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-          updateSlide(currentSlide - 1);
-        }
+  function resize(){
+    width = bgCanvas.width = window.innerWidth;
+    height = bgCanvas.height = window.innerHeight;
+    lines = [];
+    for(let i=0;i<LINE_COUNT;i++){
+      lines.push({
+        y:(height/LINE_COUNT)*i + (height/LINE_COUNT)*0.5,
+        amp:8+Math.random()*18,
+        freq:0.002+Math.random()*0.003,
+        speed:0.1+Math.random()*0.25,
+        phase:Math.random()*Math.PI*2
       });
+    }
+  }
+  window.addEventListener('resize', resize);
+  resize();
 
-      document.getElementById('deck').addEventListener('click', (e) => {
-        if (e.target.closest('#controls') || e.target.closest('.card') || e.target.closest('button') || e.target.closest('input') || e.target.closest('iframe')) return;
-        if (e.clientX > window.innerWidth * 0.75) {
-          updateSlide(currentSlide + 1);
-        } else if (e.clientX < window.innerWidth * 0.25) {
-          updateSlide(currentSlide - 1);
-        }
-      });
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,width,height);
+    ctx.strokeStyle='rgba(31,216,168,0.08)';
+    ctx.lineWidth=1;
+    lines.forEach(ln=>{
+      ctx.beginPath();
+      for(let x=0;x<=width;x+=8){
+        const y = ln.y + Math.sin(x*ln.freq + t*ln.speed + ln.phase)*ln.amp;
+        if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    });
+    t+=0.6;
+    if(!reduceMotion) requestAnimationFrame(draw);
+  }
+  draw();
 
-    })();
-  </script>
+  /* Slide navigation */
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const counter = document.getElementById('slideCounter');
+  const bar = document.getElementById('progressBar');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function go(index){
+    if(index<0) index=0;
+    if(index>=total) index=total-1;
+    current=index;
+    slides.forEach((s,i)=> s.classList.toggle('active', i===current));
+    counter.textContent = `SLIDE ${String(current+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+    bar.style.width = `${((current+1)/total)*100}%`;
+  }
+
+  prevBtn.addEventListener('click', ()=>go(current-1));
+  nextBtn.addEventListener('click', ()=>go(current+1));
+
+  window.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight' || e.key===' ' || e.key==='PageDown'){ e.preventDefault(); go(current+1); }
+    else if(e.key==='ArrowLeft' || e.key==='PageUp'){ go(current-1); }
+  });
+
+  document.getElementById('deck').addEventListener('click', (e)=>{
+    if(e.target.closest('#controls') || e.target.closest('button') || e.target.closest('iframe')) return;
+    if(e.clientX > window.innerWidth*0.75) go(current+1);
+    else if(e.clientX < window.innerWidth*0.25) go(current-1);
+  });
+
+  go(0);
+})();
+</script>
 </body>
 </html>
