@@ -28,13 +28,12 @@
   ::selection{background:var(--accent);color:var(--accent-ink);}
 
   #bgCanvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;opacity:.5;}
-
   #deck{position:relative;z-index:1;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;}
 
   .slide{
     position:absolute;width:88vw;height:86vh;max-width:1600px;max-height:900px;aspect-ratio:16/9;
-    padding:3.2rem 4rem;background:var(--bg2);border:1px solid var(--line);border-radius:20px;
-    box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;
+    padding:2.6rem 3.6rem;background:var(--bg2);border:1px solid var(--line);border-radius:20px;
+    box-shadow:var(--shadow);display:flex;flex-direction:column;
     opacity:0;transform:scale(.97) translateY(16px);pointer-events:none;transition:opacity .35s ease,transform .35s ease;
     overflow:hidden;
   }
@@ -43,111 +42,148 @@
   .slide::before{top:22px;left:22px;border-top:1px solid var(--line-strong);border-left:1px solid var(--line-strong);}
   .slide::after{bottom:22px;right:22px;border-bottom:1px solid var(--line-strong);border-right:1px solid var(--line-strong);}
 
-  .eyebrow{
-    font-family:var(--font-mono);font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--accent);font-weight:700;display:flex;align-items:center;gap:.7em;
-  }
-  .eyebrow::before{content:"";width:26px;height:1px;background:var(--accent);display:inline-block;}
-
+  .eyebrow{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700;display:flex;align-items:center;gap:.7em;}
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--accent);display:inline-block;}
   h1,h2,h3{font-family:var(--font-display);text-wrap:balance;}
 
-  .slide-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.6rem;}
-  .slide-header h2{font-size:2.1rem;font-weight:900;letter-spacing:-.02em;margin-top:.5rem;color:var(--ink);line-height:1.2;}
-  .logo{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase;}
+  .slide-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.3rem;flex:none;}
+  .slide-header h2{font-size:1.85rem;font-weight:900;letter-spacing:-.02em;margin-top:.45rem;color:var(--ink);line-height:1.2;}
+  .logo{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase;flex:none;}
 
   .body{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;}
 
   .readout{font-family:var(--font-mono);font-variant-numeric:tabular-nums;background:#04100E;color:var(--accent);border-radius:8px;padding:.35em .8em;font-size:.9rem;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);}
-  .chip{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.03em;padding:.35em .8em;border-radius:999px;border:1px solid var(--line-strong);color:var(--ink-dim);display:inline-flex;align-items:center;gap:.5em;}
+  .chip{font-family:var(--font-mono);font-size:.76rem;letter-spacing:.02em;padding:.32em .75em;border-radius:999px;border:1px solid var(--line-strong);color:var(--ink-dim);display:inline-flex;align-items:center;gap:.5em;}
+
+  ul.blist{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+  ul.blist li{font-size:1rem;font-weight:700;color:var(--ink-dim);display:flex;gap:.55rem;line-height:1.45;}
+  ul.blist li::before{content:"·";color:var(--accent);font-weight:900;}
+  ul.blist li b{color:var(--ink);font-weight:800;}
 
   /* ===== S1 Cover ===== */
   #s1{align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 30%,#132320 0%,var(--bg2) 70%);}
-  .cover-eyebrow{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.24em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:1.6rem;}
-  .cover-title{font-size:clamp(3.5rem,9vw,6.5rem);font-weight:900;letter-spacing:-.03em;line-height:1.02;color:var(--ink);}
+  .cover-eyebrow{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.24em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:1.5rem;}
+  .cover-title{font-size:clamp(3.2rem,8vw,5.8rem);font-weight:900;letter-spacing:-.03em;line-height:1.02;color:var(--ink);}
   .cover-title span{color:var(--accent);}
-  .cover-tag{font-size:1.5rem;font-weight:800;color:var(--ink-dim);margin-top:1.3rem;}
-  .cover-plate{margin-top:2.6rem;background:var(--bg3);border:1px solid var(--line-strong);border-radius:16px;padding:1.2rem 2.6rem;box-shadow:var(--shadow);}
-  .cover-plate .team{font-size:1.15rem;font-weight:900;color:var(--accent);}
+  .cover-tag{font-size:1.35rem;font-weight:800;color:var(--ink-dim);margin-top:1.2rem;max-width:42ch;}
+  .cover-plate{margin-top:2.2rem;background:var(--bg3);border:1px solid var(--line-strong);border-radius:16px;padding:1.1rem 2.4rem;box-shadow:var(--shadow);}
+  .cover-plate .team{font-size:1.1rem;font-weight:900;color:var(--accent);}
   .cover-plate .team span{font-family:var(--font-mono);color:var(--ink);font-weight:700;}
-  .cover-plate .members{font-size:1rem;color:var(--ink-dim);font-weight:700;margin-top:.35rem;}
-  .cover-hint{position:absolute;bottom:2.2rem;font-family:var(--font-mono);font-size:.8rem;color:var(--ink-faint);letter-spacing:.06em;}
+  .cover-plate .members{font-size:.95rem;color:var(--ink-dim);font-weight:700;margin-top:.3rem;}
+  .cover-hint{align-self:center;margin-top:1.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--ink-faint);letter-spacing:.06em;}
 
-  /* ===== S2 Problem — single dramatic stat ===== */
-  #s2 .body{align-items:flex-start;}
-  .mega-stat{font-family:var(--font-mono);font-weight:800;font-size:clamp(4.5rem,11vw,8rem);line-height:.95;color:var(--danger);letter-spacing:-.02em;}
-  .mega-label{font-size:1.7rem;font-weight:900;color:var(--ink);margin-top:.6rem;}
-  .mega-sub{font-size:1.15rem;color:var(--ink-dim);font-weight:700;margin-top:.9rem;max-width:56ch;line-height:1.6;}
-  .fact-row{display:flex;gap:.8rem;margin-top:2.2rem;flex-wrap:wrap;}
-  .fact-row .chip{border-color:rgba(255,106,85,.35);color:#FFB6A8;}
+  /* ===== S2 Problem ===== */
+  .prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;}
+  .prob-card{background:var(--bg3);border:1px solid var(--line);border-radius:14px;padding:1.3rem 1.4rem;border-left:4px solid var(--danger);}
+  .prob-card .k{font-size:1.1rem;font-weight:900;color:var(--ink);}
+  .prob-card .v{font-size:.92rem;font-weight:700;color:var(--ink-dim);margin-top:.4rem;line-height:1.5;}
+  .prob-real{margin-top:1.2rem;background:linear-gradient(160deg,rgba(255,106,85,.12),rgba(255,106,85,.02));border:1.5px solid rgba(255,106,85,.35);border-radius:14px;padding:1.3rem 1.6rem;}
+  .prob-real .tag{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.08em;color:var(--danger);}
+  .prob-real .h{font-size:1.25rem;font-weight:900;color:var(--ink);margin-top:.4rem;line-height:1.5;}
+  .prob-real .h b{color:var(--danger);}
+  .prob-real .s{font-size:.9rem;color:var(--ink-dim);font-weight:700;margin-top:.5rem;}
 
-  /* ===== S3 감 vs 데이터 split ===== */
-  .split{display:grid;grid-template-columns:1fr auto 1fr;gap:2rem;align-items:stretch;flex:1;}
-  .split-col{border-radius:16px;padding:2rem 2.2rem;display:flex;flex-direction:column;justify-content:center;gap:1rem;}
-  .split-col.old{background:var(--bg3);border:1px solid var(--line);opacity:.7;}
-  .split-col.new{background:linear-gradient(160deg,rgba(31,216,168,.14),rgba(31,216,168,.03));border:1.5px solid rgba(31,216,168,.4);}
-  .split-tag{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;}
-  .split-col.old .split-tag{color:var(--ink-faint);}
-  .split-col.new .split-tag{color:var(--accent);}
-  .split-head{font-size:2rem;font-weight:900;margin-top:.3rem;}
-  .split-col.old .split-head{color:var(--ink-dim);}
-  .split-col.new .split-head{color:var(--ink);}
-  .split-list{margin-top:1rem;display:flex;flex-direction:column;gap:.65rem;font-size:1.1rem;font-weight:700;}
-  .split-col.old .split-list{color:var(--ink-faint);}
-  .split-col.new .split-list{color:var(--ink-dim);}
-  .split-list b{color:var(--ink);}
-  .split-vs{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:900;font-size:1.1rem;color:var(--ink-faint);}
+  /* ===== S3 Solution ===== */
+  .sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;flex:1;align-items:stretch;}
+  .sol-card{background:var(--bg3);border:1px solid var(--line);border-radius:14px;padding:1.6rem 1.5rem;display:flex;flex-direction:column;justify-content:center;gap:.7rem;}
+  .sol-no{font-family:var(--font-mono);color:var(--accent);font-size:.8rem;font-weight:800;letter-spacing:.06em;}
+  .sol-h{font-size:1.3rem;font-weight:900;color:var(--ink);line-height:1.3;}
+  .sol-v{font-size:.95rem;color:var(--ink-dim);font-weight:700;line-height:1.55;}
+  .sol-v b{color:var(--accent);}
 
-  /* ===== S4 Architecture schematic ===== */
-  .schematic{display:flex;align-items:stretch;gap:0;flex:1;margin-top:1rem;}
-  .node{flex:1;background:var(--bg3);border:1px solid var(--line);border-radius:16px;padding:1.8rem 1.6rem;position:relative;display:flex;flex-direction:column;justify-content:center;gap:.9rem;}
-  .node + .node{margin-left:2.4rem;}
-  .node-no{font-family:var(--font-mono);color:var(--accent);font-size:.85rem;letter-spacing:.1em;font-weight:800;}
-  .node-title{font-size:1.4rem;font-weight:900;color:var(--ink);}
-  .node-desc{font-size:1rem;color:var(--ink-dim);font-weight:700;line-height:1.6;}
-  .node-arrow{position:absolute;top:50%;left:calc(100% + .4rem);transform:translateY(-50%);color:var(--accent);font-size:1.4rem;font-weight:900;}
+  /* ===== S4 Architecture ===== */
+  .arch-flow{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.1rem;flex-wrap:wrap;}
+  .arch-node{background:var(--bg3);border:1px solid var(--line-strong);border-radius:10px;padding:.6em 1.1em;font-size:.86rem;font-weight:800;color:var(--ink);white-space:nowrap;}
+  .arch-node span{display:block;font-family:var(--font-mono);font-size:.68rem;color:var(--ink-faint);font-weight:600;margin-top:.15rem;}
+  .arch-arrow{color:var(--accent);font-family:var(--font-mono);font-size:.95rem;font-weight:800;}
+  .why-box{background:linear-gradient(160deg,rgba(255,106,85,.12),rgba(255,106,85,.02));border:1.5px solid rgba(255,106,85,.35);border-radius:12px;padding:.9rem 1.3rem;margin-bottom:1.1rem;}
+  .why-box .t{font-family:var(--font-mono);font-size:.72rem;color:var(--danger);letter-spacing:.08em;}
+  .why-box .v{font-size:1rem;font-weight:800;color:var(--ink);margin-top:.35rem;line-height:1.5;}
+  .why-box .v b{color:var(--danger);}
+  .relay-split{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;flex:1;}
+  .relay-col{background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:.6rem;justify-content:center;}
+  .relay-col.pull{border-color:rgba(240,149,74,.35);}
+  .relay-col .tag{font-family:var(--font-mono);font-size:.75rem;color:var(--accent);letter-spacing:.06em;}
+  .relay-col.pull .tag{color:var(--accent-2);}
+  .relay-col .h{font-size:1.05rem;font-weight:900;color:var(--ink);}
+  .relay-col ul.blist li{font-size:.86rem;}
 
-  /* ===== S5 Engine — two big blocks ===== */
-  .engine{display:grid;grid-template-columns:1fr 1fr;gap:2rem;flex:1;align-items:stretch;}
-  .engine-block{border-radius:16px;padding:2rem 2.1rem;display:flex;flex-direction:column;justify-content:center;gap:1.1rem;background:var(--bg3);border:1.5px solid var(--line);}
+  /* ===== S5 Algorithm ===== */
+  .algo-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1rem;flex:1;}
+  .algo-card{background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:1.05rem 1.25rem;display:flex;flex-direction:column;gap:.5rem;justify-content:center;}
+  .algo-card .t{font-size:.98rem;font-weight:900;color:var(--ink);}
+  .algo-card .f{font-family:var(--font-mono);font-size:.82rem;color:var(--accent);background:#04100E;border-radius:8px;padding:.5em .75em;line-height:1.55;}
+  .algo-card .n{font-size:.78rem;color:var(--ink-dim);font-weight:700;line-height:1.4;}
+  .algo-badges{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap;}
+
+  /* ===== S5 Engine ===== */
+  .engine{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;flex:1;align-items:stretch;}
+  .engine-block{border-radius:14px;padding:1.5rem 1.6rem;display:flex;flex-direction:column;gap:.9rem;background:var(--bg3);border:1.5px solid var(--line);justify-content:center;}
   .engine-block.b{border-color:rgba(240,149,74,.4);background:linear-gradient(160deg,rgba(240,149,74,.1),rgba(240,149,74,.02));}
-  .engine-tag{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;color:var(--accent);}
+  .engine-tag{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;color:var(--accent);}
   .engine-block.b .engine-tag{color:var(--accent-2);}
-  .engine-title{font-size:1.65rem;font-weight:900;color:var(--ink);}
-  .engine-list{display:flex;flex-direction:column;gap:.75rem;font-size:1.08rem;font-weight:700;color:var(--ink-dim);}
-  .engine-list b{color:var(--ink);}
+  .engine-title{font-size:1.3rem;font-weight:900;color:var(--ink);}
+  .engine-sub{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink-faint);text-transform:uppercase;margin-top:.3rem;}
+  .engine-block ul.blist li{font-size:.9rem;}
 
-  /* ===== S6/S7 Real product — phone filmstrip ===== */
-  .phone-row{display:flex;gap:2.6rem;justify-content:center;align-items:flex-end;flex:1;}
-  .phone-card{display:flex;flex-direction:column;align-items:center;gap:1.1rem;}
-  .phone-frame{width:180px;aspect-ratio:430/860;border-radius:22px;overflow:hidden;border:5px solid #1B2422;box-shadow:var(--shadow);background:#000;}
-  .phone-frame img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
-  .phone-cap{text-align:center;}
-  .phone-cap .k{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;}
-  .phone-cap .v{font-size:1.05rem;font-weight:800;color:var(--ink);margin-top:.3rem;max-width:16ch;line-height:1.4;}
+  /* ===== S6 App overview ===== */
+  .overview{display:grid;grid-template-columns:1.1fr 1fr;gap:1.4rem;flex:1;align-items:stretch;}
+  .ov-card{background:var(--bg3);border:1.5px solid var(--line);border-radius:14px;padding:1.6rem 1.7rem;display:flex;flex-direction:column;justify-content:space-between;}
+  .ov-card.hi{border-color:rgba(31,216,168,.4);}
+  .ov-h{font-size:1.15rem;font-weight:900;color:var(--ink);}
+  .ov-flow{font-family:var(--font-mono);font-size:.95rem;color:var(--accent);font-weight:700;margin-top:.7rem;}
+  .ov-url{margin-top:1rem;font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dim);background:#04100E;border-radius:8px;padding:.7em .9em;word-break:break-all;}
+  .tab-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem;}
+  .tab-cell{background:#04100E;border:1px solid var(--line);border-radius:8px;padding:.7em .8em;font-size:.92rem;font-weight:800;color:var(--ink);}
+  .tab-cell.hi{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+  .tech-strip{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1.1rem;flex:none;}
+  .live-badge{margin-top:.9rem;font-size:.88rem;font-weight:700;color:var(--ink-dim);background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:.7em 1.1em;flex:none;}
+  .live-badge b{color:var(--accent);}
 
-  /* ===== S8 Business ===== */
-  .ledger{display:flex;flex-direction:column;flex:1;justify-content:center;}
-  .ledger-row{display:grid;grid-template-columns:3.5rem 1fr;gap:1.3rem;align-items:center;padding:1.1rem 0;border-top:1px solid var(--line);}
-  .ledger-row:last-child{border-bottom:1px solid var(--line);}
-  .ledger-no{font-family:var(--font-mono);color:var(--accent);font-weight:900;font-size:1.1rem;}
-  .ledger-row p{font-size:1.2rem;font-weight:800;color:var(--ink);}
-  .ledger-row p b{color:var(--accent);}
-  .market-note{margin-top:1.8rem;font-size:1.05rem;color:var(--ink-dim);font-weight:700;border-left:3px solid var(--accent-2);padding-left:1.1rem;}
+  /* ===== S7-9 App feature (photo + list) ===== */
+  .feat-row{display:grid;grid-template-columns:1fr 1fr;gap:2rem;flex:1;align-items:stretch;}
+  .feat-col{display:flex;gap:1.3rem;align-items:center;}
+  .feat-phone{flex:none;width:150px;aspect-ratio:430/860;border-radius:18px;overflow:hidden;border:4px solid #1B2422;box-shadow:var(--shadow);background:#000;}
+  .feat-phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+  .feat-copy{flex:1;min-width:0;}
+  .feat-copy .k{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;}
+  .feat-copy .h{font-size:1.2rem;font-weight:900;color:var(--ink);margin-top:.25rem;margin-bottom:.6rem;}
+  .feat-copy ul.blist li{font-size:.86rem;}
 
-  /* ===== S9 Live demo ===== */
-  #s9{padding:2.2rem 2.8rem;}
+  /* ===== S10 Business ===== */
+  .biz{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;flex:1;align-items:stretch;}
+  .biz-card{background:var(--bg3);border:1.5px solid var(--line);border-radius:14px;padding:1.5rem 1.6rem;display:flex;flex-direction:column;}
+  .biz-card.rev{border-color:rgba(31,216,168,.35);}
+  .biz-card.mkt{border-color:rgba(240,149,74,.35);}
+  .biz-tag{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.08em;}
+  .biz-card.rev .biz-tag{color:var(--accent);}
+  .biz-card.mkt .biz-tag{color:var(--accent-2);}
+  .biz-h{font-size:1.25rem;font-weight:900;color:var(--ink);margin:.4rem 0 1rem;}
+  .biz-row{display:flex;gap:.7rem;align-items:baseline;padding:.55rem 0;border-top:1px solid var(--line);font-size:.98rem;font-weight:700;color:var(--ink-dim);}
+  .biz-row:last-child{border-bottom:1px solid var(--line);}
+  .biz-row .no{font-family:var(--font-mono);color:var(--accent);font-weight:900;flex:none;width:1.6rem;}
+  .biz-card.mkt .biz-row .no{color:var(--accent-2);}
+  .biz-row b{color:var(--ink);}
+
+  /* ===== S11 Live demo ===== */
+  #s11{padding:2rem 2.6rem;}
   .demo-body{flex:1;min-height:0;display:flex;}
   .demo-body iframe{width:100%;height:100%;border:1px solid var(--line-strong);border-radius:16px;box-shadow:var(--shadow);}
 
-  /* ===== S10 Closing ===== */
-  #s10{align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 55%,#132320 0%,var(--bg2) 80%);}
-  .close-tag{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:1.2rem;}
-  .close-title{font-size:clamp(2.2rem,5vw,3.2rem);font-weight:900;color:var(--ink);max-width:22ch;line-height:1.3;}
-  .close-stats{display:flex;gap:1rem;margin-top:2.2rem;flex-wrap:wrap;justify-content:center;}
-  .close-plate{margin-top:2.6rem;background:#000;color:#fff;border-radius:40px;padding:1rem 2.4rem;display:flex;align-items:center;gap:1.6rem;box-shadow:var(--shadow);}
-  .close-plate .team{font-weight:900;color:var(--accent);font-size:1rem;}
-  .close-plate .members{color:#C9D6D2;font-size:.95rem;font-weight:700;}
-  .close-plate .thanks{margin-left:auto;font-family:var(--font-mono);font-size:.85rem;color:var(--accent);font-weight:700;}
+  /* ===== S12 Closing ===== */
+  #s12{align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 55%,#132320 0%,var(--bg2) 80%);}
+  .close-tag{font-family:var(--font-mono);font-size:.85rem;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:1.1rem;}
+  .close-title{font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:900;color:var(--ink);max-width:30ch;line-height:1.35;}
+  .close-title b{color:var(--danger);}
+  .close-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem;width:100%;max-width:820px;}
+  .close-stat{background:var(--bg3);border:1px solid var(--line-strong);border-radius:14px;padding:1.1rem;}
+  .close-stat .e{font-size:1.9rem;}
+  .close-stat .k{font-size:1.05rem;font-weight:900;color:var(--ink);margin-top:.3rem;}
+  .close-stat .v{font-size:.82rem;color:var(--ink-dim);font-weight:700;margin-top:.2rem;}
+  .close-plate{margin-top:2.2rem;background:#000;color:#fff;border-radius:40px;padding:.9rem 2.2rem;display:flex;align-items:center;gap:1.4rem;box-shadow:var(--shadow);}
+  .close-plate .team{font-weight:900;color:var(--accent);font-size:.95rem;}
+  .close-plate .members{color:#C9D6D2;font-size:.9rem;font-weight:700;}
+  .close-plate .thanks{margin-left:auto;font-family:var(--font-mono);font-size:.8rem;color:var(--accent);font-weight:700;}
 
   /* ===== controls ===== */
   #controls{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:1.4rem;padding:.7rem 1.6rem;background:var(--bg2);border:1px solid var(--line-strong);border-radius:40px;box-shadow:var(--shadow);}
@@ -157,13 +193,12 @@
   #progressBar{position:fixed;bottom:0;left:0;height:3px;background:var(--accent);width:10%;transition:width .3s ease;z-index:101;}
 
   @media (max-width:900px){
-    .split{grid-template-columns:1fr;}
-    .split-vs{display:none;}
+    .prob-grid,.sol-grid{grid-template-columns:1fr;}
     .schematic{flex-direction:column;}
-    .node+.node{margin-left:0;margin-top:1.6rem;}
+    .node+.node{margin-left:0;margin-top:1.2rem;}
     .node-arrow{display:none;}
-    .engine{grid-template-columns:1fr;}
-    .phone-row{flex-wrap:wrap;}
+    .engine,.overview,.feat-row,.biz{grid-template-columns:1fr;}
+    .close-stats{grid-template-columns:1fr;}
   }
 </style>
 </head>
@@ -178,197 +213,323 @@
     <div class="body" style="align-items:center;text-align:center;">
       <div class="cover-eyebrow">AI · Energy · Smart Home Makerthon</div>
       <h1 class="cover-title">Smart <span>Filter</span></h1>
-      <p class="cover-tag">감이 아니라, 데이터로 필터를 관리합니다.</p>
+      <p class="cover-tag">에어컨 필터의 실시간 차압 진단 & 에너지 최적화 솔루션</p>
       <div class="cover-plate">
         <div class="team">에너지온 <span>[Energy ON]</span></div>
         <div class="members">김예지 · 변성훈 · 정지예</div>
       </div>
     </div>
-    <div class="cover-hint" style="align-self:center;">→ 또는 SPACE로 시작</div>
+    <div class="cover-hint">→ 또는 SPACE로 시작</div>
   </section>
 
-  <!-- S2 Problem -->
+  <!-- S2 Problem & Cause -->
   <section class="slide" id="s2">
     <div class="slide-header">
-      <div><div class="eyebrow">Problem</div><h2>필터는 조용히 막힙니다</h2></div>
+      <div><div class="eyebrow">Problem & Cause</div><h2>에어컨 필터 관리의 중요성</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="mega-stat">27%</div>
-      <div class="mega-label">필터가 막히면, 팬 전력이 이만큼 급증합니다</div>
-      <p class="mega-sub">그런데도 교체 시기는 여전히 <b style="color:var(--ink)">'감'</b>으로 정합니다. 실측 데이터 없이, 기간이 됐으니 바꾸거나 — 고장 나고 나서야 바꿉니다.</p>
-      <div class="fact-row">
-        <span class="chip">판단 기준: 없음</span>
-        <span class="chip">실측 데이터: 0건</span>
-        <span class="chip">결과: 필터 · 전력 이중 낭비</span>
+      <div class="prob-grid">
+        <div class="prob-card"><div class="k">🚨 공기 저항 → 전력 27% 급증</div><div class="v">먼지 누적 → 공기 저항 증가 → 팬 과부하</div></div>
+        <div class="prob-card"><div class="k">⏳ 감 의존 주기 교체</div><div class="v">실제 오염과 무관한 기간 판단 · 고장 후 대응</div></div>
+        <div class="prob-card"><div class="k">💸 필터 · 전력 이중 낭비</div><div class="v">성급한 교체(필터 낭비) vs 늦은 교체(전력 낭비 · 공기질 악화)</div></div>
+      </div>
+      <div class="prob-real">
+        <div class="tag">REAL PROBLEM · 진짜 문제점</div>
+        <div class="h">필터 실시간 상태 파악 불가 → <b>교체 시기 오판</b> (무분별한 교체 / 타이밍 놓침)</div>
+        <div class="s">실측 데이터 없는 주기 관리 → 매달 전력 과다 지출</div>
       </div>
     </div>
   </section>
 
-  <!-- S3 감 vs 데이터 -->
+  <!-- S3 Solution Direction -->
   <section class="slide" id="s3">
     <div class="slide-header">
-      <div><div class="eyebrow">Why Us</div><h2>감 vs 데이터</h2></div>
+      <div><div class="eyebrow">Solution Direction</div><h2>해결 방향 — 필터 상태를 수치로</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="split">
-      <div class="split-col old">
-        <div class="split-tag">기존 방식</div>
-        <div class="split-head">육안 판단</div>
-        <div class="split-list">
-          <div>"더러워 보인다" — 정성적 판단</div>
-          <div>기간 기준 or 고장 후 대응</div>
-          <div>결과: <b>너무 이르거나, 너무 늦거나</b></div>
-        </div>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <div class="sol-no">01</div>
+        <div class="sol-h">먼지 누적 & 공기 저항</div>
+        <div class="sol-v">필터 오염 ↑ → 공기 통과 저항 ↑ → <b>필터 차압 급증</b></div>
       </div>
-      <div class="split-vs">VS</div>
-      <div class="split-col new">
-        <div class="split-tag">Smart Filter</div>
-        <div class="split-head">0.1Pa 정밀 실측</div>
-        <div class="split-list">
-          <div>SDP610 차압센서 직결 측정</div>
-          <div>공간·온습도 반영 AI 예측</div>
-          <div>결과: <b>필요한 순간, 정확하게</b></div>
-        </div>
+      <div class="sol-card">
+        <div class="sol-no">02</div>
+        <div class="sol-h">0.1Pa 정밀 차압 측정</div>
+        <div class="sol-v">미세 압력 변화 측정 → <b>보이지 않는 오염 수치화</b></div>
+      </div>
+      <div class="sol-card">
+        <div class="sol-no">03</div>
+        <div class="sol-h">팬 과부하 & 전력 추적</div>
+        <div class="sol-v">공기 저항 ↑ → 팬 전력 낭비 → <b>실시간 전력 데이터로 확인</b></div>
       </div>
     </div>
   </section>
 
-  <!-- S4 Architecture -->
+  <!-- S4 Architecture — 3-tier, and why -->
   <section class="slide" id="s4">
     <div class="slide-header">
-      <div><div class="eyebrow">How It Works</div><h2>실측 → 분석 → 전송</h2></div>
+      <div><div class="eyebrow">System Architecture</div><h2>왜 3단 구조인가</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="schematic">
-      <div class="node">
-        <div class="node-no">01 · SENSE</div>
-        <div class="node-title">실측</div>
-        <div class="node-desc">SDP610 차압센서 · BME280 온습도센서로 필터 상태를 직접 측정</div>
-        <span class="node-arrow">→</span>
+    <div class="body" style="justify-content:flex-start;">
+      <div class="arch-flow">
+        <div class="arch-node">XIAO ESP32-S3<span>BME280 · SDP610 · OV2640</span></div>
+        <span class="arch-arrow">--WiFi/HTTP--&gt;</span>
+        <div class="arch-node">라즈베리파이<span>엣지 게이트웨이</span></div>
+        <span class="arch-arrow">--인터넷--&gt;</span>
+        <div class="arch-node">Railway 클라우드<span>백엔드</span></div>
+        <span class="arch-arrow">--&gt;</span>
+        <div class="arch-node">React 웹앱<span>전세계 어디서든</span></div>
       </div>
-      <div class="node">
-        <div class="node-no">02 · COMPUTE</div>
-        <div class="node-title">분석</div>
-        <div class="node-desc">라즈베리파이 엣지 연산 — 오염도·잔여수명·절감 전력 계산</div>
-        <span class="node-arrow">→</span>
+      <div class="why-box">
+        <div class="t">WHY 3-TIER</div>
+        <div class="v">클라우드는 사설 IP 대역의 ESP32에 <b>직접 접속 불가</b> (NAT / 방화벽) → 같은 로컬망의 라즈베리파이가 중간에서 <b>엣지 컴퓨팅 + 릴레이</b> 역할</div>
       </div>
-      <div class="node">
-        <div class="node-no">03 · SYNC</div>
-        <div class="node-title">전송</div>
-        <div class="node-desc">MQTT 실시간 전송 — 앱 화면에 즉시 반영</div>
+      <div class="relay-split">
+        <div class="relay-col push">
+          <div class="tag">PUSH · 센서 → 클라우드</div>
+          <div class="h">비대칭 릴레이 ①</div>
+          <ul class="blist">
+            <li>ESP32 원시 센서값 <b>1초</b> 수집</li>
+            <li>막힘도% · 절감량 · 위험도 <b>엣지에서 즉시 연산</b></li>
+            <li>결과 + 카메라 프레임 클라우드로 <b>push</b></li>
+          </ul>
+        </div>
+        <div class="relay-col pull">
+          <div class="tag">PULL · 앱 → ESP32</div>
+          <div class="h">비대칭 릴레이 ②</div>
+          <ul class="blist">
+            <li>전원 · LED · 청소완료 · 캘리브레이션 명령</li>
+            <li>클라우드 <b>명령 큐</b>에 적재</li>
+            <li>라즈베리파이 <b>0.2초마다 폴링</b> → ESP32 실행</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- S5 Engine -->
+  <!-- S5 Core Algorithm — real formulas, edge-computed -->
   <section class="slide" id="s5">
     <div class="slide-header">
-      <div><div class="eyebrow">The Engine</div><h2>예측하고, 계산합니다</h2></div>
+      <div><div class="eyebrow">Core Algorithm · Edge Compute</div><h2>감이 아니라, 공식입니다</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="engine">
-      <div class="engine-block a">
-        <div class="engine-tag">PREDICT</div>
-        <div class="engine-title">🧠 오염 & 교체 예측</div>
-        <div class="engine-list">
-          <div>차압 · 공간 특성 · 온습도 변화 추세를 입력</div>
-          <div>→ <b>오염도(%) · 교체 D-Day · 3단계 등급</b>을 산출</div>
+    <div class="body">
+      <div class="algo-grid">
+        <div class="algo-card">
+          <div class="t">막힘도(%)</div>
+          <div class="f">(현재차압 − P_clean) ÷ (P_max − P_clean) × 100</div>
+          <div class="n"><b style="color:var(--accent)">2점 실측 캘리브레이션</b> — 하드코딩 Pa값 없이, 장비가 달라도 항상 재조정</div>
+        </div>
+        <div class="algo-card">
+          <div class="t">잔여수명(일)</div>
+          <div class="f">60일 × (100−막힘도%)/100 ÷ 환경가속계수</div>
+          <div class="n">습도 ≥65%→×1.25 · 온도 &gt;28℃→×1.15 — 고온다습일수록 앞당겨 예측</div>
+        </div>
+        <div class="algo-card">
+          <div class="t">절감 전력 · 전기요금</div>
+          <div class="f">막힘도% × 0.04kW × 경과시간 → ×200원/kWh</div>
+          <div class="n">%기준 정규화 설계 — 캘리브레이션 스케일이 바뀌어도 계산 로직은 그대로</div>
+        </div>
+        <div class="algo-card">
+          <div class="t">곰팡이 · 오염 가속 위험도</div>
+          <div class="f">습도구간 점수 × 온도배율 / 막힘도×0.7+(습도−60)×0.8</div>
+          <div class="n">등급 자동 산출 — 안전 · 주의 · 위험 / 낮음 · 보통 · 매우높음</div>
         </div>
       </div>
-      <div class="engine-block b">
-        <div class="engine-tag">SAVE</div>
-        <div class="engine-title">⚡ 전력 & 비용 절감</div>
-        <div class="engine-list">
-          <div>팬 과부하 실측치를 새 필터 기준과 비교</div>
-          <div>→ <b>절감 전력(kWh) · 절감 전기요금(원)</b>을 자동 환산</div>
-        </div>
+      <div class="algo-badges">
+        <span class="chip">🧹 청소 전후 비교 — before 기록 → 10초 안정화 → after 재측정 → 절감효과 숫자 증명</span>
+        <span class="chip">🐛 falsy-zero 버그 방지 — 실측값 0도 놓치지 않는 typeof 체크</span>
       </div>
     </div>
   </section>
 
-  <!-- S6 Real product part 1 -->
+  <!-- S6 Deployed web app overview -->
   <section class="slide" id="s6">
     <div class="slide-header">
-      <div><div class="eyebrow">The Real Thing</div><h2>실제로 우리가 만들었습니다</h2></div>
+      <div><div class="eyebrow">Deployed Web App</div><h2>실제 구현된 스마트홈 웹 서비스</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="phone-row">
-      <div class="phone-card">
-        <div class="phone-frame"><img src="shots/home.png" alt="홈 화면"></div>
-        <div class="phone-cap"><div class="k">Home</div><div class="v">필터 상태를 한눈에, 실시간으로</div></div>
+    <div class="overview" style="flex:1;">
+      <div class="ov-card hi">
+        <div>
+          <div class="ov-h">🌐 완성형 스마트홈 웹 시스템</div>
+          <div class="ov-flow">센서 실측 → AI 예측 → 3분 회복 검증 → B2B 마켓</div>
+        </div>
+        <div class="ov-url">🔗 https://smartfilter-railway-cloud-production-e704.up.railway.app</div>
       </div>
-      <div class="phone-card">
-        <div class="phone-frame"><img src="shots/devices.png" alt="기기 화면"></div>
-        <div class="phone-cap"><div class="k">Devices</div><div class="v">공간별 필터, 따로 관리</div></div>
-      </div>
-      <div class="phone-card">
-        <div class="phone-frame"><img src="shots/report.png" alt="리포트 화면"></div>
-        <div class="phone-cap"><div class="k">Report</div><div class="v">계산된 절감액, 그대로</div></div>
+      <div class="ov-card">
+        <div class="ov-h">📱 하단 6대 핵심 탭 메뉴</div>
+        <div class="tab-grid">
+          <div class="tab-cell">1. 🏠 홈</div>
+          <div class="tab-cell">2. 💻 기기</div>
+          <div class="tab-cell">3. 📊 리포트</div>
+          <div class="tab-cell">4. ⏱️ 회복 테스트</div>
+          <div class="tab-cell">5. ⚙️ 관리</div>
+          <div class="tab-cell hi">6. 🛒 필터 마켓</div>
+        </div>
       </div>
     </div>
+    <div class="tech-strip">
+      <span class="chip">ESP32-S3</span><span class="chip">BME280</span><span class="chip">SDP610</span><span class="chip">OV2640</span>
+      <span class="chip">Raspberry Pi · Python/systemd</span><span class="chip">Node.js · Socket.io</span>
+      <span class="chip">React · Vite · Tailwind</span><span class="chip">Railway · Nixpacks</span>
+    </div>
+    <div class="live-badge">🟢 <b>24시간</b> 실물 하드웨어 연동 중 — 목업 없이 <b>100% 실측 기반</b>, 전 세계 어디서든 동일하게 작동</div>
   </section>
 
-  <!-- S7 Real product part 2 -->
+  <!-- S7 Feature: 홈 · 기기 -->
   <section class="slide" id="s7">
     <div class="slide-header">
-      <div><div class="eyebrow">The Real Thing</div><h2>청소했다고 끝이 아닙니다</h2></div>
+      <div><div class="eyebrow">App Features · 1</div><h2>홈 · 기기</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="phone-row">
-      <div class="phone-card">
-        <div class="phone-frame"><img src="shots/recovery.png" alt="회복 테스트 화면"></div>
-        <div class="phone-cap"><div class="k">Recovery</div><div class="v">청소 전후, 3분 성능 검증</div></div>
+    <div class="feat-row">
+      <div class="feat-col">
+        <div class="feat-phone"><img src="shots/home.png" alt="홈 화면"></div>
+        <div class="feat-copy">
+          <div class="k">01 · Home</div><div class="h">🏠 홈</div>
+          <ul class="blist">
+            <li>최상단 <b>시스템 알림</b> 고정</li>
+            <li>필터 막힘도 UI (예상관리일 · 수명%)</li>
+            <li>AI <b>곰팡이 · 오염 위험도</b> 분석</li>
+            <li>라이브 카메라 On/Off</li>
+            <li>실시간 센서 (차압 · 온습도 · 운전시간)</li>
+            <li>미세먼지 농도 (기상청 연동)</li>
+          </ul>
+        </div>
       </div>
-      <div class="phone-card">
-        <div class="phone-frame"><img src="shots/management.png" alt="관리 화면"></div>
-        <div class="phone-cap"><div class="k">Management</div><div class="v">센서 헬스체크 + 이력 자동 기록</div></div>
-      </div>
-      <div class="phone-card">
-        <div class="phone-frame"><img src="shots/market.png" alt="필터 마켓 화면"></div>
-        <div class="phone-cap"><div class="k">Market</div><div class="v">진단이 곧 구매로, B2B2C 커머스</div></div>
+      <div class="feat-col">
+        <div class="feat-phone"><img src="shots/devices.png" alt="기기 화면"></div>
+        <div class="feat-copy">
+          <div class="k">02 · Devices</div><div class="h">💻 기기</div>
+          <ul class="blist">
+            <li>공간별 에어컨 등록 (주방 · 거실 수명공식 차등)</li>
+            <li>가족 + <b>반려동물</b> 관리 (털 오염 반영)</li>
+            <li>기기 상세정보 (모델 · 필터종류 · 설치일 · 게이트웨이 신호)</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- S8 Business -->
+  <!-- S8 Feature: 리포트 · 회복테스트 -->
   <section class="slide" id="s8">
     <div class="slide-header">
-      <div><div class="eyebrow">Revenue</div><h2>네 갈래, 하나의 데이터</h2></div>
+      <div><div class="eyebrow">App Features · 2</div><h2>리포트 · 회복 테스트</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="ledger">
-      <div class="ledger-row"><div class="ledger-no">01</div><p><b>하드웨어</b> — 차압 센서 모듈 B2B/B2C 판매</p></div>
-      <div class="ledger-row"><div class="ledger-no">02</div><p><b>SaaS 구독</b> — AI 예측 대시보드 월정액</p></div>
-      <div class="ledger-row"><div class="ledger-no">03</div><p><b>필터 커머스</b> — 진단 연동 자동주문 수수료</p></div>
-      <div class="ledger-row"><div class="ledger-no">04</div><p><b>B2B 유지보수</b> — 정기 점검 · 센서 교정</p></div>
+    <div class="feat-row">
+      <div class="feat-col">
+        <div class="feat-phone"><img src="shots/report.png" alt="리포트 화면"></div>
+        <div class="feat-copy">
+          <div class="k">03 · Report</div><div class="h">📊 리포트</div>
+          <ul class="blist">
+            <li>라즈베리파이 실시간 절감분석</li>
+            <li>누적 절감 전력(<b>kWh</b>) · 절감 전기요금(<b>원</b>)</li>
+            <li>가동그래프 제거 → 절감 데이터만 시각화</li>
+          </ul>
+        </div>
+      </div>
+      <div class="feat-col">
+        <div class="feat-phone"><img src="shots/recovery.png" alt="회복 테스트 화면"></div>
+        <div class="feat-copy">
+          <div class="k">04 · Recovery</div><div class="h">⏱️ 회복 테스트</div>
+          <ul class="blist">
+            <li><b>3분</b> 세척 전후 검증</li>
+            <li><b>100점</b> 만점 종합판정</li>
+            <li>차압 회복률 · 전력 개선률 · 풍량 회복률</li>
+            <li>항목별 확인 & 다시 테스트하기</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="market-note">가정에서 시작해 학교·병원·공장까지 — 센서는 그대로, 데이터만 쌓입니다.</div>
   </section>
 
-  <!-- S9 Live demo -->
+  <!-- S9 Feature: 관리 · 필터마켓 -->
   <section class="slide" id="s9">
+    <div class="slide-header">
+      <div><div class="eyebrow">App Features · 3</div><h2>관리 · 필터 마켓</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="feat-row">
+      <div class="feat-col">
+        <div class="feat-phone"><img src="shots/management.png" alt="관리 화면"></div>
+        <div class="feat-copy">
+          <div class="k">05 · Management</div><div class="h">⚙️ 관리</div>
+          <ul class="blist">
+            <li>필터 관리 · 회복 이력 기록</li>
+            <li>센서 상태체크 (<b>SDP610 · BME280</b> 진단/이상알림)</li>
+            <li>기준값 재학습 실행</li>
+            <li>알림 임계값 설정</li>
+          </ul>
+        </div>
+      </div>
+      <div class="feat-col">
+        <div class="feat-phone"><img src="shots/market.png" alt="필터 마켓 화면"></div>
+        <div class="feat-copy">
+          <div class="k">06 · Market</div><div class="h">🛒 필터 마켓</div>
+          <ul class="blist">
+            <li>가장 오른쪽 탭 — <b>B2B 연계 커머스</b></li>
+            <li>전체상품 → 필터(Main) → 에어컨 · 공기청정기 · TV</li>
+            <li>기업 제휴배너 연동</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S10 Business Model & Market -->
+  <section class="slide" id="s10">
+    <div class="slide-header">
+      <div><div class="eyebrow">Revenue & Market</div><h2>수익 구조 & 시장 확장성</h2></div>
+      <div class="logo">Smart Filter</div>
+    </div>
+    <div class="biz">
+      <div class="biz-card rev">
+        <div class="biz-tag">REVENUE STREAMS</div>
+        <div class="biz-h">💰 4대 핵심 수익 모델</div>
+        <div class="biz-row"><span class="no">01</span><span><b>하드웨어 판매</b> — 차압 센서 모듈 B2B/B2C 공급</span></div>
+        <div class="biz-row"><span class="no">02</span><span><b>SaaS 구독료</b> — 대시보드 · AI예측 월/연 구독</span></div>
+        <div class="biz-row"><span class="no">03</span><span><b>필터 수수료</b> — 맞춤 필터 자동주문 · 배송 수수료</span></div>
+        <div class="biz-row"><span class="no">04</span><span><b>B2B 유지케어</b> — 정기점검 · 센서교정 · 관리보고서</span></div>
+      </div>
+      <div class="biz-card mkt">
+        <div class="biz-tag">TARGET MARKETS</div>
+        <div class="biz-h">🚀 4단계 시장 연쇄 확장</div>
+        <div class="biz-row"><span class="no">1</span><span><b>초기진입</b> — 일반가정 · 스마트 아파트단지</span></div>
+        <div class="biz-row"><span class="no">2</span><span><b>공공확장</b> — 학교 · 학원 · 공공기관 건물</span></div>
+        <div class="biz-row"><span class="no">3</span><span><b>다중시설</b> — 병원 · 다중이용시설</span></div>
+        <div class="biz-row"><span class="no">4</span><span><b>대형 B2B</b> — 공장 · 클린룸 · 대형건물 관제</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S11 Live demo -->
+  <section class="slide" id="s11">
     <div class="slide-header" style="margin-bottom:.9rem;">
-      <div><div class="eyebrow" style="color:var(--danger)">Live Demo</div><h2 style="font-size:1.6rem;">실시간 실물 시연 — Smart Filter 카메라 중계</h2></div>
+      <div><div class="eyebrow" style="color:var(--danger)">Live Demo</div><h2 style="font-size:1.5rem;">실시간 실물 시연 — Smart Filter 카메라 중계</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="demo-body"><iframe src="index.html" title="Live Relay Engine"></iframe></div>
   </section>
 
-  <!-- S10 Closing -->
-  <section class="slide" id="s10">
+  <!-- S12 Closing -->
+  <section class="slide" id="s12">
     <div class="body" style="align-items:center;text-align:center;">
       <div class="close-tag">Smart Home Standard</div>
-      <h2 class="close-title">감이 아닌 데이터, 스마트홈의 기본기</h2>
+      <h2 class="close-title">감이 아닌 <b>실측 데이터</b>로, 에너지를 절약하는 스마트홈 필수 표준</h2>
       <div class="close-stats">
-        <span class="readout">27% <span style="opacity:.6">절감 여력</span></span>
-        <span class="readout">0.1Pa <span style="opacity:.6">정밀도</span></span>
-        <span class="readout">3분 <span style="opacity:.6">회복 검증</span></span>
+        <div class="close-stat"><div class="e">⚡</div><div class="k">에너지 27% 절감</div><div class="v">공기저항 차단 · 전기요금 절약</div></div>
+        <div class="close-stat"><div class="e">🧠</div><div class="k">AI 교체 예측</div><div class="v">3단계 상태 · 사전 D-Day 알림</div></div>
+        <div class="close-stat"><div class="e">📱</div><div class="k">통합 웹 대시보드</div><div class="v">원격 상태점검 · 리포트</div></div>
       </div>
       <div class="close-plate">
         <div class="team">에너지온 [Energy ON]</div>
         <div class="members">김예지 · 변성훈 · 정지예</div>
-        <div class="thanks">THANK YOU</div>
+        <div class="thanks">THANK YOU FOR LISTENING</div>
       </div>
     </div>
   </section>
@@ -377,7 +538,7 @@
 
 <div id="controls">
   <button class="nav-btn" id="prevBtn" title="이전 슬라이드 (←)">◀ 이전</button>
-  <div class="counter" id="slideCounter">SLIDE 01 / 10</div>
+  <div class="counter" id="slideCounter">SLIDE 01 / 12</div>
   <button class="nav-btn" id="nextBtn" title="다음 슬라이드 (→)">다음 ▶</button>
 </div>
 <div id="progressBar"></div>
@@ -386,7 +547,6 @@
 (() => {
   'use strict';
 
-  /* Ambient signal-line background — echoes the differential-pressure readout the product is built on */
   const bgCanvas = document.getElementById('bgCanvas');
   const ctx = bgCanvas.getContext('2d');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -428,7 +588,6 @@
   }
   draw();
 
-  /* Slide navigation */
   const slides = document.querySelectorAll('.slide');
   const total = slides.length;
   let current = 0;
