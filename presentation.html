@@ -414,6 +414,11 @@
   .qr-caption { margin-top: 1.1vh; font: 800 .9vw 'Space Grotesk', sans-serif; color: var(--slate); }
 
   /* ===== Live relay ===== */
+  .lr-split { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vw; width: 100%; min-height: 0; }
+  .lr-pane { display: flex; flex-direction: column; min-height: 0; gap: 1vh; }
+  .lr-pane-label { display: flex; align-items: center; gap: .5vw; font: 800 .9vw 'Space Grotesk', sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--slate); }
+  .lr-pane-label .live-dot { width: .55vw; height: .55vw; border-radius: 50%; background: var(--danger); box-shadow: 0 0 8px 2px rgba(225,29,72,.6); animation: liveDotBlink 1.6s ease-in-out infinite; }
+  @keyframes liveDotBlink { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
   .lr-monitor { flex: 1; background: #04131a; border: 1px solid rgba(11,34,51,.2); border-radius: 1vw; overflow: hidden; box-shadow: var(--shadow), 0 0 50px rgba(14,165,233,.15); min-height: 0; }
   .lr-monitor iframe { width: 100%; height: 100%; border: none; }
 
@@ -910,10 +915,17 @@
   <!-- 11 · LIVE SHOWCASE -->
   <section class="slide" data-index="11">
     <div class="chrome label"><span class="dot"></span>LIVE RELAY DEMO</div>
-    <h1 class="chrome h-title">실시간 실물 시연: Smart Filter 카메라 중계</h1>
-    <div class="body-area" style="display:flex;">
-      <div class="frag lr-monitor">
-        <iframe src="index.html" title="Live Relay Engine"></iframe>
+    <h1 class="chrome h-title">실시간 실물 시연: 카메라 중계 &amp; 센서 대시보드</h1>
+    <div class="body-area" style="display:flex; min-height:0;">
+      <div class="frag lr-split">
+        <div class="lr-pane">
+          <div class="lr-pane-label"><span class="live-dot"></span>📷 실시간 카메라 중계</div>
+          <div class="lr-monitor"><iframe src="index.html" title="Live Camera Relay"></iframe></div>
+        </div>
+        <div class="lr-pane">
+          <div class="lr-pane-label"><span class="live-dot"></span>📊 실시간 센서 대시보드</div>
+          <div class="lr-monitor"><iframe src="https://smartfilter-railway-cloud-production-e704.up.railway.app/sensor-board" title="Live Sensor Dashboard"></iframe></div>
+        </div>
       </div>
     </div>
     <div class="slide-foot chrome">
