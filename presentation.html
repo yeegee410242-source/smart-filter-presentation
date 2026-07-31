@@ -488,41 +488,52 @@
       <div><div class="eyebrow">Customer Benefits</div><h2>고객이 얻는 효과</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="body" style="display:flex; flex-direction:column; gap:1.2rem; justify-content:space-between;">
-      <div style="background:#F0F9FF; border:1.5px solid #BAE6FD; padding:1.1rem 1.4rem; border-radius:14px; font-size:1.15rem; font-weight:800; color:var(--primary-dark); line-height:1.6;">
-        💡 <b>필터 관리와 에너지 절감을 동시에 해결합니다</b><br>
-        <span style="font-size:1.05rem; color:var(--muted); font-weight:700;">Smart Filter는 필터 상태 표시에 그치지 않고, 적시 교체를 유도하여 전력 사용량, 필터 비용, 관리 시간을 함께 줄입니다.</span>
+    <div class="body" style="display:flex; flex-direction:column; gap:1.5rem; justify-content:space-between; height:100%;">
+      <div class="benefit-grid" style="grid-template-columns:1fr 1fr 1fr; gap:1.5rem; flex:1;">
+        <div class="card" style="border-top:6px solid var(--primary); background:#F0F9FF; padding:1.75rem; justify-content:space-between;">
+          <div>
+            <div style="font-size:2.8rem; margin-bottom:0.75rem;">⚡</div>
+            <div style="font-size:1.6rem; font-weight:900; color:var(--primary-dark); margin-bottom:1rem; border-bottom:2px dashed #BAE6FD; padding-bottom:0.6rem;">
+              에너지 비용 절감
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.85rem; font-size:1.25rem; font-weight:800; color:var(--text); line-height:1.5;">
+            <div>🔹 팬 전력 과부하 차단</div>
+            <div>🔹 예상 절감 전력 사전 확인</div>
+            <div>🔹 월간·연간 전기요금 절감</div>
+          </div>
+        </div>
+
+        <div class="card" style="border-top:6px solid var(--accent); background:#F0FDF4; padding:1.75rem; justify-content:space-between;">
+          <div>
+            <div style="font-size:2.8rem; margin-bottom:0.75rem;">🛠️</div>
+            <div style="font-size:1.6rem; font-weight:900; color:var(--accent); margin-bottom:1rem; border-bottom:2px dashed #A7F3D0; padding-bottom:0.6rem;">
+              유지관리 효율 향상
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.85rem; font-size:1.25rem; font-weight:800; color:var(--text); line-height:1.5;">
+            <div>🔹 불필요한 현장 점검 감소</div>
+            <div>🔹 과잉 및 지연 교체 방지</div>
+            <div>🔹 다중 공간 통합 원격 관리</div>
+          </div>
+        </div>
+
+        <div class="card" style="border-top:6px solid var(--warning); background:#FFFBEB; padding:1.75rem; justify-content:space-between;">
+          <div>
+            <div style="font-size:2.8rem; margin-bottom:0.75rem;">🌿</div>
+            <div style="font-size:1.6rem; font-weight:900; color:var(--warning); margin-bottom:1rem; border-bottom:2px dashed #FDE68A; padding-bottom:0.6rem;">
+              실내 환경 개선
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.85rem; font-size:1.25rem; font-weight:800; color:var(--text); line-height:1.5;">
+            <div>🔹 성능 저하 조기 감지</div>
+            <div>🔹 곰팡이/오염 위험 사전 관리</div>
+            <div>🔹 쾌적한 실내 공기 유지</div>
+          </div>
+        </div>
       </div>
-      <div class="benefit-grid" style="grid-template-columns:1fr 1fr 1fr; gap:1.2rem; flex:1;">
-        <div class="benefit-card" style="padding:1.25rem;">
-          <div class="e">⚡</div>
-          <div class="k" style="font-size:1.25rem; color:var(--primary-dark);">에너지 비용 절감</div>
-          <div class="v" style="font-size:0.95rem; line-height:1.6; text-align:left; margin-top:0.5rem;">
-            • 필터 저항으로 인한 팬 전력 증가 방지<br>
-            • 예상 전력 감소량 사전 확인<br>
-            • 월간·연간 전기요금 실제 절감
-          </div>
-        </div>
-        <div class="benefit-card" style="padding:1.25rem;">
-          <div class="e">🛠️</div>
-          <div class="k" style="font-size:1.25rem; color:var(--accent);">유지관리 효율 향상</div>
-          <div class="v" style="font-size:0.95rem; line-height:1.6; text-align:left; margin-top:0.5rem;">
-            • 불필요한 현장 직접 점검 감소<br>
-            • 과잉 교체 및 지연 교체 방지<br>
-            • 여러 공간의 필터 통합 원격 관리
-          </div>
-        </div>
-        <div class="benefit-card" style="padding:1.25rem;">
-          <div class="e">🌿</div>
-          <div class="k" style="font-size:1.25rem; color:var(--warning);">실내 환경 개선</div>
-          <div class="v" style="font-size:0.95rem; line-height:1.6; text-align:left; margin-top:0.5rem;">
-            • 필터 성능 저하 조기 감지<br>
-            • 곰팡이 및 오염 위험 사전 관리<br>
-            • 쾌적한 실내 공기환경 유지
-          </div>
-        </div>
-      </div>
-      <div style="background:#0F172A; color:#FFFFFF; text-align:center; padding:0.9rem; border-radius:12px; font-size:1.25rem; font-weight:900; font-family:var(--f-mono);">
+
+      <div style="background:#0F172A; color:#FFFFFF; text-align:center; padding:1.2rem 2rem; border-radius:16px; font-size:1.4rem; font-weight:900; font-family:var(--f-mono); box-shadow:0 8px 20px rgba(15,23,42,0.15);">
         💰 필터 비용 절감 + 전력 절감 + 관리 효율 향상
       </div>
     </div>
