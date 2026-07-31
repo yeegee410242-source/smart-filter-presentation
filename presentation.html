@@ -12,35 +12,29 @@
 <style>
   :root {
     --navy: #0B1830;
-    --navy-dark: #071022;
-    --navy-card: rgba(19, 36, 68, 0.85);
-    --navy-card-hover: rgba(27, 49, 90, 0.95);
-    --navy-border: rgba(56, 189, 248, 0.25);
-    --navy-border-glow: rgba(56, 189, 248, 0.5);
-    
+    --navy-dark: #060E1E;
+    --canvas: #F8FAFC;
     --white: #FFFFFF;
-    --ink-light: #F8FAFC;
-    --ink-dim: #CBD5E1;
-    --ink-slate: #94A3B8;
+    --ink: #0F172A;
+    --ink-dim: #334155;
+    --ink-slate: #64748B;
     
-    --sky: #38BDF8;
-    --sky-dark: #0284C7;
-    --sky-glow: #7DD3FC;
-    --sky-light: rgba(2, 132, 199, 0.15);
+    --sky: #0284C7;
+    --sky-glow: #38BDF8;
+    --sky-light: #F0F9FF;
+    --sky-border: #BAE6FD;
     
-    --mint: #34D399;
-    --mint-dark: #059669;
-    --mint-glow: #6EE7B7;
-    --mint-light: rgba(5, 150, 105, 0.15);
+    --mint: #059669;
+    --mint-glow: #34D399;
+    --mint-light: #ECFDF5;
     
-    --danger: #FB7185;
-    --danger-light: rgba(225, 29, 72, 0.15);
-    --danger-border: rgba(251, 113, 133, 0.4);
+    --danger: #E11D48;
+    --danger-light: #FFF1F2;
     
-    --shadow-lg: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
-    --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    --shadow-soft: 0 12px 35px -8px rgba(11, 24, 48, 0.06);
+    --shadow-float: 0 20px 40px -10px rgba(2, 132, 199, 0.15);
     
-    --m: 5.5vw;
+    --m: 6vw;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
@@ -48,200 +42,141 @@
 
   #deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 
-  /* ===== Slide Base (Unified Dark Theme) ===== */
+  /* ===== Slide Base (Spacious Open Layout) ===== */
   .slide {
     position: absolute; inset: 0; width: 100vw; height: 100vh;
     display: flex; flex-direction: column; justify-content: space-between;
-    padding: 5.5vh var(--m) 6.5vh var(--m);
-    background: radial-gradient(circle at 60% 40%, #13274C 0%, var(--navy-dark) 85%);
-    color: var(--white);
+    padding: 6vh var(--m) 7vh var(--m);
+    background: var(--canvas); color: var(--ink);
     opacity: 0; pointer-events: none; transition: opacity .45s cubic-bezier(.4,0,.2,1);
     overflow: hidden;
   }
   .slide.active { opacity: 1; pointer-events: auto; }
 
-  /* Background Ambient Particle Glow */
-  .slide::before {
-    content: ""; position: absolute; top: -10vw; right: -10vw; width: 35vw; height: 35vw;
-    border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, rgba(0,0,0,0) 70%);
-    pointer-events: none; z-index: 0;
+  .slide--dark {
+    background: radial-gradient(circle at 65% 35%, #122548 0%, var(--navy-dark) 85%);
+    color: var(--white);
   }
 
-  /* Animation System */
+  /* Keyframe Animations for Floating & Descending Motion */
+  @keyframes floatVertical {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+
+  .floating-elem { animation: floatVertical 4s ease-in-out infinite; }
+  .pulse-dot { width: 0.6vw; height: 0.6vw; border-radius: 50%; background: var(--sky-glow); display: inline-block; animation: pulseGlow 2.5s ease-in-out infinite; }
+
+  /* Staggered Motion System */
   [data-anim] {
-    opacity: 0; transform: translateY(18px);
-    transition: opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+    opacity: 0; transform: translateY(22px);
+    transition: opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1);
   }
   .slide.active [data-anim].in { opacity: 1; transform: translateY(0); }
 
-  /* ===== Unified Header Layout ===== */
-  .slide-header { display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; border-bottom: 1.5px solid rgba(255,255,255,0.08); padding-bottom: 1.2vh; }
-  .header-left { display: flex; flex-direction: column; gap: 0.4vh; }
-  
+  /* Header Typography */
+  .slide-header { display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; margin-bottom: 2vh; }
   .eyebrow {
-    font-family: 'Space Grotesk', sans-serif; font-size: 0.9vw; font-weight: 800;
-    letter-spacing: .14em; text-transform: uppercase; color: var(--sky);
-    display: flex; align-items: center; gap: .6em;
+    font-family: 'Space Grotesk', sans-serif; font-size: 0.95vw; font-weight: 800;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--sky);
+    display: flex; align-items: center; gap: .6em; margin-bottom: 0.6vh;
   }
-  .eyebrow::before { content: ""; width: 1.8vw; height: 2px; background: var(--sky); display: inline-block; }
+  .eyebrow::before { content: ""; width: 1.8vw; height: 2.5px; background: var(--sky); display: inline-block; }
+  .slide--dark .eyebrow { color: var(--sky-glow); }
+  .slide--dark .eyebrow::before { background: var(--sky-glow); }
 
-  .h-title { font-size: 2.2vw; font-weight: 900; letter-spacing: -.03em; color: var(--white); line-height: 1.25; }
-  .logo { font-family: 'Space Grotesk', sans-serif; font-size: 0.95vw; font-weight: 800; letter-spacing: .12em; color: var(--sky-glow); text-transform: uppercase; }
+  .h-title { font-size: 2.4vw; font-weight: 900; letter-spacing: -.03em; color: var(--ink); line-height: 1.25; }
+  .slide--dark .h-title { color: var(--white); }
+  .logo { font-family: 'Space Grotesk', sans-serif; font-size: 0.95vw; font-weight: 800; letter-spacing: .12em; color: var(--sky); text-transform: uppercase; }
+  .slide--dark .logo { color: var(--sky-glow); }
 
-  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 2.5vh; min-height: 0; z-index: 2; }
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; z-index: 2; }
 
-  /* ===== Bullet List Styling ===== */
-  ul.blist { list-style: none; display: flex; flex-direction: column; gap: 1.1vh; }
+  /* Bullet List */
+  ul.blist { list-style: none; display: flex; flex-direction: column; gap: 1.2vh; }
   ul.blist li { font-size: 1.1vw; font-weight: 700; color: var(--ink-dim); line-height: 1.6; position: relative; padding-left: 1.4em; }
   ul.blist li::before { content: "•"; color: var(--sky); font-weight: 900; position: absolute; left: 0; top: 0; font-size: 1.3em; }
-  ul.blist li b { color: var(--white); font-weight: 900; }
+  ul.blist li b { color: var(--ink); font-weight: 900; }
+  .slide--dark ul.blist li { color: rgba(255,255,255,.85); }
+  .slide--dark ul.blist li b { color: var(--white); }
 
-  /* ===== Unified Glass Cards ===== */
-  .glass-card {
-    background: var(--navy-card); border: 1.5px solid var(--navy-border);
-    border-radius: 20px; padding: 2.8vh 2vw; backdrop-filter: blur(12px);
-    box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: space-between;
-    transition: border-color .3s ease;
-  }
-  .glass-card:hover { border-color: var(--navy-border-glow); }
-
-  /* ===== S1 Cover ===== */
+  /* ===== Cover Slide ===== */
   #s1 { justify-content: center; align-items: center; text-align: center; }
   .cover-pill {
     font-family: 'Space Grotesk', sans-serif; font-size: 0.9vw; font-weight: 800;
     letter-spacing: .22em; color: var(--sky-glow); text-transform: uppercase;
-    background: rgba(56, 189, 248, 0.12); border: 1.5px solid rgba(56, 189, 248, 0.35);
+    background: rgba(2, 132, 199, 0.12); border: 1.5px solid rgba(56, 189, 248, 0.35);
     padding: .6vh 1.6vw; border-radius: 999px; display: inline-block; margin-bottom: 3vh;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
   }
-  .cover-title { font-size: 5.5vw; font-weight: 900; letter-spacing: -.04em; line-height: 1; color: var(--white); }
-  .cover-title span { color: var(--sky-glow); text-shadow: 0 0 30px rgba(56, 189, 248, 0.4); }
-  .cover-sub { font-size: 1.6vw; font-weight: 700; color: var(--ink-dim); margin-top: 2.2vh; }
+  .cover-title { font-size: 5.8vw; font-weight: 900; letter-spacing: -.04em; line-height: 1; color: var(--white); }
+  .cover-title span { color: var(--sky-glow); text-shadow: 0 0 35px rgba(56, 189, 248, 0.4); }
+  .cover-sub { font-size: 1.65vw; font-weight: 700; color: rgba(255,255,255,.85); margin-top: 2.5vh; max-width: 36ch; }
   .cover-plate {
-    margin-top: 4.5vh; background: var(--navy-card); border: 1.5px solid var(--navy-border);
-    border-radius: 20px; padding: 1.6vh 3.2vw; backdrop-filter: blur(12px); box-shadow: var(--shadow-lg);
+    margin-top: 4.5vh; background: rgba(11, 24, 48, 0.85); border: 1.5px solid rgba(56, 189, 248, 0.3);
+    border-radius: 20px; padding: 1.6vh 3.2vw; backdrop-filter: blur(12px); box-shadow: var(--shadow-float);
   }
   .cover-team { font-size: 1.3vw; font-weight: 900; color: var(--sky-glow); }
-  .cover-members { font-size: 1.05vw; color: var(--ink-slate); font-weight: 700; margin-top: .5vh; }
+  .cover-members { font-size: 1.05vw; color: rgba(255,255,255,.75); font-weight: 700; margin-top: .5vh; }
 
-  /* ===== S2 Problem Cards ===== */
-  .prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; }
-  .prob-card {
-    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 20px;
-    padding: 2.8vh 2vw; border-left: 6px solid var(--danger); box-shadow: var(--shadow-card);
+  /* ===== Open Metric Layout (No Heavy Rigid Boxes!) ===== */
+  .open-metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; }
+  .open-metric-item {
+    padding: 2vh 1vw; border-bottom: 2px solid var(--sky-border);
   }
-  .prob-card .k { font-size: 1.3vw; font-weight: 900; color: var(--white); }
-  .prob-card .v { font-size: 1.05vw; font-weight: 700; color: var(--ink-slate); margin-top: 1vh; line-height: 1.55; }
-  
-  .prob-real {
-    margin-top: 2.5vh; background: var(--danger-light); border: 1.5px solid var(--danger-border);
-    border-radius: 20px; padding: 2.5vh 2.2vw;
-  }
-  .prob-real .tag { font-family: 'Space Grotesk', sans-serif; font-size: 0.85vw; font-weight: 900; color: var(--danger); letter-spacing: .08em; }
-  .prob-real .h { font-size: 1.35vw; font-weight: 900; color: var(--white); margin-top: .6vh; line-height: 1.5; }
-  .prob-real .h b { color: var(--danger); }
+  .open-metric-item .k { font-size: 1.35vw; font-weight: 900; color: var(--ink); }
+  .open-metric-item .v { font-size: 1.1vw; font-weight: 700; color: var(--ink-slate); margin-top: 1vh; line-height: 1.6; }
 
-  /* ===== S3 Solution Cards ===== */
-  .sol-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; flex: 1; }
-  .sol-card {
-    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 20px;
-    padding: 3.2vh 2vw; display: flex; flex-direction: column; justify-content: center; gap: 1.4vh;
-    box-shadow: var(--shadow-card);
+  /* ===== Open Connected Pipeline (Horizontal Flow) ===== */
+  .pipe-flow { display: flex; align-items: center; justify-content: space-between; gap: 1vw; margin: 3vh 0; }
+  .pipe-step {
+    flex: 1; background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 18px;
+    padding: 2.2vh 1.4vw; position: relative; box-shadow: var(--shadow-soft);
   }
-  .sol-no { font-family: 'Space Grotesk', sans-serif; font-size: 1vw; font-weight: 800; color: var(--sky); letter-spacing: .08em; }
-  .sol-h { font-size: 1.5vw; font-weight: 900; color: var(--white); }
-  .sol-v { font-size: 1.1vw; font-weight: 700; color: var(--ink-dim); line-height: 1.6; }
-  .sol-v b { color: var(--sky-glow); font-weight: 900; }
+  .pipe-step .no { font-family: 'Space Grotesk', sans-serif; font-size: 0.9vw; font-weight: 800; color: var(--sky); margin-bottom: .6vh; }
+  .pipe-step .h { font-size: 1.25vw; font-weight: 900; color: var(--ink); }
+  .pipe-step .sub { font-size: 0.95vw; font-weight: 700; color: var(--ink-slate); margin-top: .6vh; line-height: 1.5; }
+  .pipe-connector { color: var(--sky); font-family: 'Space Grotesk', sans-serif; font-size: 1.6vw; font-weight: 900; flex: none; }
 
-  /* ===== S4 Architecture Flow ===== */
-  .arch-flow { display: flex; align-items: center; justify-content: space-between; gap: 0.6vw; margin-bottom: 2.5vh; }
-  .arch-node {
-    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 14px;
-    padding: 1.5vh 1.2vw; font-size: 1.05vw; font-weight: 900; color: var(--white); text-align: center; flex: 1;
-    box-shadow: var(--shadow-card);
+  /* ===== Open Feature Split ===== */
+  .feat-open-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; flex: 1; align-items: center; }
+  .feat-open-col { display: flex; gap: 2vw; align-items: center; }
+  .feat-phone-mock { flex: none; width: 11vw; aspect-ratio: 430/860; border-radius: 20px; overflow: hidden; border: 3.5px solid var(--navy); box-shadow: var(--shadow-float); }
+  .feat-phone-mock img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+
+  /* ===== Slide 10 Stat Pillars ===== */
+  .stat-pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; flex: 1; }
+  .stat-pillar {
+    background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 24px;
+    padding: 3.5vh 2.2vw; display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: var(--shadow-soft); border-top: 6px solid var(--sky);
   }
-  .arch-node span { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 0.8vw; color: var(--sky-glow); font-weight: 800; margin-top: .3vh; }
-  .arch-arrow { color: var(--sky-glow); font-family: 'Space Grotesk', sans-serif; font-size: 1.4vw; font-weight: 900; }
+  .stat-pillar.mint { border-top-color: var(--mint); }
+  .stat-pillar.navy { border-top-color: var(--navy); }
+  .stat-pillar-num { font-family: 'Space Grotesk', sans-serif; font-size: 2.8vw; font-weight: 900; color: var(--sky); margin: 1vh 0 1.5vh 0; }
+  .stat-pillar.mint .stat-pillar-num { color: var(--mint); }
+  .stat-pillar.navy .stat-pillar-num { color: var(--navy); }
 
-  .relay-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vw; flex: 1; }
-  .relay-col {
-    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 20px;
-    padding: 2.8vh 2.2vw; display: flex; flex-direction: column; justify-content: center; gap: 1.2vh;
-    box-shadow: var(--shadow-card);
-  }
-  .relay-col.pull { background: var(--sky-light); border-color: rgba(56,189,248,0.4); }
-  .relay-col .tag { font-family: 'Space Grotesk', sans-serif; font-size: 0.85vw; font-weight: 900; color: var(--sky-glow); letter-spacing: .08em; }
-  .relay-col .h { font-size: 1.35vw; font-weight: 900; color: var(--white); }
-
-  /* ===== Feature Phone Cards ===== */
-  .feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; flex: 1; align-items: center; }
-  .feat-col {
-    display: flex; gap: 1.8vw; align-items: center; background: var(--navy-card);
-    border: 1.5px solid var(--navy-border); border-radius: 22px; padding: 2.5vh 2vw; box-shadow: var(--shadow-card);
-  }
-  .feat-phone { flex: none; width: 10.5vw; aspect-ratio: 430/860; border-radius: 18px; overflow: hidden; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-  .feat-phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
-  .feat-copy { flex: 1; min-width: 0; }
-  .feat-copy .k { font-family: 'Space Grotesk', sans-serif; font-size: 0.8vw; font-weight: 900; color: var(--sky-glow); letter-spacing: .1em; text-transform: uppercase; }
-  .feat-copy .h { font-size: 1.4vw; font-weight: 900; color: var(--white); margin-top: .4vh; margin-bottom: 1.2vh; }
-
-  /* ===== S10 Customer Benefits Stat Pillars ===== */
-  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; flex: 1; }
-  .stat-card {
-    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 22px;
-    padding: 3.2vh 2vw; display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: var(--shadow-card); border-top: 6px solid var(--sky-glow);
-  }
-  .stat-card.mint { border-top-color: var(--mint-glow); }
-  .stat-card.navy { border-top-color: var(--sky); }
-  .stat-icon { font-size: 2.5vw; margin-bottom: 1vh; }
-  .stat-title { font-size: 1.45vw; font-weight: 900; color: var(--white); }
-  .stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 2.8vw; font-weight: 900; color: var(--sky-glow); margin: 0.8vh 0 1.5vh 0; text-shadow: 0 0 20px rgba(56,189,248,0.3); }
-  .stat-card.mint .stat-number { color: var(--mint-glow); text-shadow: 0 0 20px rgba(52,211,153,0.3); }
-  .stat-card.navy .stat-number { color: var(--sky); }
-
-  /* ===== S11 Revenue Model ===== */
-  .biz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vw; flex: 1; }
-  .biz-card {
-    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 22px;
-    padding: 3.2vh 2vw; display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: var(--shadow-card);
-  }
-  .biz-card.rev { background: var(--sky-light); border-color: rgba(56,189,248,0.4); }
-  .biz-card.mkt { background: var(--mint-light); border-color: rgba(52,211,153,0.4); }
-  .biz-tag { font-family: 'Space Grotesk', sans-serif; font-size: 0.85vw; font-weight: 900; letter-spacing: .08em; }
-  .biz-card.rev .biz-tag { color: var(--sky-glow); }
-  .biz-card.mkt .biz-tag { color: var(--mint-glow); }
-  .biz-h { font-size: 1.5vw; font-weight: 900; color: var(--white); margin: .6vh 0 1.5vh; }
-  .biz-row { display: flex; gap: .8vw; align-items: baseline; padding: 1.2vh 0; border-top: 1px dashed rgba(255,255,255,0.12); font-size: 1.1vw; font-weight: 800; color: var(--ink-dim); }
-  .biz-row .no { font-family: 'Space Grotesk', sans-serif; color: var(--sky-glow); font-weight: 900; flex: none; width: 1.8vw; }
-  .biz-card.mkt .biz-row .no { color: var(--mint-glow); }
-  .biz-row b { color: var(--white); font-weight: 900; }
-
-  /* ===== S12 Live Relay Camera Frame ===== */
-  .lr-monitor {
-    width: 100%; height: 100%; background: #04070f; border: 2px solid rgba(56,189,248,0.4);
-    border-radius: 20px; overflow: hidden; position: relative; box-shadow: var(--shadow-lg);
-  }
-  .lr-monitor iframe { width: 100%; height: 100%; border: none; }
-
-  /* Bottom Control Track */
-  #progress-track { position: fixed; left: 0; bottom: 0; width: 100vw; height: 5px; background: rgba(255,255,255,0.12); z-index: 100; }
-  #progress-fill { height: 100%; background: var(--sky-glow); width: 0; transition: width .4s ease; box-shadow: 0 0 10px var(--sky-glow); }
+  /* ===== Controls & Progress ===== */
+  #progress-track { position: fixed; left: 0; bottom: 0; width: 100vw; height: 5px; background: rgba(0,0,0,0.08); z-index: 100; }
+  #progress-fill { height: 100%; background: var(--sky-glow); width: 0; transition: width .4s ease; }
 
   #controls {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100;
-    display: flex; align-items: center; gap: 1.2vw; padding: .6vh 1.4vw;
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 1.4vw; padding: .7vh 1.6vw;
     background: rgba(11, 24, 48, 0.92); border: 1.5px solid rgba(56, 189, 248, 0.35);
-    border-radius: 999px; backdrop-filter: blur(12px); box-shadow: var(--shadow-lg);
+    border-radius: 999px; backdrop-filter: blur(12px); box-shadow: var(--shadow-float);
   }
   .nav-btn {
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    color: var(--white); font-size: 0.9vw; font-weight: 800; cursor: pointer;
-    padding: .4vh 1.1vw; border-radius: 999px; font-family: 'Pretendard', sans-serif; transition: all .2s;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+    color: var(--white); font-size: 0.95vw; font-weight: 800; cursor: pointer;
+    padding: .5vh 1.2vw; border-radius: 999px; font-family: 'Pretendard', sans-serif; transition: all .2s;
   }
-  .nav-btn:hover { background: var(--sky-dark); border-color: var(--sky-glow); color: var(--white); }
-  .counter { font-family: 'Space Grotesk', sans-serif; font-size: 0.9vw; font-weight: 800; color: var(--sky-glow); letter-spacing: .05em; }
+  .nav-btn:hover { background: var(--sky); border-color: var(--sky); color: var(--white); }
+  .counter { font-family: 'Space Grotesk', sans-serif; font-size: 0.95vw; font-weight: 800; color: var(--sky-glow); letter-spacing: .06em; }
 
 </style>
 </head>
@@ -250,12 +185,12 @@
 <div id="deck">
 
   <!-- S1 Cover -->
-  <section class="slide active" id="s1" data-index="0">
+  <section class="slide slide--dark active" id="s1" data-index="0">
     <div class="body" style="align-items:center; text-align:center;">
-      <div class="cover-pill" data-anim>AI ENERGY SMART HOME MAKERTHON</div>
+      <div class="cover-pill floating-elem" data-anim>AI ENERGY SMART HOME MAKERTHON</div>
       <h1 class="cover-title" data-anim>Smart <span>Filter</span></h1>
       <p class="cover-sub" data-anim>에어컨 필터의 실시간 차압 진단 & 에너지 최적화 솔루션</p>
-      <div class="cover-plate" data-anim>
+      <div class="cover-plate floating-elem" data-anim>
         <div class="cover-team">에너지온 <span>[Energy ON]</span></div>
         <div class="cover-members">김예지 · 변성훈 · 정지예</div>
       </div>
@@ -265,30 +200,30 @@
   <!-- S2 Problem & Cause -->
   <section class="slide" data-index="1">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>Problem & Cause</div>
         <h2 class="h-title" data-anim>에어컨 필터 관리의 중요성</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="prob-grid">
-        <div class="prob-card" data-anim>
+      <div class="open-metric-grid">
+        <div class="open-metric-item" data-anim>
           <div class="k">🚨 공기 저항 → 전력 <span data-count="27.0" data-suffix="%">0%</span> 급증</div>
           <div class="v">먼지 누적 → 공기 저항 증가 → 팬 과부하 발생</div>
         </div>
-        <div class="prob-card" data-anim>
+        <div class="open-metric-item" data-anim>
           <div class="k">⏳ 감 의존 주기 교체</div>
           <div class="v">실제 오염도와 무관한 정기 기간 판단 · 고장 후 대응</div>
         </div>
-        <div class="prob-card" data-anim>
+        <div class="open-metric-item" data-anim>
           <div class="k">💸 필터 · 전력 이중 낭비</div>
           <div class="v">성급한 교체(필터 낭비) vs 늦은 교체(전력 낭비 · 공기질 악화)</div>
         </div>
       </div>
-      <div class="prob-real" data-anim>
-        <div class="tag">REAL PROBLEM · 진짜 문제점</div>
-        <div class="h">필터 실시간 상태 파악 불가 → <b>교체 시기 오판</b> (무분별한 교체 / 타이밍 놓침)</div>
+      <div style="margin-top:4vh; background:var(--danger-light); border:1.5px solid #FECDD3; border-radius:20px; padding:2.8vh 2.4vw;" data-anim>
+        <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--danger); letter-spacing:.08em;">REAL PROBLEM · 진짜 문제점</div>
+        <div style="font-size:1.4vw; font-weight:900; color:var(--ink); margin-top:.8vh;">필터 실시간 상태 파악 불가 → <b style="color:var(--danger);">교체 시기 오판</b> (무분별한 교체 / 타이밍 놓침)</div>
       </div>
     </div>
   </section>
@@ -296,28 +231,30 @@
   <!-- S3 Solution -->
   <section class="slide" data-index="2">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>Solution Direction</div>
         <h2 class="h-title" data-anim>해결 방향 — 필터 상태를 수치로 바꾸다</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="sol-grid">
-        <div class="sol-card" data-anim>
-          <div class="sol-no">STEP 01</div>
-          <div class="sol-h">🌀 먼지 누적 & 공기 저항</div>
-          <div class="sol-v">필터 오염 진행 → 공기 저항 증가 → <b>필터 차압(압력차) 급격히 상승</b></div>
+      <div class="pipe-flow">
+        <div class="pipe-step" data-anim>
+          <div class="no">STEP 01</div>
+          <div class="h">🌀 먼지 누적 & 공기 저항</div>
+          <div class="sub">필터 오염 진행 → 공기 저항 증가 → <b style="color:var(--sky);">필터 차압 상승</b></div>
         </div>
-        <div class="sol-card" data-anim>
-          <div class="sol-no">STEP 02</div>
-          <div class="sol-h">📊 <span data-count="0.1" data-decimals="1" data-suffix="Pa">0Pa</span> 정밀 차압 측정</div>
-          <div class="sol-v">차압 센서 실측 → 눈에 보이지 않는 필터 오염 <b>정밀 데이터 수치화</b></div>
+        <div class="pipe-connector" data-anim>➔</div>
+        <div class="pipe-step" data-anim>
+          <div class="no">STEP 02</div>
+          <div class="h">📊 <span data-count="0.1" data-decimals="1" data-suffix="Pa">0Pa</span> 정밀 차압 측정</div>
+          <div class="sub">차압 센서 실측 → 오염도 <b style="color:var(--sky);">정밀 데이터 수치화</b></div>
         </div>
-        <div class="sol-card" data-anim>
-          <div class="sol-no">STEP 03</div>
-          <div class="sol-h">⚡ 팬 과부하 & 전력 추적</div>
-          <div class="sol-v">증가한 공기 저항으로 인한 <b>팬 전력 낭비를 실시간 모니터링</b></div>
+        <div class="pipe-connector" data-anim>➔</div>
+        <div class="pipe-step" data-anim>
+          <div class="no">STEP 03</div>
+          <div class="h">⚡ 팬 과부하 & 전력 추적</div>
+          <div class="sub">공기 저항으로 인한 <b style="color:var(--sky);">팬 전력 낭비 실시간 모니터링</b></div>
         </div>
       </div>
     </div>
@@ -326,37 +263,52 @@
   <!-- S4 Architecture & Workflow -->
   <section class="slide" data-index="3">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>Workflow</div>
         <h2 class="h-title" data-anim>SmartFilter 전체 흐름도</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="arch-flow" data-anim>
-        <div class="arch-node">차압 센서 (SDP610)<span>0.1Pa 실측</span></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node">온습도 센서 (BME280)<span>오염 가속 측정</span></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node">ESP32-S3 (Sender)<span>MQTT 무선 송출</span></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node">라즈베리파이 (Hub)<span>AI 예측 처리</span></div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-node">웹 대시보드<span>실시간 차압/절감</span></div>
+      <div class="pipe-flow" style="margin:2vh 0;" data-anim>
+        <div class="pipe-step" style="text-align:center;">
+          <div style="font-size:1.1vw; font-weight:900;">차압 센서 (SDP610)</div>
+          <div style="font-size:0.85vw; color:var(--sky); font-weight:800; margin-top:.4vh;">0.1Pa 정밀 실측</div>
+        </div>
+        <div class="pipe-connector">➔</div>
+        <div class="pipe-step" style="text-align:center;">
+          <div style="font-size:1.1vw; font-weight:900;">온습도 센서 (BME280)</div>
+          <div style="font-size:0.85vw; color:var(--sky); font-weight:800; margin-top:.4vh;">오염 가속 환경</div>
+        </div>
+        <div class="pipe-connector">➔</div>
+        <div class="pipe-step" style="text-align:center;">
+          <div style="font-size:1.1vw; font-weight:900;">ESP32-S3 (Sender)</div>
+          <div style="font-size:0.85vw; color:var(--sky); font-weight:800; margin-top:.4vh;">MQTT 무선 송출</div>
+        </div>
+        <div class="pipe-connector">➔</div>
+        <div class="pipe-step" style="text-align:center;">
+          <div style="font-size:1.1vw; font-weight:900;">라즈베리파이 (Hub)</div>
+          <div style="font-size:0.85vw; color:var(--sky); font-weight:800; margin-top:.4vh;">AI 예측 처리</div>
+        </div>
+        <div class="pipe-connector">➔</div>
+        <div class="pipe-step" style="text-align:center;">
+          <div style="font-size:1.1vw; font-weight:900;">웹 대시보드</div>
+          <div style="font-size:0.85vw; color:var(--sky); font-weight:800; margin-top:.4vh;">실시간 관제</div>
+        </div>
       </div>
-      <div class="relay-split">
-        <div class="relay-col" data-anim>
-          <div class="tag">PUSH METRIC</div>
-          <div class="h">1. 차압 · 온습도 실시간 측정 & 전송</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:2vw; margin-top:2vh;">
+        <div style="background:var(--white); border:1.5px solid var(--sky-border); border-radius:20px; padding:2.5vh 2vw;" data-anim>
+          <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">PUSH METRIC</div>
+          <div style="font-size:1.35vw; font-weight:900; margin:.6vh 0 1.2vh;">1. 차압 · 온습도 실시간 측정 & 전송</div>
           <ul class="blist">
             <li>SDP610 차압 0.1Pa 고정밀 실측 (막힘도)</li>
             <li>BME280 온도 · 습도 환경 측정</li>
             <li>ESP32에서 MQTT 프로토콜로 실시간 송출</li>
           </ul>
         </div>
-        <div class="relay-col pull" data-anim>
-          <div class="tag">AI & DASHBOARD</div>
-          <div class="h">2. 데이터 분석 & 통합 관제</div>
+        <div style="background:var(--sky-light); border:1.5px solid var(--sky-border); border-radius:20px; padding:2.5vh 2vw;" data-anim>
+          <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">AI & DASHBOARD</div>
+          <div style="font-size:1.35vw; font-weight:900; margin:.6vh 0 1.2vh;">2. 데이터 분석 & 통합 관제</div>
           <ul class="blist">
             <li>라즈베리파이 데이터 누적 저장 및 이력 분석</li>
             <li>AI 기반 교체 D-Day 및 예상 전력 절감량 계산</li>
@@ -370,25 +322,25 @@
   <!-- S5 AI Engine -->
   <section class="slide" data-index="4">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>AI Engine</div>
         <h2 class="h-title" data-anim>Smart Filter — AI 오염 예측 & 전력 분석</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="relay-split">
-        <div class="relay-col" data-anim>
-          <div class="tag">SECTION 01</div>
-          <div class="h">🧠 1. 필터 오염 & 교체 주기 예측</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:2vw;">
+        <div style="background:var(--white); border:1.5px solid var(--sky-border); border-radius:20px; padding:3vh 2vw;" data-anim>
+          <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">SECTION 01</div>
+          <div style="font-size:1.4vw; font-weight:900; margin:.6vh 0 1.5vh;">🧠 1. 필터 오염 & 교체 주기 예측</div>
           <ul class="blist">
             <li><b>예측 활용 데이터:</b> 차압 수치, 공간별 특성 (거실·주방 등), 온습도 데이터</li>
             <li><b>예측 결과 리포트:</b> 현재 오염도 (%), AI 교체 D-Day, 3단계 상태 (정상·주의·위험)</li>
           </ul>
         </div>
-        <div class="relay-col pull" data-anim>
-          <div class="tag">SECTION 02</div>
-          <div class="h">⚡ 2. 팬 전력 감소량 & 비용 계산</div>
+        <div style="background:var(--mint-light); border:1.5px solid #A7F3D0; border-radius:20px; padding:3vh 2vw;" data-anim>
+          <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--mint);">SECTION 02</div>
+          <div style="font-size:1.4vw; font-weight:900; margin:.6vh 0 1.5vh;">⚡ 2. 팬 전력 감소량 & 비용 계산</div>
           <ul class="blist">
             <li><b>계산 필요 데이터:</b> 차압 상승에 따른 팬 과부하 측정값, 교체 시 감소 전력 계수</li>
             <li><b>절감 계산 리포트:</b> 미교체 전력증가량, 교체 전력감소량, <b>월간·연간 전기요금 절감액 환산</b></li>
@@ -401,26 +353,28 @@
   <!-- S6 App Overview -->
   <section class="slide" data-index="5">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>Deployed App</div>
         <h2 class="h-title" data-anim>실제 구현된 스마트홈 웹 서비스</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="relay-split">
-        <div class="relay-col pull" data-anim>
-          <div class="tag">FULL STACK WEB DEPLOYMENT</div>
-          <div class="h">🌐 완성형 스마트홈 웹 시스템</div>
-          <p style="font-size:1.1vw; font-weight:800; color:var(--sky-glow); margin-top:1.2vh;">🔗 https://smartfilter-railway-cloud-production-e704.up.railway.app</p>
-          <div style="margin-top:2.2vh; font-size:1vw; font-weight:700; color:var(--ink-dim); line-height:1.6;">🟢 24시간 실물 하드웨어 연동 중 — 목업 없이 100% 실측 기반으로 전 세계 어디서든 작동</div>
-        </div>
-        <div class="relay-col" style="align-items:center; text-align:center;" data-anim>
-          <div class="tag">QR CONNECT</div>
-          <div style="background:#fff; border:1.5px solid var(--sky-glow); border-radius:16px; padding:1.2vh 1.2vw; margin-top:1.2vh; box-shadow:0 0 25px rgba(56,189,248,0.2);">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" style="width:9vw; height:9vw;"><path fill="#FFFFFF" d="M0 0h39v39H0z"/><path stroke="#0E211D" d="M1 1.5h7m2 0h1m3 0h1m1 0h1m1 0h1m3 0h1m3 0h1m2 0h1m1 0h7M1 2.5h1m5 0h1m2 0h1m4 0h2m4 0h1m1 0h3m1 0h3m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h3m4 0h3m4 0h1m1 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m3 0h1m4 0h2m1 0h3m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h1m3 0h1m3 0h2m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h2m1 0h2m4 0h1m3 0h1m2 0h1m2 0h2m1 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h4m1 0h1m1 0h1m1 0h2m1 0h3m3 0h2M1 9.5h1m1 0h5m2 0h2m1 0h1m1 0h1m1 0h1m4 0h1m1 0h1m1 0h2m1 0h1m1 0h5M3 10.5h2m3 0h1m2 0h2m2 0h2m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m2 0h2M1 11.5h1m1 0h1m3 0h2m4 0h5m1 0h2m1 0h1m4 0h2m2 0h2m3 0h2M4 12.5h2m2 0h7m1 0h1m2 0h5m1 0h1m2 0h3m1 0h1m4 0h1M1 13.5h5m1 0h1m6 0h3m1 0h1m1 0h1m2 0h1m1 0h3m2 0h8M1 14.5h1m1 0h4m1 0h6m3 0h1m2 0h2m1 0h2m1 0h1m2 0h1m2 0h1M2 15.5h1m1 0h5m2 0h1m4 0h1m2 0h1m1 0h1m1 0h1m4 0h1m2 0h4m2 0h1M1 16.5h1m1 0h1m1 0h2m1 0h4m3 0h3m3 0h1m3 0h1m1 0h1m1 0h1m1 0h3M1 17.5h3m1 0h5m1 0h3m1 0h2m2 0h1m1 0h6m1 0h1m2 0h3m1 0h2M2 18.5h1m1 0h3m2 0h3m3 0h3m11 0h1m2 0h1m3 0h1M1 19.5h1m1 0h6m1 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m1 0h4m2 0h1m2 0h2M1 20.5h6m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m2 0h3m2 0h2m1 0h5m2 0h1M4 21.5h1m1 0h2m1 0h3m2 0h2m1 0h2m2 0h1m2 0h4m2 0h2m1 0h1m1 0h1M3 22.5h2m1 0h1m1 0h2m1 0h1m3 0h1m1 0h6m1 0h1m1 0h2m1 0h1m4 0h1M2 23.5h1m2 0h3m1 0h2m4 0h4m2 0h2m3 0h3m1 0h1m1 0h3m1 0h2M1 24.5h1m1 0h1m2 0h1m1 0h1m2 0h1m2 0h2m2 0h6m1 0h1m2 0h2m2 0h2m2 0h1M2 25.5h3m2 0h1m2 0h4m2 0h2m2 0h1m1 0h1m2 0h4m1 0h2m1 0h1m1 0h2M1 26.5h3m4 0h2m1 0h6m1 0h2m1 0h1m1 0h1m1 0h1m3 0h2M1 27.5h1m1 0h1m3 0h4m1 0h1m2 0h4m1 0h1m1 0h2m1 0h2m1 0h2m1 0h1m3 0h3M1 28.5h1m1 0h4m1 0h1m3 0h2m1 0h2m3 0h4m1 0h1m2 0h1m1 0h3m1 0h1m2 0h1M1 29.5h1m1 0h2m2 0h4m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h6m1 0h1m1 0h1M9 30.5h5m3 0h1m1 0h3m2 0h1m4 0h1m3 0h2M1 31.5h7m4 0h1m1 0h1m1 0h2m1 0h1m3 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h3M1 32.5h1m5 0h1m1 0h2m2 0h2m1 0h2m3 0h1m2 0h2m1 0h1m1 0h1m3 0h2m1 0h2M1 33.5h1m1 0h3m1 0h1m1 0h3m2 0h1m1 0h1m2 0h5m2 0h8m1 0h1M1 34.5h1m1 0h3m1 0h1m1 0h3m1 0h5m4 0h1m1 0h1m1 0h6m1 0h2m2 0h1M1 35.5h1m1 0h3m1 0h1m1 0h2m1 0h4m5 0h1m3 0h1m1 0h2m1 0h1m3 0h1m1 0h2M1 36.5h1m5 0h1m2 0h2m1 0h2m2 0h1m1 0h1m2 0h2m1 0h1m1 0h3m1 0h1m1 0h2m2 0h1M1 37.5h7m1 0h2m3 0h2m1 0h2m4 0h1m2 0h2m5 0h1m1 0h3"/></svg>
+      <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:2.5vw; align-items:center;">
+        <div style="background:var(--sky-light); border:1.5px solid var(--sky-border); border-radius:22px; padding:3.5vh 2.4vw;" data-anim>
+          <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">FULL STACK WEB DEPLOYMENT</div>
+          <div style="font-size:1.55vw; font-weight:900; margin-top:.8vh;">🌐 완성형 스마트홈 웹 시스템</div>
+          <div style="font-size:1.1vw; font-weight:800; color:var(--sky); margin-top:1.5vh;">🔗 https://smartfilter-railway-cloud-production-e704.up.railway.app</div>
+          <div style="margin-top:2.5vh; font-size:1.05vw; font-weight:700; color:var(--ink-slate); line-height:1.65;">
+            🟢 <b>24시간 실물 하드웨어 연동 중</b> — 목업 없이 100% 실측 기반으로 전 세계 어디서든 동일하게 작동합니다.
           </div>
-          <div style="font-size:0.95vw; font-weight:800; color:var(--white); margin-top:1.2vh;">📲 폰으로 스캔해서 접속</div>
+        </div>
+        <div style="background:var(--white); border:1.5px solid var(--sky-border); border-radius:22px; padding:3.5vh 2vw; text-align:center;" data-anim>
+          <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">QR CONNECT</div>
+          <div style="background:#fff; border:1.5px solid var(--sky-border); border-radius:18px; padding:1.2vh 1.2vw; display:inline-block; margin-top:1.5vh; box-shadow:var(--shadow-soft);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" style="width:9.5vw; height:9.5vw;"><path fill="#FFFFFF" d="M0 0h39v39H0z"/><path stroke="#0E211D" d="M1 1.5h7m2 0h1m3 0h1m1 0h1m1 0h1m3 0h1m3 0h1m2 0h1m1 0h7M1 2.5h1m5 0h1m2 0h1m4 0h2m4 0h1m1 0h3m1 0h3m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h3m4 0h3m4 0h1m1 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m3 0h1m4 0h2m1 0h3m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h1m3 0h1m3 0h2m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h2m1 0h2m4 0h1m3 0h1m2 0h1m2 0h2m1 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h4m1 0h1m1 0h1m1 0h2m1 0h3m3 0h2M1 9.5h1m1 0h5m2 0h2m1 0h1m1 0h1m1 0h1m4 0h1m1 0h1m1 0h2m1 0h1m1 0h5M3 10.5h2m3 0h1m2 0h2m2 0h2m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m2 0h2M1 11.5h1m1 0h1m3 0h2m4 0h5m1 0h2m1 0h1m4 0h2m2 0h2m3 0h2M4 12.5h2m2 0h7m1 0h1m2 0h5m1 0h1m2 0h3m1 0h1m4 0h1M1 13.5h5m1 0h1m6 0h3m1 0h1m1 0h1m2 0h1m1 0h3m2 0h8M1 14.5h1m1 0h4m1 0h6m3 0h1m2 0h2m1 0h2m1 0h1m2 0h1m2 0h1M2 15.5h1m1 0h5m2 0h1m4 0h1m2 0h1m1 0h1m1 0h1m4 0h1m2 0h4m2 0h1M1 16.5h1m1 0h1m1 0h2m1 0h4m3 0h3m3 0h1m3 0h1m1 0h1m1 0h1m1 0h3M1 17.5h3m1 0h5m1 0h3m1 0h2m2 0h1m1 0h6m1 0h1m2 0h3m1 0h2M2 18.5h1m1 0h3m2 0h3m3 0h3m11 0h1m2 0h1m3 0h1M1 19.5h1m1 0h6m1 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m1 0h4m2 0h1m2 0h2M1 20.5h6m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m2 0h3m2 0h2m1 0h5m2 0h1M4 21.5h1m1 0h2m1 0h3m2 0h2m1 0h2m2 0h1m2 0h4m2 0h2m1 0h1m1 0h1M3 22.5h2m1 0h1m1 0h2m1 0h1m3 0h1m1 0h6m1 0h1m1 0h2m1 0h1m4 0h1M2 23.5h1m2 0h3m1 0h2m4 0h4m2 0h2m3 0h3m1 0h1m1 0h3m1 0h2M1 24.5h1m1 0h1m2 0h1m1 0h1m2 0h1m2 0h2m2 0h6m1 0h1m2 0h2m2 0h2m2 0h1M2 25.5h3m2 0h1m2 0h4m2 0h2m2 0h1m1 0h1m2 0h4m1 0h2m1 0h1m1 0h2M1 26.5h3m4 0h2m1 0h6m1 0h2m1 0h1m1 0h1m1 0h1m3 0h2M1 27.5h1m1 0h1m3 0h4m1 0h1m2 0h4m1 0h1m1 0h2m1 0h2m1 0h2m1 0h1m3 0h3M1 28.5h1m1 0h4m1 0h1m3 0h2m1 0h2m3 0h4m1 0h1m2 0h1m1 0h3m1 0h1m2 0h1M1 29.5h1m1 0h2m2 0h4m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h6m1 0h1m1 0h1M9 30.5h5m3 0h1m1 0h3m2 0h1m4 0h1m3 0h2M1 31.5h7m4 0h1m1 0h1m1 0h2m1 0h1m3 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h3M1 32.5h1m5 0h1m1 0h2m2 0h2m1 0h2m3 0h1m2 0h2m1 0h1m1 0h1m3 0h2m1 0h2M1 33.5h1m1 0h3m1 0h1m1 0h3m2 0h1m1 0h1m2 0h5m2 0h8m1 0h1M1 34.5h1m1 0h3m1 0h1m1 0h3m1 0h5m4 0h1m1 0h1m1 0h6m1 0h2m2 0h1M1 35.5h1m1 0h3m1 0h1m1 0h2m1 0h4m5 0h1m3 0h1m1 0h2m1 0h1m3 0h1m1 0h2M1 36.5h1m5 0h1m2 0h2m1 0h2m2 0h1m1 0h1m2 0h2m1 0h1m1 0h3m1 0h1m1 0h2m2 0h1M1 37.5h7m1 0h2m3 0h2m1 0h2m4 0h1m2 0h2m5 0h1m1 0h3"/></svg>
+          </div>
+          <div style="font-size:0.95vw; font-weight:800; color:var(--ink-dim); margin-top:1.2vh;">📲 폰 카메라 스캔 접속</div>
         </div>
       </div>
     </div>
@@ -429,18 +383,19 @@
   <!-- S7 Feature: 홈 · 기기 -->
   <section class="slide" data-index="6">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>App Features · 1</div>
         <h2 class="h-title" data-anim>홈 · 기기</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="feat-row">
-        <div class="feat-col" data-anim>
-          <div class="feat-phone"><img src="shots/home.png" alt="홈 화면"></div>
-          <div class="feat-copy">
-            <div class="k">01 · Home</div><div class="h">🏠 홈</div>
+      <div class="feat-open-row">
+        <div class="feat-open-col" data-anim>
+          <div class="feat-phone-mock"><img src="shots/home.png" alt="홈 화면"></div>
+          <div>
+            <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">01 · HOME</div>
+            <div style="font-size:1.45vw; font-weight:900; margin:.4vh 0 1.2vh;">🏠 홈</div>
             <ul class="blist">
               <li>최상단 시스템 알림 고정</li>
               <li><b>필터 막힘 등급</b> (예상관리일 · 수명%)</li>
@@ -450,10 +405,11 @@
             </ul>
           </div>
         </div>
-        <div class="feat-col" data-anim>
-          <div class="feat-phone"><img src="shots/devices.png" alt="기기 화면"></div>
-          <div class="feat-copy">
-            <div class="k">02 · Devices</div><div class="h">💻 기기</div>
+        <div class="feat-open-col" data-anim>
+          <div class="feat-phone-mock"><img src="shots/devices.png" alt="기기 화면"></div>
+          <div>
+            <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">02 · DEVICES</div>
+            <div style="font-size:1.45vw; font-weight:900; margin:.4vh 0 1.2vh;">💻 기기</div>
             <ul class="blist">
               <li><b>공간별 에어컨 등록</b> (주방 · 거실 수명공식 차등)</li>
               <li>가족 + 반려동물 관리 (털 오염 반영)</li>
@@ -468,28 +424,30 @@
   <!-- S8 Feature: 리포트 · 회복 테스트 -->
   <section class="slide" data-index="7">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>App Features · 2</div>
         <h2 class="h-title" data-anim>리포트 · 회복 테스트</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="feat-row">
-        <div class="feat-col" data-anim>
-          <div class="feat-phone"><img src="shots/report.png" alt="리포트 화면"></div>
-          <div class="feat-copy">
-            <div class="k">03 · Report</div><div class="h">📊 리포트</div>
+      <div class="feat-open-row">
+        <div class="feat-open-col" data-anim>
+          <div class="feat-phone-mock"><img src="shots/report.png" alt="리포트 화면"></div>
+          <div>
+            <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">03 · REPORT</div>
+            <div style="font-size:1.45vw; font-weight:900; margin:.4vh 0 1.2vh;">📊 리포트</div>
             <ul class="blist">
               <li>라즈베리파이 <b>실시간 절감 분석</b></li>
               <li>누적 절감 전력(kWh) · 절감 전기요금(원)</li>
             </ul>
           </div>
         </div>
-        <div class="feat-col" data-anim>
-          <div class="feat-phone"><img src="shots/recovery.png" alt="회복 테스트 화면"></div>
-          <div class="feat-copy">
-            <div class="k">04 · Recovery</div><div class="h">⏱️ 회복 테스트</div>
+        <div class="feat-open-col" data-anim>
+          <div class="feat-phone-mock"><img src="shots/recovery.png" alt="회복 테스트 화면"></div>
+          <div>
+            <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">04 · RECOVERY</div>
+            <div style="font-size:1.45vw; font-weight:900; margin:.4vh 0 1.2vh;">⏱️ 회복 테스트</div>
             <ul class="blist">
               <li><b>3분</b> 세척 전후 검증</li>
               <li>100점 만점 종합판정</li>
@@ -504,28 +462,30 @@
   <!-- S9 Feature: 관리 · 필터 마켓 -->
   <section class="slide" data-index="8">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>App Features · 3</div>
         <h2 class="h-title" data-anim>관리 · 필터 마켓</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="feat-row">
-        <div class="feat-col" data-anim>
-          <div class="feat-phone"><img src="shots/management.png" alt="관리 화면"></div>
-          <div class="feat-copy">
-            <div class="k">05 · Management</div><div class="h">⚙️ 관리</div>
+      <div class="feat-open-row">
+        <div class="feat-open-col" data-anim>
+          <div class="feat-phone-mock"><img src="shots/management.png" alt="관리 화면"></div>
+          <div>
+            <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">05 · MANAGEMENT</div>
+            <div style="font-size:1.45vw; font-weight:900; margin:.4vh 0 1.2vh;">⚙️ 관리</div>
             <ul class="blist">
               <li><b>필터 관리 회복 이력 기록</b></li>
               <li>센서 상태체크 (SDP610 · BME280 진단/이상알림)</li>
             </ul>
           </div>
         </div>
-        <div class="feat-col" data-anim>
-          <div class="feat-phone"><img src="shots/market.png" alt="필터 마켓 화면"></div>
-          <div class="feat-copy">
-            <div class="k">06 · Market</div><div class="h">🛒 필터 마켓</div>
+        <div class="feat-open-col" data-anim>
+          <div class="feat-phone-mock"><img src="shots/market.png" alt="필터 마켓 화면"></div>
+          <div>
+            <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">06 · MARKET</div>
+            <div style="font-size:1.45vw; font-weight:900; margin:.4vh 0 1.2vh;">🛒 필터 마켓</div>
             <ul class="blist">
               <li>가장 오른쪽 탭 — <b>B2B 연계 커머스</b></li>
               <li><b>기업 배너</b> 광고 연동</li>
@@ -539,19 +499,19 @@
   <!-- S10 Customer Benefits -->
   <section class="slide" data-index="9">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>Customer Benefits</div>
         <h2 class="h-title" data-anim>고객이 얻는 효과</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="stat-grid">
-        <div class="stat-card" data-anim>
+      <div class="stat-pillar-grid">
+        <div class="stat-pillar" data-anim>
           <div>
-            <div class="stat-icon">⚡</div>
-            <div class="stat-title">에너지 비용 절감</div>
-            <div class="stat-number" data-count="27.0" data-prefix="-" data-suffix="%">0%</div>
+            <div style="font-size:2.5vw; margin-bottom:.8vh;">⚡</div>
+            <div style="font-size:1.5vw; font-weight:900;">에너지 비용 절감</div>
+            <div class="stat-pillar-num" data-count="27.0" data-prefix="-" data-suffix="%">0%</div>
           </div>
           <ul class="blist">
             <li>팬 전력 과부하 차단</li>
@@ -560,11 +520,11 @@
           </ul>
         </div>
 
-        <div class="stat-card mint" data-anim>
+        <div class="stat-pillar mint" data-anim>
           <div>
-            <div class="stat-icon">🛠️</div>
-            <div class="stat-title">유지관리 효율 향상</div>
-            <div class="stat-number">ZERO</div>
+            <div style="font-size:2.5vw; margin-bottom:.8vh;">🛠️</div>
+            <div style="font-size:1.5vw; font-weight:900;">유지관리 효율 향상</div>
+            <div class="stat-pillar-num">ZERO</div>
           </div>
           <ul class="blist">
             <li>불필요한 현장 점검 감소</li>
@@ -573,11 +533,11 @@
           </ul>
         </div>
 
-        <div class="stat-card navy" data-anim>
+        <div class="stat-pillar navy" data-anim>
           <div>
-            <div class="stat-icon">🌿</div>
-            <div class="stat-title">실내 환경 개선</div>
-            <div class="stat-number" data-count="100" data-suffix="%">0%</div>
+            <div style="font-size:2.5vw; margin-bottom:.8vh;">🌿</div>
+            <div style="font-size:1.5vw; font-weight:900;">실내 환경 개선</div>
+            <div class="stat-pillar-num" data-count="100" data-suffix="%">0%</div>
           </div>
           <ul class="blist">
             <li>성능 저하 조기 감지</li>
@@ -586,7 +546,7 @@
           </ul>
         </div>
       </div>
-      <div style="margin-top:2.5vh; background:rgba(56,189,248,0.12); border:1.5px solid rgba(56,189,248,0.35); text-align:center; padding:1.2vh 2vw; border-radius:16px; font-size:1.3vw; font-weight:900; color:var(--white); box-shadow:0 0 20px rgba(56,189,248,0.15);" data-anim>
+      <div style="margin-top:2.5vh; background:var(--navy-dark); color:#FFFFFF; text-align:center; padding:1.4vh 2vw; border-radius:18px; font-size:1.35vw; font-weight:900; font-family:'Space Grotesk';" data-anim>
         💰 필터 비용 절감 + 전력 절감 + 관리 효율 향상
       </div>
     </div>
@@ -595,38 +555,35 @@
   <!-- S11 Business Model -->
   <section class="slide" data-index="10">
     <div class="slide-header">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>Business Model</div>
         <h2 class="h-title" data-anim>수익 모델 — 센서 판매에서 에너지 관리 서비스까지</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="biz-grid">
-        <div class="biz-card rev" data-anim>
-          <div>
-            <div class="biz-tag">REVENUE STREAMS</div>
-            <div class="biz-h">💰 4대 핵심 수익 구조</div>
-          </div>
-          <div>
-            <div class="biz-row"><span class="no">01</span><span><b>1. 센서 모듈 판매</b> — 부착형 센서 제품 판매</span></div>
-            <div class="biz-row"><span class="no">02</span><span><b>2. 대시보드 구독 서비스</b> — AI 교체 예측 구독료</span></div>
-            <div class="biz-row"><span class="no">03</span><span><b>3. 필터 판매 & 제휴 배너 광고</b> — <b>기업 제휴 배너 광고 수익</b></span></div>
-            <div class="biz-row"><span class="no">04</span><span><b>4. B2B 에너지 관리 서비스</b> — B2B 연간 관리 계약</span></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:2vw;">
+        <div style="background:var(--sky-light); border:1.5px solid var(--sky-border); border-radius:22px; padding:3vh 2vw;" data-anim>
+          <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--sky);">REVENUE STREAMS</div>
+          <div style="font-size:1.5vw; font-weight:900; margin:.6vh 0 1.5vh;">💰 4대 핵심 수익 구조</div>
+          <div style="display:flex; flex-direction:column; gap:1vh;">
+            <div style="font-size:1.1vw; font-weight:800; border-top:1px dashed var(--sky-border); padding-top:1vh;"><b style="color:var(--sky);">01.</b> 센서 모듈 판매 — 부착형 센서 제품 판매</div>
+            <div style="font-size:1.1vw; font-weight:800; border-top:1px dashed var(--sky-border); padding-top:1vh;"><b style="color:var(--sky);">02.</b> 대시보드 구독 서비스 — AI 교체 예측 구독료</div>
+            <div style="font-size:1.1vw; font-weight:800; border-top:1px dashed var(--sky-border); padding-top:1vh;"><b style="color:var(--sky);">03.</b> 필터 판매 & 제휴 배너 광고 — <b>기업 제휴 배너 광고 수익</b></div>
+            <div style="font-size:1.1vw; font-weight:800; border-top:1px dashed var(--sky-border); padding-top:1vh;"><b style="color:var(--sky);">04.</b> B2B 에너지 관리 서비스 — B2B 연간 관리 계약</div>
           </div>
         </div>
-        <div class="biz-card mkt" data-anim>
-          <div>
-            <div class="biz-tag">PIPELINE</div>
-            <div class="biz-h">🚀 핵심 수익 체계 & 시장 확장</div>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:1.5vh;">
-            <div style="background:rgba(255,255,255,0.05); border:1.5px solid rgba(52,211,153,0.4); padding:1.4vh 1.4vw; border-radius:16px; font-size:1.05vw; font-weight:800; color:var(--ink-dim); line-height:1.6;">
-              📍 <b style="color:var(--mint-glow);">수익 확장 선순환 파이프라인:</b><br>
+
+        <div style="background:var(--mint-light); border:1.5px solid #A7F3D0; border-radius:22px; padding:3vh 2vw;" data-anim>
+          <div style="font-family:'Space Grotesk'; font-size:0.85vw; font-weight:900; color:var(--mint);">PIPELINE</div>
+          <div style="font-size:1.5vw; font-weight:900; margin:.6vh 0 1.5vh;">🚀 핵심 수익 체계 & 시장 확장</div>
+          <div style="display:flex; flex-direction:column; gap:1.6vh;">
+            <div style="background:#FFFFFF; border:1.5px solid #A7F3D0; padding:1.4vh 1.4vw; border-radius:16px; font-size:1.05vw; font-weight:800; color:var(--ink-dim); line-height:1.65;">
+              📍 <b style="color:var(--mint);">수익 확장 선순환 파이프라인:</b><br>
               센서 판매로 고객 확보 ➔ 대시보드 구독 & 배너 광고로 반복 수익 ➔ B2B 에너지 관리 서비스로 확장
             </div>
-            <div style="background:rgba(255,255,255,0.05); border:1.5px solid rgba(52,211,153,0.4); padding:1.4vh 1.4vw; border-radius:16px; font-size:1.05vw; font-weight:800; color:var(--ink-dim); line-height:1.6;">
-              🎯 <b style="color:var(--mint-glow);">4단계 시장 진입 전략:</b><br>
+            <div style="background:#FFFFFF; border:1.5px solid #A7F3D0; padding:1.4vh 1.4vw; border-radius:16px; font-size:1.05vw; font-weight:800; color:var(--ink-dim); line-height:1.65;">
+              🎯 <b style="color:var(--mint);">4단계 시장 진입 전략:</b><br>
               1. 가정·아파트 ➔ 2. 학교·공공기관 ➔ 3. 병원·다중시설 ➔ 4. 대형 B2B 공장
             </div>
           </div>
@@ -638,27 +595,27 @@
   <!-- S12 Live Demo Showcase -->
   <section class="slide" data-index="11">
     <div class="slide-header" style="margin-bottom: 1.5vh;">
-      <div class="header-left">
+      <div>
         <div class="eyebrow" data-anim>Live Relay Showcase</div>
         <h2 class="h-title" data-anim>실시간 실물 시연: Smart Filter 카메라 중계</h2>
       </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
-      <div class="lr-monitor">
-        <iframe src="index.html" title="Live Relay Engine"></iframe>
+      <div style="width:100%; height:100%; background:#04070f; border:2px solid var(--sky-border); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-float);">
+        <iframe src="index.html" title="Live Relay Engine" style="width:100%; height:100%; border:none;"></iframe>
       </div>
     </div>
   </section>
 
   <!-- S13 Closing -->
-  <section class="slide" id="s13" data-index="12">
+  <section class="slide slide--dark" id="s13" data-index="12">
     <div class="body" style="align-items:center; text-align:center;">
-      <div class="cover-pill" data-anim>SMART HOME STANDARD</div>
-      <h2 style="font-size: 3vw; font-weight: 900; color: var(--white); max-width: 26ch; line-height: 1.35;" data-anim>
+      <div class="cover-pill floating-elem" data-anim>SMART HOME STANDARD</div>
+      <h2 style="font-size: 3.2vw; font-weight: 900; color: var(--white); max-width: 26ch; line-height: 1.35;" data-anim>
         Smart Filter는 <b>감이 아닌 실측 데이터</b>로 에너지를 절약하는 스마트홈의 필수 표준입니다
       </h2>
-      <div class="cover-plate" style="margin-top: 5vh;" data-anim>
+      <div class="cover-plate floating-elem" style="margin-top: 5vh;" data-anim>
         <div class="cover-team">에너지온 [Energy ON]</div>
         <div class="cover-members">김예지 · 변성훈 · 정지예</div>
       </div>
@@ -689,7 +646,7 @@
   function animateSlide(slide) {
     const animElements = slide.querySelectorAll('[data-anim]');
     animElements.forEach((el, index) => {
-      setTimeout(() => el.classList.add('in'), index * 70);
+      setTimeout(() => el.classList.add('in'), index * 60);
     });
 
     // Count up metrics
