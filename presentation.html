@@ -382,6 +382,7 @@
   </section>
 
   <!-- S7 Feature: 홈 · 기기 -->
+  <!-- S7 Feature: 홈 · 기기 -->
   <section class="slide" id="s7">
     <div class="slide-header">
       <div><div class="eyebrow">App Features · 1</div><h2>홈 · 기기</h2></div>
@@ -394,10 +395,10 @@
           <div class="k">01 · Home</div><div class="h">🏠 홈</div>
           <ul class="blist">
             <li>최상단 <b>시스템 알림</b> 고정</li>
-            <li>필터 막힘도 UI (예상관리일 · 수명%)</li>
-            <li>AI <b>곰팡이 · 오염 위험도</b> 분석</li>
+            <li><b>필터 막힘 등급</b> (예상관리일 · 수명%)</li>
+            <li><b>곰팡이 오염 위험도 분석</b></li>
             <li>라이브 카메라 On/Off</li>
-            <li>실시간 센서 (차압 · 온습도 · 운전시간)</li>
+            <li><b>실시간 센서 값</b> (차압 · 온습도 · 운전시간)</li>
             <li>미세먼지 농도 (기상청 연동)</li>
           </ul>
         </div>
@@ -407,9 +408,9 @@
         <div class="feat-copy">
           <div class="k">02 · Devices</div><div class="h">💻 기기</div>
           <ul class="blist">
-            <li>공간별 에어컨 등록 (주방 · 거실 수명공식 차등)</li>
+            <li><b>공간별 에어컨 등록</b> (주방 · 거실 수명공식 차등)</li>
             <li>가족 + <b>반려동물</b> 관리 (털 오염 반영)</li>
-            <li>기기 상세정보 (모델 · 필터종류 · 설치일 · 게이트웨이 신호)</li>
+            <li><b>기기 상세 정보</b> (모델 · 필터종류 · 설치일 · 신호)</li>
           </ul>
         </div>
       </div>
@@ -428,7 +429,7 @@
         <div class="feat-copy">
           <div class="k">03 · Report</div><div class="h">📊 리포트</div>
           <ul class="blist">
-            <li>라즈베리파이 실시간 절감분석</li>
+            <li>라즈베리파이 <b>실시간 절감 분석</b></li>
             <li>누적 절감 전력(<b>kWh</b>) · 절감 전기요금(<b>원</b>)</li>
           </ul>
         </div>
@@ -440,7 +441,7 @@
           <ul class="blist">
             <li><b>3분</b> 세척 전후 검증</li>
             <li><b>100점</b> 만점 종합판정</li>
-            <li>차압 회복률 · 전력 개선률 · 풍량 회복률</li>
+            <li><b>차압 회복률 · 전력 개선률 · 풍량 회복률</b></li>
             <li>항목별 확인 & 다시 테스트하기</li>
           </ul>
         </div>
@@ -460,7 +461,7 @@
         <div class="feat-copy">
           <div class="k">05 · Management</div><div class="h">⚙️ 관리</div>
           <ul class="blist">
-            <li>필터 관리 · 회복 이력 기록</li>
+            <li><b>필터 관리 회복 이력 기록</b></li>
             <li>센서 상태체크 (<b>SDP610 · BME280</b> 진단/이상알림)</li>
             <li>기준값 재학습 실행</li>
             <li>알림 임계값 설정</li>
@@ -474,7 +475,7 @@
           <ul class="blist">
             <li>가장 오른쪽 탭 — <b>B2B 연계 커머스</b></li>
             <li>전체상품 → 필터(Main) → 에어컨 · 공기청정기 · TV</li>
-            <li>기업 제휴배너 연동</li>
+            <li><b>기업 배너</b> 광고 연동</li>
           </ul>
         </div>
       </div>
@@ -484,17 +485,45 @@
   <!-- S10 Customer Benefits -->
   <section class="slide" id="s10">
     <div class="slide-header">
-      <div><div class="eyebrow">Customer Benefits</div><h2>고객이 얻는 이익</h2></div>
+      <div><div class="eyebrow">Customer Benefits</div><h2>고객이 얻는 효과</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="body">
-      <div class="benefit-grid">
-        <div class="benefit-card"><div class="e">📈</div><div class="k">실시간 오염도(%)</div><div class="v">감이 아닌 숫자로 필터 상태 확인</div></div>
-        <div class="benefit-card"><div class="e">📅</div><div class="k">교체 D-Day 예측</div><div class="v">AI가 미리 알려주는 교체 시점 (3단계 등급)</div></div>
-        <div class="benefit-card"><div class="e">💸</div><div class="k">절감 전력 · 요금 자동계산</div><div class="v">kWh · 원 단위로 바로 확인</div></div>
-        <div class="benefit-card"><div class="e">🦠</div><div class="k">곰팡이 · 오염 위험 알림</div><div class="v">습도 · 온도 기반 사전 경고</div></div>
-        <div class="benefit-card"><div class="e">🌐</div><div class="k">원격 통합 대시보드</div><div class="v">센서 · 카메라 · 제어, 어디서든</div></div>
-        <div class="benefit-card"><div class="e">✅</div><div class="k">3분 회복 검증</div><div class="v">청소 효과를 점수로 증명</div></div>
+    <div class="body" style="display:flex; flex-direction:column; gap:1.2rem; justify-content:space-between;">
+      <div style="background:#F0F9FF; border:1.5px solid #BAE6FD; padding:1.1rem 1.4rem; border-radius:14px; font-size:1.15rem; font-weight:800; color:var(--primary-dark); line-height:1.6;">
+        💡 <b>필터 관리와 에너지 절감을 동시에 해결합니다</b><br>
+        <span style="font-size:1.05rem; color:var(--muted); font-weight:700;">Smart Filter는 필터 상태 표시에 그치지 않고, 적시 교체를 유도하여 전력 사용량, 필터 비용, 관리 시간을 함께 줄입니다.</span>
+      </div>
+      <div class="benefit-grid" style="grid-template-columns:1fr 1fr 1fr; gap:1.2rem; flex:1;">
+        <div class="benefit-card" style="padding:1.25rem;">
+          <div class="e">⚡</div>
+          <div class="k" style="font-size:1.25rem; color:var(--primary-dark);">에너지 비용 절감</div>
+          <div class="v" style="font-size:0.95rem; line-height:1.6; text-align:left; margin-top:0.5rem;">
+            • 필터 저항으로 인한 팬 전력 증가 방지<br>
+            • 예상 전력 감소량 사전 확인<br>
+            • 월간·연간 전기요금 실제 절감
+          </div>
+        </div>
+        <div class="benefit-card" style="padding:1.25rem;">
+          <div class="e">🛠️</div>
+          <div class="k" style="font-size:1.25rem; color:var(--accent);">유지관리 효율 향상</div>
+          <div class="v" style="font-size:0.95rem; line-height:1.6; text-align:left; margin-top:0.5rem;">
+            • 불필요한 현장 직접 점검 감소<br>
+            • 과잉 교체 및 지연 교체 방지<br>
+            • 여러 공간의 필터 통합 원격 관리
+          </div>
+        </div>
+        <div class="benefit-card" style="padding:1.25rem;">
+          <div class="e">🌿</div>
+          <div class="k" style="font-size:1.25rem; color:var(--warning);">실내 환경 개선</div>
+          <div class="v" style="font-size:0.95rem; line-height:1.6; text-align:left; margin-top:0.5rem;">
+            • 필터 성능 저하 조기 감지<br>
+            • 곰팡이 및 오염 위험 사전 관리<br>
+            • 쾌적한 실내 공기환경 유지
+          </div>
+        </div>
+      </div>
+      <div style="background:#0F172A; color:#FFFFFF; text-align:center; padding:0.9rem; border-radius:12px; font-size:1.25rem; font-weight:900; font-family:var(--f-mono);">
+        💰 필터 비용 절감 + 전력 절감 + 관리 효율 향상
       </div>
     </div>
   </section>
@@ -502,25 +531,31 @@
   <!-- S11 Business Model & Market -->
   <section class="slide" id="s11">
     <div class="slide-header">
-      <div><div class="eyebrow">Revenue & Market</div><h2>수익 구조 & 시장 확장성</h2></div>
+      <div><div class="eyebrow">Business Model</div><h2>수익 모델 — 센서 판매에서 에너지 관리 서비스까지</h2></div>
       <div class="logo">Smart Filter</div>
     </div>
-    <div class="biz">
-      <div class="biz-card rev">
+    <div class="biz" style="gap:1.2rem; flex:1;">
+      <div class="biz-card rev" style="padding:1.4rem; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
         <div class="biz-tag">REVENUE STREAMS</div>
-        <div class="biz-h">💰 4대 핵심 수익 모델</div>
-        <div class="biz-row"><span class="no">01</span><span><b>하드웨어 판매</b> — 차압 센서 모듈 B2B/B2C 공급</span></div>
-        <div class="biz-row"><span class="no">02</span><span><b>SaaS 구독료</b> — 대시보드 · AI예측 월/연 구독</span></div>
-        <div class="biz-row"><span class="no">03</span><span><b>필터 수수료</b> — 맞춤 필터 자동주문 · 배송 수수료</span></div>
-        <div class="biz-row"><span class="no">04</span><span><b>B2B 유지케어</b> — 정기점검 · 센서교정 · 관리보고서</span></div>
+        <div class="biz-h" style="font-size:1.45rem;">💰 4대 핵심 수익 구조</div>
+        <div class="biz-row"><span class="no">01</span><span><b>1. 센서 모듈 판매</b> — 부착형 센서 / 가정·학교·기업 대상 제품 & 패키지 판매</span></div>
+        <div class="biz-row"><span class="no">02</span><span><b>2. 대시보드 구독 서비스</b> — 실시간 상태 확인 · AI 교체 예측 · 월/연간 구독료</span></div>
+        <div class="biz-row"><span class="no">03</span><span><b>3. 필터 판매 & 제휴 배너 광고</b> — 필터 자동 추천·배송 수수료 + <b>기업 제휴 배너 광고 수익</b></span></div>
+        <div class="biz-row"><span class="no">04</span><span><b>4. B2B 에너지 관리 서비스</b> — 공장·병원·클린룸 대상 팬 전력 분석 & 연간 관리 계약</span></div>
       </div>
-      <div class="biz-card mkt">
-        <div class="biz-tag">TARGET MARKETS</div>
-        <div class="biz-h">🚀 4단계 시장 연쇄 확장</div>
-        <div class="biz-row"><span class="no">1</span><span><b>초기진입</b> — 일반가정 · 스마트 아파트단지</span></div>
-        <div class="biz-row"><span class="no">2</span><span><b>공공확장</b> — 학교 · 학원 · 공공기관 건물</span></div>
-        <div class="biz-row"><span class="no">3</span><span><b>다중시설</b> — 병원 · 다중이용시설</span></div>
-        <div class="biz-row"><span class="no">4</span><span><b>대형 B2B</b> — 공장 · 클린룸 · 대형건물 관제</span></div>
+      <div class="biz-card mkt" style="padding:1.4rem; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+        <div class="biz-tag">PIPELINE & EXPANSION</div>
+        <div class="biz-h" style="font-size:1.45rem;">🚀 핵심 수익 체계 & 시장 확장</div>
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          <div style="background:#FFFFFF; border:1.5px solid #A7F3D0; padding:0.9rem 1.1rem; border-radius:10px; font-size:1.05rem; font-weight:800; color:var(--muted);">
+            📍 <b>수익 확장 선순환 파이프라인:</b><br>
+            <span style="color:var(--accent);">센서 판매로 고객 확보 ➔ 대시보드 구독 & 배너 광고로 반복 수익 ➔ B2B 에너지 관리 서비스로 확장</span>
+          </div>
+          <div style="background:#FFFFFF; border:1.5px solid #A7F3D0; padding:0.9rem 1.1rem; border-radius:10px; font-size:1.05rem; font-weight:800; color:var(--muted);">
+            🎯 <b>4단계 시장 진입 전략:</b><br>
+            1. 가정·아파트 단지 ➔ 2. 학교·공공기관 ➔ 3. 병원·다중시설 ➔ 4. 대형 B2B 공장·클린룸
+          </div>
+        </div>
       </div>
     </div>
   </section>
