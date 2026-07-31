@@ -12,222 +12,235 @@
 <style>
   :root {
     --navy: #0B1830;
-    --navy-card: #132444;
-    --canvas: #F8FAFC;
+    --navy-dark: #071022;
+    --navy-card: rgba(19, 36, 68, 0.85);
+    --navy-card-hover: rgba(27, 49, 90, 0.95);
+    --navy-border: rgba(56, 189, 248, 0.25);
+    --navy-border-glow: rgba(56, 189, 248, 0.5);
+    
     --white: #FFFFFF;
-    --ink: #0F172A;
-    --ink-dim: #334155;
-    --ink-slate: #64748B;
-    --sky: #0284C7;
-    --sky-glow: #38BDF8;
-    --sky-light: #F0F9FF;
-    --sky-border: #BAE6FD;
-    --mint: #059669;
-    --mint-glow: #34D399;
-    --mint-light: #ECFDF5;
-    --danger: #E11D48;
-    --danger-light: #FFF1F2;
-    --gold: #D97706;
-    --shadow-lg: 0 20px 40px -15px rgba(2, 132, 199, 0.15);
-    --shadow-card: 0 10px 25px -5px rgba(11, 24, 48, 0.08);
+    --ink-light: #F8FAFC;
+    --ink-dim: #CBD5E1;
+    --ink-slate: #94A3B8;
+    
+    --sky: #38BDF8;
+    --sky-dark: #0284C7;
+    --sky-glow: #7DD3FC;
+    --sky-light: rgba(2, 132, 199, 0.15);
+    
+    --mint: #34D399;
+    --mint-dark: #059669;
+    --mint-glow: #6EE7B7;
+    --mint-light: rgba(5, 150, 105, 0.15);
+    
+    --danger: #FB7185;
+    --danger-light: rgba(225, 29, 72, 0.15);
+    --danger-border: rgba(251, 113, 133, 0.4);
+    
+    --shadow-lg: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
     
     --m: 5.5vw;
-    --label-top: 6.5vh;
-    --title-top: 11vh;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-  html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--navy); font-family: 'Pretendard', sans-serif; -webkit-font-smoothing: antialiased; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--navy-dark); font-family: 'Pretendard', sans-serif; -webkit-font-smoothing: antialiased; }
 
   #deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 
-  /* ===== Slide Base ===== */
+  /* ===== Slide Base (Unified Dark Theme) ===== */
   .slide {
     position: absolute; inset: 0; width: 100vw; height: 100vh;
     display: flex; flex-direction: column; justify-content: space-between;
-    padding: 5vh var(--m) 6vh var(--m);
-    background: var(--canvas); color: var(--ink);
+    padding: 5.5vh var(--m) 6.5vh var(--m);
+    background: radial-gradient(circle at 60% 40%, #13274C 0%, var(--navy-dark) 85%);
+    color: var(--white);
     opacity: 0; pointer-events: none; transition: opacity .45s cubic-bezier(.4,0,.2,1);
     overflow: hidden;
   }
   .slide.active { opacity: 1; pointer-events: auto; }
 
-  .slide--dark {
-    background: radial-gradient(circle at 60% 40%, #152B52 0%, var(--navy) 80%);
-    color: var(--white);
+  /* Background Ambient Particle Glow */
+  .slide::before {
+    content: ""; position: absolute; top: -10vw; right: -10vw; width: 35vw; height: 35vw;
+    border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none; z-index: 0;
   }
 
   /* Animation System */
   [data-anim] {
-    opacity: 0; transform: translateY(16px);
+    opacity: 0; transform: translateY(18px);
     transition: opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
   }
   .slide.active [data-anim].in { opacity: 1; transform: translateY(0); }
 
-  /* Top Navigation / Headers */
-  .slide-header { display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; }
+  /* ===== Unified Header Layout ===== */
+  .slide-header { display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; border-bottom: 1.5px solid rgba(255,255,255,0.08); padding-bottom: 1.2vh; }
+  .header-left { display: flex; flex-direction: column; gap: 0.4vh; }
+  
   .eyebrow {
-    font-family: 'Space Grotesk', sans-serif; font-size: 0.95vw; font-weight: 700;
-    letter-spacing: .12em; text-transform: uppercase; color: var(--sky);
-    display: flex; align-items: center; gap: .6em; margin-bottom: 0.8vh;
+    font-family: 'Space Grotesk', sans-serif; font-size: 0.9vw; font-weight: 800;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--sky);
+    display: flex; align-items: center; gap: .6em;
   }
   .eyebrow::before { content: ""; width: 1.8vw; height: 2px; background: var(--sky); display: inline-block; }
-  .slide--dark .eyebrow { color: var(--sky-glow); }
-  .slide--dark .eyebrow::before { background: var(--sky-glow); }
 
-  .h-title { font-size: 2.3vw; font-weight: 900; letter-spacing: -.03em; color: var(--ink); line-height: 1.2; }
-  .slide--dark .h-title { color: var(--white); }
-  .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1vw; font-weight: 800; letter-spacing: .1em; color: var(--sky); text-transform: uppercase; }
-  .slide--dark .logo { color: var(--sky-glow); }
+  .h-title { font-size: 2.2vw; font-weight: 900; letter-spacing: -.03em; color: var(--white); line-height: 1.25; }
+  .logo { font-family: 'Space Grotesk', sans-serif; font-size: 0.95vw; font-weight: 800; letter-spacing: .12em; color: var(--sky-glow); text-transform: uppercase; }
 
   .body { flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 2.5vh; min-height: 0; z-index: 2; }
 
-  /* Bullet List */
-  ul.blist { list-style: none; display: flex; flex-direction: column; gap: 1vh; }
-  ul.blist li { font-size: 1.1vw; font-weight: 700; color: var(--ink-dim); line-height: 1.55; position: relative; padding-left: 1.3em; }
+  /* ===== Bullet List Styling ===== */
+  ul.blist { list-style: none; display: flex; flex-direction: column; gap: 1.1vh; }
+  ul.blist li { font-size: 1.1vw; font-weight: 700; color: var(--ink-dim); line-height: 1.6; position: relative; padding-left: 1.4em; }
   ul.blist li::before { content: "•"; color: var(--sky); font-weight: 900; position: absolute; left: 0; top: 0; font-size: 1.3em; }
-  ul.blist li b { color: var(--ink); font-weight: 900; }
-  .slide--dark ul.blist li { color: rgba(255,255,255,.85); }
-  .slide--dark ul.blist li b { color: var(--white); }
+  ul.blist li b { color: var(--white); font-weight: 900; }
 
-  /* Number Metrics */
-  .metric-val { display: flex; align-items: baseline; gap: 0.3vw; font-family: 'Space Grotesk', sans-serif; }
-  .metric-num { font-size: 3.8vw; font-weight: 800; letter-spacing: -.03em; color: var(--sky); line-height: 1; }
-  .metric-unit { font-size: 1.5vw; font-weight: 700; color: var(--ink); }
-  .slide--dark .metric-unit { color: var(--white); }
+  /* ===== Unified Glass Cards ===== */
+  .glass-card {
+    background: var(--navy-card); border: 1.5px solid var(--navy-border);
+    border-radius: 20px; padding: 2.8vh 2vw; backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-card); display: flex; flex-direction: column; justify-content: space-between;
+    transition: border-color .3s ease;
+  }
+  .glass-card:hover { border-color: var(--navy-border-glow); }
 
   /* ===== S1 Cover ===== */
   #s1 { justify-content: center; align-items: center; text-align: center; }
   .cover-pill {
     font-family: 'Space Grotesk', sans-serif; font-size: 0.9vw; font-weight: 800;
-    letter-spacing: .2em; color: var(--sky-glow); text-transform: uppercase;
-    background: rgba(2, 132, 199, 0.15); border: 1px solid rgba(56, 189, 248, 0.3);
-    padding: .5vh 1.4vw; border-radius: 999px; display: inline-block; margin-bottom: 2.5vh;
+    letter-spacing: .22em; color: var(--sky-glow); text-transform: uppercase;
+    background: rgba(56, 189, 248, 0.12); border: 1.5px solid rgba(56, 189, 248, 0.35);
+    padding: .6vh 1.6vw; border-radius: 999px; display: inline-block; margin-bottom: 3vh;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
   }
   .cover-title { font-size: 5.5vw; font-weight: 900; letter-spacing: -.04em; line-height: 1; color: var(--white); }
-  .cover-title span { color: var(--sky-glow); }
-  .cover-sub { font-size: 1.6vw; font-weight: 700; color: rgba(255,255,255,.85); margin-top: 2vh; }
+  .cover-title span { color: var(--sky-glow); text-shadow: 0 0 30px rgba(56, 189, 248, 0.4); }
+  .cover-sub { font-size: 1.6vw; font-weight: 700; color: var(--ink-dim); margin-top: 2.2vh; }
   .cover-plate {
-    margin-top: 4vh; background: rgba(19, 36, 68, 0.85); border: 1.5px solid rgba(56, 189, 248, 0.3);
-    border-radius: 20px; padding: 1.5vh 3vw; backdrop-filter: blur(10px); box-shadow: var(--shadow-lg);
+    margin-top: 4.5vh; background: var(--navy-card); border: 1.5px solid var(--navy-border);
+    border-radius: 20px; padding: 1.6vh 3.2vw; backdrop-filter: blur(12px); box-shadow: var(--shadow-lg);
   }
   .cover-team { font-size: 1.3vw; font-weight: 900; color: var(--sky-glow); }
-  .cover-members { font-size: 1.05vw; color: rgba(255,255,255,.75); font-weight: 700; margin-top: .5vh; }
+  .cover-members { font-size: 1.05vw; color: var(--ink-slate); font-weight: 700; margin-top: .5vh; }
 
-  /* ===== Problem & Cause Grid ===== */
-  .prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5vw; }
+  /* ===== S2 Problem Cards ===== */
+  .prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; }
   .prob-card {
-    background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 18px;
-    padding: 2.5vh 1.8vw; border-left: 6px solid var(--danger); box-shadow: var(--shadow-card);
+    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 20px;
+    padding: 2.8vh 2vw; border-left: 6px solid var(--danger); box-shadow: var(--shadow-card);
   }
-  .prob-card .k { font-size: 1.3vw; font-weight: 900; color: var(--ink); }
-  .prob-card .v { font-size: 1.05vw; font-weight: 700; color: var(--ink-slate); margin-top: 1vh; line-height: 1.5; }
+  .prob-card .k { font-size: 1.3vw; font-weight: 900; color: var(--white); }
+  .prob-card .v { font-size: 1.05vw; font-weight: 700; color: var(--ink-slate); margin-top: 1vh; line-height: 1.55; }
   
   .prob-real {
-    margin-top: 2.5vh; background: var(--danger-light); border: 2px solid #FECDD3;
-    border-radius: 18px; padding: 2.5vh 2.2vw;
+    margin-top: 2.5vh; background: var(--danger-light); border: 1.5px solid var(--danger-border);
+    border-radius: 20px; padding: 2.5vh 2.2vw;
   }
   .prob-real .tag { font-family: 'Space Grotesk', sans-serif; font-size: 0.85vw; font-weight: 900; color: var(--danger); letter-spacing: .08em; }
-  .prob-real .h { font-size: 1.4vw; font-weight: 900; color: var(--ink); margin-top: .6vh; }
+  .prob-real .h { font-size: 1.35vw; font-weight: 900; color: var(--white); margin-top: .6vh; line-height: 1.5; }
   .prob-real .h b { color: var(--danger); }
 
-  /* ===== Solution Cards ===== */
+  /* ===== S3 Solution Cards ===== */
   .sol-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; flex: 1; }
   .sol-card {
-    background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 20px;
-    padding: 3vh 2vw; display: flex; flex-direction: column; justify-content: center; gap: 1.2vh;
+    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 20px;
+    padding: 3.2vh 2vw; display: flex; flex-direction: column; justify-content: center; gap: 1.4vh;
     box-shadow: var(--shadow-card);
   }
   .sol-no { font-family: 'Space Grotesk', sans-serif; font-size: 1vw; font-weight: 800; color: var(--sky); letter-spacing: .08em; }
-  .sol-h { font-size: 1.55vw; font-weight: 900; color: var(--ink); }
+  .sol-h { font-size: 1.5vw; font-weight: 900; color: var(--white); }
   .sol-v { font-size: 1.1vw; font-weight: 700; color: var(--ink-dim); line-height: 1.6; }
-  .sol-v b { color: var(--sky); font-weight: 900; }
+  .sol-v b { color: var(--sky-glow); font-weight: 900; }
 
-  /* ===== Architecture Flow ===== */
+  /* ===== S4 Architecture Flow ===== */
   .arch-flow { display: flex; align-items: center; justify-content: space-between; gap: 0.6vw; margin-bottom: 2.5vh; }
   .arch-node {
-    background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 14px;
-    padding: 1.4vh 1.2vw; font-size: 1.05vw; font-weight: 900; color: var(--ink); text-align: center; flex: 1;
+    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 14px;
+    padding: 1.5vh 1.2vw; font-size: 1.05vw; font-weight: 900; color: var(--white); text-align: center; flex: 1;
     box-shadow: var(--shadow-card);
   }
-  .arch-node span { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 0.8vw; color: var(--sky); font-weight: 800; margin-top: .3vh; }
-  .arch-arrow { color: var(--sky); font-family: 'Space Grotesk', sans-serif; font-size: 1.4vw; font-weight: 900; }
+  .arch-node span { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 0.8vw; color: var(--sky-glow); font-weight: 800; margin-top: .3vh; }
+  .arch-arrow { color: var(--sky-glow); font-family: 'Space Grotesk', sans-serif; font-size: 1.4vw; font-weight: 900; }
 
   .relay-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vw; flex: 1; }
   .relay-col {
-    background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 18px;
-    padding: 2.5vh 2vw; display: flex; flex-direction: column; justify-content: center; gap: 1vh;
+    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 20px;
+    padding: 2.8vh 2.2vw; display: flex; flex-direction: column; justify-content: center; gap: 1.2vh;
     box-shadow: var(--shadow-card);
   }
-  .relay-col.pull { background: var(--sky-light); border-color: var(--sky-border); }
-  .relay-col .tag { font-family: 'Space Grotesk', sans-serif; font-size: 0.85vw; font-weight: 900; color: var(--sky); letter-spacing: .08em; }
-  .relay-col .h { font-size: 1.35vw; font-weight: 900; color: var(--ink); }
+  .relay-col.pull { background: var(--sky-light); border-color: rgba(56,189,248,0.4); }
+  .relay-col .tag { font-family: 'Space Grotesk', sans-serif; font-size: 0.85vw; font-weight: 900; color: var(--sky-glow); letter-spacing: .08em; }
+  .relay-col .h { font-size: 1.35vw; font-weight: 900; color: var(--white); }
 
   /* ===== Feature Phone Cards ===== */
   .feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; flex: 1; align-items: center; }
-  .feat-col { display: flex; gap: 1.8vw; align-items: center; background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 22px; padding: 2.2vh 1.8vw; box-shadow: var(--shadow-card); }
-  .feat-phone { flex: none; width: 10.5vw; aspect-ratio: 430/860; border-radius: 18px; overflow: hidden; border: 3px solid var(--navy); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+  .feat-col {
+    display: flex; gap: 1.8vw; align-items: center; background: var(--navy-card);
+    border: 1.5px solid var(--navy-border); border-radius: 22px; padding: 2.5vh 2vw; box-shadow: var(--shadow-card);
+  }
+  .feat-phone { flex: none; width: 10.5vw; aspect-ratio: 430/860; border-radius: 18px; overflow: hidden; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
   .feat-phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
   .feat-copy { flex: 1; min-width: 0; }
-  .feat-copy .k { font-family: 'Space Grotesk', sans-serif; font-size: 0.8vw; font-weight: 900; color: var(--sky); letter-spacing: .1em; text-transform: uppercase; }
-  .feat-copy .h { font-size: 1.4vw; font-weight: 900; color: var(--ink); margin-top: .4vh; margin-bottom: 1.2vh; }
+  .feat-copy .k { font-family: 'Space Grotesk', sans-serif; font-size: 0.8vw; font-weight: 900; color: var(--sky-glow); letter-spacing: .1em; text-transform: uppercase; }
+  .feat-copy .h { font-size: 1.4vw; font-weight: 900; color: var(--white); margin-top: .4vh; margin-bottom: 1.2vh; }
 
-  /* ===== Slide 10 Customer Benefits Stat Pillars ===== */
+  /* ===== S10 Customer Benefits Stat Pillars ===== */
   .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6vw; flex: 1; }
   .stat-card {
-    background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 22px;
-    padding: 3vh 2vw; display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: var(--shadow-card); border-top: 6px solid var(--sky);
+    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 22px;
+    padding: 3.2vh 2vw; display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: var(--shadow-card); border-top: 6px solid var(--sky-glow);
   }
-  .stat-card.mint { border-top-color: var(--mint); }
-  .stat-card.navy { border-top-color: var(--navy); }
+  .stat-card.mint { border-top-color: var(--mint-glow); }
+  .stat-card.navy { border-top-color: var(--sky); }
   .stat-icon { font-size: 2.5vw; margin-bottom: 1vh; }
-  .stat-title { font-size: 1.45vw; font-weight: 900; color: var(--ink); }
-  .stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 2.4vw; font-weight: 900; color: var(--sky); margin: 0.8vh 0 1.5vh 0; }
-  .stat-card.mint .stat-number { color: var(--mint); }
-  .stat-card.navy .stat-number { color: var(--navy); }
+  .stat-title { font-size: 1.45vw; font-weight: 900; color: var(--white); }
+  .stat-number { font-family: 'Space Grotesk', sans-serif; font-size: 2.8vw; font-weight: 900; color: var(--sky-glow); margin: 0.8vh 0 1.5vh 0; text-shadow: 0 0 20px rgba(56,189,248,0.3); }
+  .stat-card.mint .stat-number { color: var(--mint-glow); text-shadow: 0 0 20px rgba(52,211,153,0.3); }
+  .stat-card.navy .stat-number { color: var(--sky); }
 
-  /* ===== Slide 11 Revenue Model ===== */
+  /* ===== S11 Revenue Model ===== */
   .biz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vw; flex: 1; }
   .biz-card {
-    background: var(--white); border: 1.5px solid var(--sky-border); border-radius: 22px;
-    padding: 3vh 2vw; display: flex; flex-direction: column; justify-content: space-between;
+    background: var(--navy-card); border: 1.5px solid var(--navy-border); border-radius: 22px;
+    padding: 3.2vh 2vw; display: flex; flex-direction: column; justify-content: space-between;
     box-shadow: var(--shadow-card);
   }
-  .biz-card.rev { background: var(--sky-light); border-color: var(--sky-border); }
-  .biz-card.mkt { background: var(--mint-light); border-color: #A7F3D0; }
+  .biz-card.rev { background: var(--sky-light); border-color: rgba(56,189,248,0.4); }
+  .biz-card.mkt { background: var(--mint-light); border-color: rgba(52,211,153,0.4); }
   .biz-tag { font-family: 'Space Grotesk', sans-serif; font-size: 0.85vw; font-weight: 900; letter-spacing: .08em; }
-  .biz-card.rev .biz-tag { color: var(--sky); }
-  .biz-card.mkt .biz-tag { color: var(--mint); }
-  .biz-h { font-size: 1.5vw; font-weight: 900; color: var(--ink); margin: .6vh 0 1.5vh; }
-  .biz-row { display: flex; gap: .8vw; align-items: baseline; padding: 1.2vh 0; border-top: 1px dashed rgba(15,23,42,0.12); font-size: 1.1vw; font-weight: 800; color: var(--ink-dim); }
-  .biz-row .no { font-family: 'Space Grotesk', sans-serif; color: var(--sky); font-weight: 900; flex: none; width: 1.8vw; }
-  .biz-card.mkt .biz-row .no { color: var(--mint); }
-  .biz-row b { color: var(--ink); font-weight: 900; }
+  .biz-card.rev .biz-tag { color: var(--sky-glow); }
+  .biz-card.mkt .biz-tag { color: var(--mint-glow); }
+  .biz-h { font-size: 1.5vw; font-weight: 900; color: var(--white); margin: .6vh 0 1.5vh; }
+  .biz-row { display: flex; gap: .8vw; align-items: baseline; padding: 1.2vh 0; border-top: 1px dashed rgba(255,255,255,0.12); font-size: 1.1vw; font-weight: 800; color: var(--ink-dim); }
+  .biz-row .no { font-family: 'Space Grotesk', sans-serif; color: var(--sky-glow); font-weight: 900; flex: none; width: 1.8vw; }
+  .biz-card.mkt .biz-row .no { color: var(--mint-glow); }
+  .biz-row b { color: var(--white); font-weight: 900; }
 
-  /* ===== Slide 12 Live Relay Camera Frame ===== */
+  /* ===== S12 Live Relay Camera Frame ===== */
   .lr-monitor {
     width: 100%; height: 100%; background: #04070f; border: 2px solid rgba(56,189,248,0.4);
-    border-radius: 18px; overflow: hidden; position: relative; box-shadow: var(--shadow-lg);
+    border-radius: 20px; overflow: hidden; position: relative; box-shadow: var(--shadow-lg);
   }
   .lr-monitor iframe { width: 100%; height: 100%; border: none; }
 
   /* Bottom Control Track */
-  #progress-track { position: fixed; left: 0; bottom: 0; width: 100vw; height: 5px; background: rgba(255,255,255,0.15); z-index: 100; }
-  #progress-fill { height: 100%; background: var(--sky-glow); width: 0; transition: width .4s ease; }
+  #progress-track { position: fixed; left: 0; bottom: 0; width: 100vw; height: 5px; background: rgba(255,255,255,0.12); z-index: 100; }
+  #progress-fill { height: 100%; background: var(--sky-glow); width: 0; transition: width .4s ease; box-shadow: 0 0 10px var(--sky-glow); }
 
   #controls {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100;
     display: flex; align-items: center; gap: 1.2vw; padding: .6vh 1.4vw;
-    background: rgba(11, 24, 48, 0.9); border: 1.5px solid rgba(56, 189, 248, 0.4);
+    background: rgba(11, 24, 48, 0.92); border: 1.5px solid rgba(56, 189, 248, 0.35);
     border-radius: 999px; backdrop-filter: blur(12px); box-shadow: var(--shadow-lg);
   }
   .nav-btn {
     background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
     color: var(--white); font-size: 0.9vw; font-weight: 800; cursor: pointer;
-    padding: .4vh 1vw; border-radius: 999px; font-family: 'Pretendard', sans-serif; transition: all .2s;
+    padding: .4vh 1.1vw; border-radius: 999px; font-family: 'Pretendard', sans-serif; transition: all .2s;
   }
-  .nav-btn:hover { background: var(--sky); border-color: var(--sky); color: var(--white); }
+  .nav-btn:hover { background: var(--sky-dark); border-color: var(--sky-glow); color: var(--white); }
   .counter { font-family: 'Space Grotesk', sans-serif; font-size: 0.9vw; font-weight: 800; color: var(--sky-glow); letter-spacing: .05em; }
 
 </style>
@@ -237,7 +250,7 @@
 <div id="deck">
 
   <!-- S1 Cover -->
-  <section class="slide slide--dark active" data-index="0">
+  <section class="slide active" id="s1" data-index="0">
     <div class="body" style="align-items:center; text-align:center;">
       <div class="cover-pill" data-anim>AI ENERGY SMART HOME MAKERTHON</div>
       <h1 class="cover-title" data-anim>Smart <span>Filter</span></h1>
@@ -252,14 +265,26 @@
   <!-- S2 Problem & Cause -->
   <section class="slide" data-index="1">
     <div class="slide-header">
-      <div><div class="eyebrow">Problem & Cause</div><h2 class="h-title">에어컨 필터 관리의 중요성</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>Problem & Cause</div>
+        <h2 class="h-title" data-anim>에어컨 필터 관리의 중요성</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
       <div class="prob-grid">
-        <div class="prob-card" data-anim><div class="k">🚨 공기 저항 → 전력 27% 급증</div><div class="v">먼지 누적 → 공기 저항 증가 → 팬 과부하</div></div>
-        <div class="prob-card" data-anim><div class="k">⏳ 감 의존 주기 교체</div><div class="v">실제 오염과 무관한 기간 판단 · 고장 후 대응</div></div>
-        <div class="prob-card" data-anim><div class="k">💸 필터 · 전력 이중 낭비</div><div class="v">성급한 교체(필터 낭비) vs 늦은 교체(전력 낭비 · 공기질 악화)</div></div>
+        <div class="prob-card" data-anim>
+          <div class="k">🚨 공기 저항 → 전력 <span data-count="27.0" data-suffix="%">0%</span> 급증</div>
+          <div class="v">먼지 누적 → 공기 저항 증가 → 팬 과부하 발생</div>
+        </div>
+        <div class="prob-card" data-anim>
+          <div class="k">⏳ 감 의존 주기 교체</div>
+          <div class="v">실제 오염도와 무관한 정기 기간 판단 · 고장 후 대응</div>
+        </div>
+        <div class="prob-card" data-anim>
+          <div class="k">💸 필터 · 전력 이중 낭비</div>
+          <div class="v">성급한 교체(필터 낭비) vs 늦은 교체(전력 낭비 · 공기질 악화)</div>
+        </div>
       </div>
       <div class="prob-real" data-anim>
         <div class="tag">REAL PROBLEM · 진짜 문제점</div>
@@ -271,7 +296,10 @@
   <!-- S3 Solution -->
   <section class="slide" data-index="2">
     <div class="slide-header">
-      <div><div class="eyebrow">Solution Direction</div><h2 class="h-title">해결 방향 — 필터 상태를 수치로 바꾸다</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>Solution Direction</div>
+        <h2 class="h-title" data-anim>해결 방향 — 필터 상태를 수치로 바꾸다</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -283,7 +311,7 @@
         </div>
         <div class="sol-card" data-anim>
           <div class="sol-no">STEP 02</div>
-          <div class="sol-h">📊 0.1Pa 정밀 차압 측정</div>
+          <div class="sol-h">📊 <span data-count="0.1" data-decimals="1" data-suffix="Pa">0Pa</span> 정밀 차압 측정</div>
           <div class="sol-v">차압 센서 실측 → 눈에 보이지 않는 필터 오염 <b>정밀 데이터 수치화</b></div>
         </div>
         <div class="sol-card" data-anim>
@@ -298,7 +326,10 @@
   <!-- S4 Architecture & Workflow -->
   <section class="slide" data-index="3">
     <div class="slide-header">
-      <div><div class="eyebrow">Workflow</div><h2 class="h-title">SmartFilter 전체 흐름도</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>Workflow</div>
+        <h2 class="h-title" data-anim>SmartFilter 전체 흐름도</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -339,7 +370,10 @@
   <!-- S5 AI Engine -->
   <section class="slide" data-index="4">
     <div class="slide-header">
-      <div><div class="eyebrow">AI Engine</div><h2 class="h-title">Smart Filter — AI 오염 예측 & 전력 분석</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>AI Engine</div>
+        <h2 class="h-title" data-anim>Smart Filter — AI 오염 예측 & 전력 분석</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -367,23 +401,26 @@
   <!-- S6 App Overview -->
   <section class="slide" data-index="5">
     <div class="slide-header">
-      <div><div class="eyebrow">Deployed App</div><h2 class="h-title">실제 구현된 스마트홈 웹 서비스</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>Deployed App</div>
+        <h2 class="h-title" data-anim>실제 구현된 스마트홈 웹 서비스</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
       <div class="relay-split">
         <div class="relay-col pull" data-anim>
-          <div class="tag">DESTRUCTIVE STACK</div>
+          <div class="tag">FULL STACK WEB DEPLOYMENT</div>
           <div class="h">🌐 완성형 스마트홈 웹 시스템</div>
-          <p style="font-size:1.1vw; font-weight:800; color:var(--sky); margin-top:1vh;">🔗 https://smartfilter-railway-cloud-production-e704.up.railway.app</p>
-          <div style="margin-top:2vh; font-size:1vw; font-weight:700; color:var(--ink-slate);">🟢 24시간 실물 하드웨어 연동 중 — 목업 없이 100% 실측 기반으로 전 세계 어디서든 작동</div>
+          <p style="font-size:1.1vw; font-weight:800; color:var(--sky-glow); margin-top:1.2vh;">🔗 https://smartfilter-railway-cloud-production-e704.up.railway.app</p>
+          <div style="margin-top:2.2vh; font-size:1vw; font-weight:700; color:var(--ink-dim); line-height:1.6;">🟢 24시간 실물 하드웨어 연동 중 — 목업 없이 100% 실측 기반으로 전 세계 어디서든 작동</div>
         </div>
         <div class="relay-col" style="align-items:center; text-align:center;" data-anim>
           <div class="tag">QR CONNECT</div>
-          <div style="background:#fff; border:1.5px solid var(--sky-border); border-radius:14px; padding:1vh 1vw; margin-top:1vh;">
+          <div style="background:#fff; border:1.5px solid var(--sky-glow); border-radius:16px; padding:1.2vh 1.2vw; margin-top:1.2vh; box-shadow:0 0 25px rgba(56,189,248,0.2);">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" style="width:9vw; height:9vw;"><path fill="#FFFFFF" d="M0 0h39v39H0z"/><path stroke="#0E211D" d="M1 1.5h7m2 0h1m3 0h1m1 0h1m1 0h1m3 0h1m3 0h1m2 0h1m1 0h7M1 2.5h1m5 0h1m2 0h1m4 0h2m4 0h1m1 0h3m1 0h3m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h3m4 0h3m4 0h1m1 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m3 0h1m4 0h2m1 0h3m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h1m3 0h1m3 0h2m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h2m1 0h2m4 0h1m3 0h1m2 0h1m2 0h2m1 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h4m1 0h1m1 0h1m1 0h2m1 0h3m3 0h2M1 9.5h1m1 0h5m2 0h2m1 0h1m1 0h1m1 0h1m4 0h1m1 0h1m1 0h2m1 0h1m1 0h5M3 10.5h2m3 0h1m2 0h2m2 0h2m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m2 0h2M1 11.5h1m1 0h1m3 0h2m4 0h5m1 0h2m1 0h1m4 0h2m2 0h2m3 0h2M4 12.5h2m2 0h7m1 0h1m2 0h5m1 0h1m2 0h3m1 0h1m4 0h1M1 13.5h5m1 0h1m6 0h3m1 0h1m1 0h1m2 0h1m1 0h3m2 0h8M1 14.5h1m1 0h4m1 0h6m3 0h1m2 0h2m1 0h2m1 0h1m2 0h1m2 0h1M2 15.5h1m1 0h5m2 0h1m4 0h1m2 0h1m1 0h1m1 0h1m4 0h1m2 0h4m2 0h1M1 16.5h1m1 0h1m1 0h2m1 0h4m3 0h3m3 0h1m3 0h1m1 0h1m1 0h1m1 0h3M1 17.5h3m1 0h5m1 0h3m1 0h2m2 0h1m1 0h6m1 0h1m2 0h3m1 0h2M2 18.5h1m1 0h3m2 0h3m3 0h3m11 0h1m2 0h1m3 0h1M1 19.5h1m1 0h6m1 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m1 0h4m2 0h1m2 0h2M1 20.5h6m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m2 0h3m2 0h2m1 0h5m2 0h1M4 21.5h1m1 0h2m1 0h3m2 0h2m1 0h2m2 0h1m2 0h4m2 0h2m1 0h1m1 0h1M3 22.5h2m1 0h1m1 0h2m1 0h1m3 0h1m1 0h6m1 0h1m1 0h2m1 0h1m4 0h1M2 23.5h1m2 0h3m1 0h2m4 0h4m2 0h2m3 0h3m1 0h1m1 0h3m1 0h2M1 24.5h1m1 0h1m2 0h1m1 0h1m2 0h1m2 0h2m2 0h6m1 0h1m2 0h2m2 0h2m2 0h1M2 25.5h3m2 0h1m2 0h4m2 0h2m2 0h1m1 0h1m2 0h4m1 0h2m1 0h1m1 0h2M1 26.5h3m4 0h2m1 0h6m1 0h2m1 0h1m1 0h1m1 0h1m3 0h2M1 27.5h1m1 0h1m3 0h4m1 0h1m2 0h4m1 0h1m1 0h2m1 0h2m1 0h2m1 0h1m3 0h3M1 28.5h1m1 0h4m1 0h1m3 0h2m1 0h2m3 0h4m1 0h1m2 0h1m1 0h3m1 0h1m2 0h1M1 29.5h1m1 0h2m2 0h4m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h6m1 0h1m1 0h1M9 30.5h5m3 0h1m1 0h3m2 0h1m4 0h1m3 0h2M1 31.5h7m4 0h1m1 0h1m1 0h2m1 0h1m3 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h3M1 32.5h1m5 0h1m1 0h2m2 0h2m1 0h2m3 0h1m2 0h2m1 0h1m1 0h1m3 0h2m1 0h2M1 33.5h1m1 0h3m1 0h1m1 0h3m2 0h1m1 0h1m2 0h5m2 0h8m1 0h1M1 34.5h1m1 0h3m1 0h1m1 0h3m1 0h5m4 0h1m1 0h1m1 0h6m1 0h2m2 0h1M1 35.5h1m1 0h3m1 0h1m1 0h2m1 0h4m5 0h1m3 0h1m1 0h2m1 0h1m3 0h1m1 0h2M1 36.5h1m5 0h1m2 0h2m1 0h2m2 0h1m1 0h1m2 0h2m1 0h1m1 0h3m1 0h1m1 0h2m2 0h1M1 37.5h7m1 0h2m3 0h2m1 0h2m4 0h1m2 0h2m5 0h1m1 0h3"/></svg>
           </div>
-          <div style="font-size:0.9vw; font-weight:800; color:var(--ink-dim); margin-top:1vh;">📲 폰으로 스캔해서 접속</div>
+          <div style="font-size:0.95vw; font-weight:800; color:var(--white); margin-top:1.2vh;">📲 폰으로 스캔해서 접속</div>
         </div>
       </div>
     </div>
@@ -392,7 +429,10 @@
   <!-- S7 Feature: 홈 · 기기 -->
   <section class="slide" data-index="6">
     <div class="slide-header">
-      <div><div class="eyebrow">App Features · 1</div><h2 class="h-title">홈 · 기기</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>App Features · 1</div>
+        <h2 class="h-title" data-anim>홈 · 기기</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -428,7 +468,10 @@
   <!-- S8 Feature: 리포트 · 회복 테스트 -->
   <section class="slide" data-index="7">
     <div class="slide-header">
-      <div><div class="eyebrow">App Features · 2</div><h2 class="h-title">리포트 · 회복 테스트</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>App Features · 2</div>
+        <h2 class="h-title" data-anim>리포트 · 회복 테스트</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -461,7 +504,10 @@
   <!-- S9 Feature: 관리 · 필터 마켓 -->
   <section class="slide" data-index="8">
     <div class="slide-header">
-      <div><div class="eyebrow">App Features · 3</div><h2 class="h-title">관리 · 필터 마켓</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>App Features · 3</div>
+        <h2 class="h-title" data-anim>관리 · 필터 마켓</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -493,7 +539,10 @@
   <!-- S10 Customer Benefits -->
   <section class="slide" data-index="9">
     <div class="slide-header">
-      <div><div class="eyebrow">Customer Benefits</div><h2 class="h-title">고객이 얻는 효과</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>Customer Benefits</div>
+        <h2 class="h-title" data-anim>고객이 얻는 효과</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -537,13 +586,19 @@
           </ul>
         </div>
       </div>
+      <div style="margin-top:2.5vh; background:rgba(56,189,248,0.12); border:1.5px solid rgba(56,189,248,0.35); text-align:center; padding:1.2vh 2vw; border-radius:16px; font-size:1.3vw; font-weight:900; color:var(--white); box-shadow:0 0 20px rgba(56,189,248,0.15);" data-anim>
+        💰 필터 비용 절감 + 전력 절감 + 관리 효율 향상
+      </div>
     </div>
   </section>
 
   <!-- S11 Business Model -->
   <section class="slide" data-index="10">
     <div class="slide-header">
-      <div><div class="eyebrow">Business Model</div><h2 class="h-title">수익 모델 — 센서 판매에서 에너지 관리 서비스까지</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>Business Model</div>
+        <h2 class="h-title" data-anim>수익 모델 — 센서 판매에서 에너지 관리 서비스까지</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -566,12 +621,12 @@
             <div class="biz-h">🚀 핵심 수익 체계 & 시장 확장</div>
           </div>
           <div style="display:flex; flex-direction:column; gap:1.5vh;">
-            <div style="background:#FFFFFF; border:1.5px solid #A7F3D0; padding:1.4vh 1.2vw; border-radius:14px; font-size:1.1vw; font-weight:800; color:var(--ink-dim);">
-              📍 <b style="color:var(--mint);">수익 확장 선순환 파이프라인:</b><br>
+            <div style="background:rgba(255,255,255,0.05); border:1.5px solid rgba(52,211,153,0.4); padding:1.4vh 1.4vw; border-radius:16px; font-size:1.05vw; font-weight:800; color:var(--ink-dim); line-height:1.6;">
+              📍 <b style="color:var(--mint-glow);">수익 확장 선순환 파이프라인:</b><br>
               센서 판매로 고객 확보 ➔ 대시보드 구독 & 배너 광고로 반복 수익 ➔ B2B 에너지 관리 서비스로 확장
             </div>
-            <div style="background:#FFFFFF; border:1.5px solid #A7F3D0; padding:1.4vh 1.2vw; border-radius:14px; font-size:1.1vw; font-weight:800; color:var(--ink-dim);">
-              🎯 <b style="color:var(--mint);">4단계 시장 진입 전략:</b><br>
+            <div style="background:rgba(255,255,255,0.05); border:1.5px solid rgba(52,211,153,0.4); padding:1.4vh 1.4vw; border-radius:16px; font-size:1.05vw; font-weight:800; color:var(--ink-dim); line-height:1.6;">
+              🎯 <b style="color:var(--mint-glow);">4단계 시장 진입 전략:</b><br>
               1. 가정·아파트 ➔ 2. 학교·공공기관 ➔ 3. 병원·다중시설 ➔ 4. 대형 B2B 공장
             </div>
           </div>
@@ -583,7 +638,10 @@
   <!-- S12 Live Demo Showcase -->
   <section class="slide" data-index="11">
     <div class="slide-header" style="margin-bottom: 1.5vh;">
-      <div><div class="eyebrow">Live Relay Showcase</div><h2 class="h-title">실시간 실물 시연: Smart Filter 카메라 중계</h2></div>
+      <div class="header-left">
+        <div class="eyebrow" data-anim>Live Relay Showcase</div>
+        <h2 class="h-title" data-anim>실시간 실물 시연: Smart Filter 카메라 중계</h2>
+      </div>
       <div class="logo">Smart Filter</div>
     </div>
     <div class="body">
@@ -594,10 +652,10 @@
   </section>
 
   <!-- S13 Closing -->
-  <section class="slide slide--dark" data-index="12">
+  <section class="slide" id="s13" data-index="12">
     <div class="body" style="align-items:center; text-align:center;">
       <div class="cover-pill" data-anim>SMART HOME STANDARD</div>
-      <h2 style="font-size: 3vw; font-weight: 900; color: var(--white); max-width: 25ch; line-height: 1.3;" data-anim>
+      <h2 style="font-size: 3vw; font-weight: 900; color: var(--white); max-width: 26ch; line-height: 1.35;" data-anim>
         Smart Filter는 <b>감이 아닌 실측 데이터</b>로 에너지를 절약하는 스마트홈의 필수 표준입니다
       </h2>
       <div class="cover-plate" style="margin-top: 5vh;" data-anim>
@@ -631,7 +689,7 @@
   function animateSlide(slide) {
     const animElements = slide.querySelectorAll('[data-anim]');
     animElements.forEach((el, index) => {
-      setTimeout(() => el.classList.add('in'), index * 60);
+      setTimeout(() => el.classList.add('in'), index * 70);
     });
 
     // Count up metrics
@@ -640,6 +698,7 @@
       const target = parseFloat(el.getAttribute('data-count'));
       const prefix = el.getAttribute('data-prefix') || '';
       const suffix = el.getAttribute('data-suffix') || '';
+      const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
       let current = 0;
       const step = target / 25;
       const timer = setInterval(() => {
@@ -648,7 +707,7 @@
           current = target;
           clearInterval(timer);
         }
-        el.textContent = `${prefix}${current.toFixed(target % 1 === 0 ? 0 : 1)}${suffix}`;
+        el.textContent = `${prefix}${current.toFixed(decimals)}${suffix}`;
       }, 30);
     });
   }
